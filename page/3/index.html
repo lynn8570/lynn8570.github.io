@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="android"><meta name="keywords" content="android"><link rel="alternate" href="/default" title="Lynn8570's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://lynn8570.github.io/page/3/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>Lynn8570's Blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Lynn8570's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Lynn8570's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><section id="posts" class="posts"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2018/02/21/bookxiaobai application/">书小白书单功能实现</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-02-21
+        </span><span class="post-category">
+            <a href="/categories/ANDROID/">ANDROID</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p>书小白书单功能实现</p>
+          <div class="read-more">
+            <a href="/2018/02/21/bookxiaobai application/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2017/12/11/android private so/">Android N  无法调用私有库问题</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-12-11
+        </span><span class="post-category">
+            <a href="/categories/ANDROID/">ANDROID</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h1 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h1><p>因项目需要，需要将一个第三方的应用集成到系统平台上，这个第三方应用带有自己的私有so库和jni代码等。按照以前的集成方式，</p>
+<pre><code>LOCAL_PATH:= $(call my-dir)
+include $(CLEAR_VARS)
+
+LOCAL_MODULE_TAGS := optional
+
+LOCAL_TARGET_CPU_ABI := $(TARGET_CPU_ABI)
+LOCAL_MULTILIB := 32
+
+ifeq ($(TARGET_CPU_ABI), arm64-v8a)
+    LOCAL_MULTILIB := 64
+else
+    ifeq ($(TARGET_CPU_ABI), armeabi-v7a)
+        LOCAL_TARGET_CPU_ABI := armeabi
+    endif
+endif
+
+LOCAL_PREBUILT_LIBS  :=    \
+    libs/$(LOCAL_TARGET_CPU_ABI)/xxx.so 
+
+include $(BUILD_MULTI_PREBUILT)</code></pre><p>按照以上MK方式集成后，发现如下错：</p>
+<pre><code>01-01 09:18:59.348  4092  4092 E AndroidRuntime: FATAL EXCEPTION: main
+01-01 09:18:59.348  4092  4092 E AndroidRuntime: Process: com.olc.magicuhf, PID: 4092
+01-01 09:18:59.348  4092  4092 E AndroidRuntime: java.lang.UnsatisfiedLinkError: dlopen failed: library &quot;/system/lib64/libuhf-tools.so&quot; needed or dlopened by &quot;/system/lib64/libnativeloader.so&quot; is not accessible for the namespace &quot;classloader-namespace&quot;
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at java.lang.Runtime.loadLibrary0(Runtime.java:989)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at java.lang.System.loadLibrary(System.java:1562)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at android.hardware.uhf.magic.Reader.&lt;clinit&gt;(Reader.java:1279)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at android.hardware.uhf.magic.Reader.init(Native Method)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at com.olc.magicuhf.App.InitUHF(App.java:22)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at com.olc.magicuhf.App.onCreate(App.java:18)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at android.app.Instrumentation.callApplicationOnCreate(Instrumentation.java:1025)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at android.app.ActivityThread.handleBindApplication(ActivityThread.java:5405)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at android.app.ActivityThread.-wrap2(ActivityThread.java)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1546)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at android.os.Handler.dispatchMessage(Handler.java:102)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at android.os.Looper.loop(Looper.java:154)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at android.app.ActivityThread.main(ActivityThread.java:6121)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at java.lang.reflect.Method.invoke(Native Method)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:889)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:779)
+01-01 09:18:59.351  1342  1816 W ActivityManager:   Force finishing activity com.olc.magicuhf/.MainActivity</code></pre><h1 id="方式一：NO"><a href="#方式一：NO" class="headerlink" title="方式一：NO"></a>方式一：NO</h1><p>查了一些资料说：ndroid N 不能直接调用系统的一些私有库了，公用的库都定义在public.libraries.txt里面系统应用刚刷机是能够调用system/lib64下的库，但通过install升级该应用时，应用打开会挂。因为升级后permitted_paths就不再包含system/lib64了。所以我们可以将apk要用到的库名称写到public.libraries.txt中去解决快速调试问题。</p>
+<p>尝试了这种方法，引发更多的编译错误，惹不起，惹不起。</p>
+<h1 id="方式二：yes"><a href="#方式二：yes" class="headerlink" title="方式二：yes"></a>方式二：yes</h1><p>之前都是讲这些SO库集成编译到系统里面，现在需要so库编译到apk中，这样就不是系统的私有库了，是apk自带的库。重点如下</p>
+<pre><code>LOCAL_PATH:= $(call my-dir)
+include $(CLEAR_VARS)
+LOCAL_STATIC_JAVA_LIBRARIES := android-support-v4
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := \
+$(call all-java-files-under, src)
+LOCAL_PACKAGE_NAME := Demo
+LOCAL_CERTIFICATE := platform
+LOCAL_PROGUARD_FLAG_FILES := proguard.flags
+#LOCAL_PROGUARD_ENABLED :=full
+LOCAL_PRIVILEGED_MODULE := false
+LOCAL_JNI_SHARED_LIBRARIES := libfingerprint
+LOCAL_MODULE_INCLUDE_LIBRARY  := true
+LOCAL_PREBUILT_JNI_LIBS := jni/xxx.so
+$(shell cp -rf $(LOCAL_PATH)/jni/xx.so $(TARGET_OUT)/lib64/xxx.so)
+
+# := proguard.flagLOCAL_PROGUARD_FLAG_FILESs
+
+LOCAL_AAPT_FLAGS += -c zz_ZZ
+
+include $(BUILD_PACKAGE)
+
+include $(call all-makefiles-under, jni)
+
+# Use the folloing include to make our test apk.
+include $(call all-makefiles-under,$(LOCAL_PATH))</code></pre><h1 id="题外话"><a href="#题外话" class="headerlink" title="题外话"></a>题外话</h1><p>1.如果需要访问系统文件节点，则需要系统权限，且uid要为android:sharedUserId=”android.uid.system”才可以访问。<br>具体和SELinux的权限设置有关，除非改对应的te文件，不然，根据权限设置，必须系统应用而且UID也需要是系统的才可以访问。</p>
+<p>2.so库需要打包到应用中才可以调用，Android N之后，非系统应用无法调用系统私有库。</p>
+
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2016/08/18/android performance part3/">Android performance par3: Memory</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2016-08-18
+        </span><span class="post-category">
+            <a href="/categories/ANDROID/">ANDROID</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h1 id="关于内存的一些小tips"><a href="#关于内存的一些小tips" class="headerlink" title="关于内存的一些小tips"></a>关于内存的一些小tips</h1><ol>
+<li>Android 的每个应用程序都会使用一个专有的Dalvik虚拟机实例来运行，每个应用程序都是在属于自己的进程中运行的。</li>
+<li>如果程序在运行过程中出现了内存泄漏的问题，仅仅会使得自己的进程被杀掉，而不会影响其他进程（如果是system_process 等系统进程出问题的话，则会引起系统重启）。</li>
+<li>Android为不同类型的进程分配了不同的内存使用上限，如果应用进程使用的内存超过了这个上限， 则会被系统视为内存泄漏，从而被杀掉Android会根据进程中运行的组件类别以及组件的状态来判断该进程的重要性，从高到低一共有五个级别：前台进程、可见进程、服务进程、后台进程、空进程。</li>
+<li>Android设备出厂以后，java虚拟机对单个应用的最大内存分配就确定下来了，超出这个值就会OOM。这个属性值是定义在/system/build.prop文件中的 dalvik.vm.heapsize=36m</li>
+<li>当GC发生时，虚拟机会从GC Roots 开始去扫描当前的对象树，发现通过任何reference chain(引用链)无法访问某个对象的时候，该对象即被回收</li>
+<li>Java中包含4种对象引用：强引用、软引用、弱引用、虚引用</li>
+<li>Shallow size就是对象本身占用内存的大小，不包含对其他对象的引用，也就是对象头加成员变量（不是成员变量的值）的总和</li>
+<li>Retained size是该对象自己的shallow size，加上只能从该对象能直接或间接访问到对象的shallow size之和</li>
+</ol>
+<h1 id="Memory-monitor"><a href="#Memory-monitor" class="headerlink" title="Memory monitor"></a>Memory monitor</h1><ol>
+<li>发现内存抖动的场景 </li>
+<li>发现大内存对象分配的场景 </li>
+<li>发现内存不断增长的场景 </li>
+<li>确定卡顿问题是否因为执行了GC操作</li>
+</ol>
+<h1 id="OOM"><a href="#OOM" class="headerlink" title="OOM"></a>OOM</h1><p>之前我们知道Android的应用程序所能申请的最大内存都是有限的，OOM是指APP向系统申请内存的请求超过了应用所能有的最大阀值的内存，系统无法再分配多余的空间，就会造成OOM error。</p>
+<p>在Android平台下，除了之前所说的持续发生了内存泄漏(Memory Leak)</p>
+<p>一次性申请很多内存，比如说一次创建大的数组或者是载入大的文件如图片的时候</p>
+<h1 id="Leakcanary"><a href="#Leakcanary" class="headerlink" title="Leakcanary"></a>Leakcanary</h1><p>关于Leakcanary 工具可参考之前的文章。</p>
+<h1 id="内存优化总结"><a href="#内存优化总结" class="headerlink" title="内存优化总结"></a>内存优化总结</h1><ul>
+<li><p>static：static声明变量的生命周期其实是和APP的生命周期一 样的，请合理使用。无关引用：比如比较有代表性的Context泄漏，很多情况下当Activity 结束掉后，由于仍被其他的对象指向导致一直迟迟不能回收，这就造成了内存泄漏</p>
+</li>
+<li><p>SoftReference/WeakReference/LruCache：如果对内存的开销比较关注的APP，可以考虑使用WeakReference，当GC回收扫过这块内存区域时 就会回收；如果不是那么关注的话，可以使用SoftReference，它会在内存申请不足的情况下自动释放，同样也能解决OOM问题</p>
+</li>
+<li><p>谨慎handler：handler运行于UI 线程，不断处理来自MessageQueue的消息，如果handler还有消息需要处理但是Activity页面已经结束的情况下，Activity的 引用其实并不会被回收，这就造成了内存泄漏。解决方案，一是在Activity的onDestroy方法中调用handler.removeCallbacksAndMessages(null);取消所有的消息的处理，包括待处理的消息；二是声明handler的内部类为static。</p>
+</li>
+<li><p>Bitmap：BitmapFactory.Options的inSampleSize属性进行控制，加载网络图片的时候，使用软引用或者弱引用并进 行本地缓存，图片加载的项目 picasso等</p>
+</li>
+<li><p>Cursor和I/O流及时关闭</p>
+</li>
+<li><p>ListView和GridView的item缓存</p>
+</li>
+<li><p>页面背景和图片加载：在布局和代码中设置背景和图片的时候，如果是纯色，尽量使用color；如果是规则图形，尽量使用shape画图；如果稍微复杂点，可以使用9patch图；如果不能使用9patch的情况下，针对几种主流分辨率的机型进行切图。</p>
+</li>
+<li><p>线程：开启线程数量不易过多，一般和自己机器内核数一样最好。4？</p>
+</li>
+<li><p>String/StringBuffer</p>
+</li>
+</ul>
+
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2016/07/08/android performance part2/">Android performance par2: Compute</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2016-07-08
+        </span><span class="post-category">
+            <a href="/categories/ANDROID/">ANDROID</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>前文主要讲在渲染阶段，我们可以做的优化。本文主要是分析算法对程序运行速度的影响。举个栗子，int的运算速度最快，short次之，byte再次之，long再次之。float和double运算速度最慢；除法比乘法慢的太多，基本上除法是乘法的9倍时间……等等，真的要这么较真吗？？？我只是举个栗子，这说明，我们的代码，实实在在的在影响程序的运行速度。</p>
+<p>当然如果我们遇到的只是一个方法耗时太久，那么问题似乎更简单些，我们只需要优化一个方法函数，而整个的运行速度就会有很大的提高。而更麻烦的就是，我们遇到的是，每个方法都慢了一点点，所以我们花了很大的时间，优化了每个方法，但是整体的速度只提高了一点点。</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%8721.png" alt></p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%8722.png" alt></p>
+<h1 id="batching-and-cashing"><a href="#batching-and-cashing" class="headerlink" title="batching and cashing"></a>batching and cashing</h1><p>性能优化中最常用的一项技术就是，批处理和缓存。这可以减少我们进行耗时运算的次数，从而从整体上降低方法的运行时间。</p>
+<p>视频举了个斐波那契的数列1,1,2，3，5，8，13，21，34，……数列从第3项起，每一项是前两项的和，这就是有名的斐波拉契数列。</p>
+<p>所以计算斐波那契的数列可以用递归的方式来写：</p>
+<pre><code>/**
+ *  Why store things when you can recurse instead?  Don&apos;t let evidence, personal experience,
+ *  or rational arguments from your peers fool you.  The elegant solution is the best solution.
+ *
+ * @param positionInFibSequence  The position in the fibonacci sequence to return.
+ * @return the nth number of the fibonacci sequence.  Seriously, try to keep up.
+ */
+public int computeFibonacciRecursive(int positionInFibSequence) {
+    if (positionInFibSequence &lt;= 2) {
+        return 1;
+    } else {
+        return computeFibonacciRecursive(positionInFibSequence - 1)
+                + computeFibonacciRecursive(positionInFibSequence - 2);
+    }
+}</code></pre><p>似乎看起来没有问题，但实际运行过程中，我们发现随着数列越来越大，递归算法造成的运行时间成指数级的增长。</p>
+<p>我抓了两个，分别是数列35 和 数列37 的计算trace文件</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20170725093716.png?imageView2/2/w/650/h/600/q/75" alt></p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20170725093830.png?imageView2/2/w/650/h/600/q/75" alt></p>
+<p>35的时候耗时已经31秒多了，而37时，增加到81秒多。更别提如果是1000的大小的数列。程序的运行时间将达到一个什么级别。</p>
+<p>然而在充分理解了函数意义之后，采用算法优化之后，可大大降低运行速度。优化如下：</p>
+<pre><code>  /**
+ * It is important to understand what your code is doing, no matter how simple the task. For
+ * example, most people know better than to compute Fibonacci numbers recursively, but it is
+ * not unusual to unintentionally redo work in your application. Check your app for places
+ * where you can cache current results for future re-use.
+ *
+ * In this case, recursive Fibonacci calls fib8 which calls fib7 and fib6, but that fib7 call
+ * calls fib6 again and fib5, So now you&apos;ve got two fib6&apos;s and one fib5 call, but each of those
+ * fib6 calls will have a fib5 and fib4, so now you have three calls to calculate fib5, blah,
+ * blah, blah.  Recursive fibonacci is terrible.  Iterating lets you calculate fibX once,
+ * use that result twice, and move on.
+ *
+ * @param positionInFibSequence  The position in the fibonacci sequence to return.
+ * @return the nth number of the fibonacci sequence.  Seriously, try to keep up.
+ */
+public int computeFibonacci(int positionInFibSequence) {
+
+    int prev = 0;
+    int current = 1;
+    int newValue;
+    for (int i=1; i&lt;positionInFibSequence; i++) {
+        newValue = current + prev;
+        prev = current;
+        current = newValue;
+    }
+
+    return current;
+}</code></pre><p>将之前的值保存起来，这样，不用每一次都递归去重新计算之前的数列值。</p>
+<p>再测试下trace运行速度。</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20170725094936.png?imageView2/2/w/650/h/600/q/75" alt></p>
+<p>计算数列大小为1000的序列值。总共大概三秒。。</p>
+<p>这个列子大概演示了，cashing，在程序算法优化上的作用。我们将之前的值cashing起来，而不是再重新计算。大大减少了运算次数。从而将运算性能大大的提高了。</p>
+<h2 id="trace-view-的使用"><a href="#trace-view-的使用" class="headerlink" title="trace view 的使用"></a>trace view 的使用</h2><p>找到最耗时的方法，定位性能瓶颈。traceview可以将每个方法的运行时间调用的层级关系清晰的展现出来，方便我们分析。</p>
+<p>Android device monitor-&gt;devices-&gt;package name-&gt;        start method profiling-&gt; interact with app -&gt;</p>
+<p>使用monitor来获取trace文件，录制了一个动画：</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/profiling_trace.gif" alt></p>
+<p>用代码的方式来获取trace文件</p>
+<ol>
+<li>Debug的以下静态方法方法来启动： startMethodTracing(String traceName)， stopMethodTracing ()</li>
+<li>adb pull /sdcard/XXXX.trace d:XXX.trace</li>
+<li>再用DDMS打开trace文件</li>
+</ol>
+<h1 id="UI-thread"><a href="#UI-thread" class="headerlink" title="UI thread"></a>UI thread</h1><p>应用启动，系统会创建一个主线程（main thread）。这个主线程负责向UI组件分发事件（包括绘制事件）</p>
+<ol>
+<li>不要阻塞UI线程。</li>
+<li>不要在UI线程之外访问Android UI toolkit</li>
+</ol>
+<p>如果线程被阻塞了，那么我们可能会得到一个ANR：</p>
+<p>应用开发中常见的ANR主要有如下几类：</p>
+<ul>
+<li>按键触摸事件派发超时ANR，一般阈值为5s（设置中开启ANR弹窗，默认有事件派发才会触发弹框ANR）；</li>
+<li>广播阻塞ANR，一般阈值为10s（设置中开启ANR弹窗，默认不弹框，只有log提示）；</li>
+<li>服务超时ANR，一般阈值为20s（设置中开启ANR弹窗，默认不弹框，只有log提示）；</li>
+</ul>
+<p>发现ANR的时候可以通过如下命令，查看一些anr的信息，ANR文件的分析，我过个阶段会整理下遇到的问题和解决方式。</p>
+<p>adb pull /data/anr/ arn/</p>
+<p>为了不要阻塞UI线程，我们需要将耗时的工作放在其他线程中。</p>
+<p>这个就不具体举例了。</p>
+<h1 id="数据结构对性能的影响"><a href="#数据结构对性能的影响" class="headerlink" title="数据结构对性能的影响"></a>数据结构对性能的影响</h1><p>我们大概也是举个例子：</p>
+<p>ArrayList和LinkedList的大致区别： </p>
+<ul>
+<li>ArrayList是实现了基于动态数组的数据结构，LinkedList基于链表的数据结构。 -对于随机访问get和set，ArrayList觉得优于LinkedList，因为LinkedList要移动指针。 </li>
+<li>对于新增和删除操作add和remove，LinedList比较占优势，因为ArrayList要移动数据。 </li>
+</ul>
+<p>这里引入另外一个查看方法执行时间的工作，system trace.</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/systemtrace.gif" alt></p>
+<p>对于想检测的函数方法，我们可以在前后加上代码，然后在抓trace的时候，需要中选应用对应的包名，才可以看到对应的标签。</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%8723.png" alt></p>
+<p>即上图中的 Trace.begingSection()和 Trace.endSection()</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20170725112812.png" alt></p>
+<h1 id="算法优化"><a href="#算法优化" class="headerlink" title="算法优化"></a>算法优化</h1><p>本章主要介绍在算法优化上两个我们可以使用作为分析的辅助工具 TraceView和systemtrace。<br>具体的算法优化方法有批处理，缓存、多线程、数据结构优化，这边只是举了视频中的例子。</p>
+
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2016/07/01/android performance part1/">Android performance par1: Render</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2016-07-01
+        </span><span class="post-category">
+            <a href="/categories/ANDROID/">ANDROID</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这几篇文章是根据谷歌出的Android性能的专题视频的总结以及实验的笔记，这个视频主题从Render渲染、compute算法、memory算法、battery电池这几个方面来讲述如何对Android应用进行性能上的优化。主要是介绍了一些检测的工具，和优化的策略。</p>
+<p>#Render#</p>
+<p>CPU负责把UI组件计算成Polygons，Texture纹理，然后交给GPU进行栅格化渲染。<br>每次从CPU转移到GPU是一件很麻烦的事情，OpenGL ES可以把那些需要渲染的纹理Hold在GPU Memory里面，在下次需要渲染的时候直接进行操作<br>在Android里面那些由主题所提供的资源，例如Bitmaps，Drawables都是一起打包到统一的Texture纹理当中，然后再传递到 GPU里面<br>当然随着UI组件的越来越丰富，有了更多演变的形态。例如显示图 片的时候，需要先经过CPU的计算加载到内存中，然后传递给GPU进行渲染。文字的显示更加复杂，需要先经过CPU换算成纹理，然后再交给GPU进行渲 染，回到CPU绘制单个字符之后，再重新引用经过GPU渲染的内容。动画则是一个更加复杂的操作流程。<br><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%871.png" alt></p>
+<h2 id="卡顿原因"><a href="#卡顿原因" class="headerlink" title="卡顿原因"></a>卡顿原因</h2><p>手机的刷新频率为60fps,如果当前需要处理的事情太多了，以至于无法再16ms内完成frame的刷新，就造成了丢帧，在视觉上，就给用户卡顿的感觉。如果此时用户正在进行一些交互，比如滑动屏幕、输入文字等，这种卡顿就会尤为明显。<br><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%872.png" alt></p>
+<p>另外，虚拟机在执行GC垃圾回收操作时所有线程（包括UI线程）都需要暂停，当GC垃圾回收完成之后所有线程才能够继续执行。所以如果此时有大量的GC操作，也会引起卡顿问题。</p>
+<h2 id="UI性能优化策略"><a href="#UI性能优化策略" class="headerlink" title="UI性能优化策略"></a>UI性能优化策略</h2><ol>
+<li><p>CPU side: 不必要的layout和invalidations。过多的view hierarchy和不必要的重绘导致CPU过度的刷新displaylist和相关的GPU资源</p>
+</li>
+<li><p>GPU side: overdraw。</p>
+</li>
+</ol>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%873.png" alt></p>
+<h3 id="Overdraw"><a href="#Overdraw" class="headerlink" title="Overdraw"></a>Overdraw</h3><p>Overdraw(过度绘制)描述的是屏幕上的某个像素在同一帧的时间内被绘制了多次<br>在多层次重叠的UI结构里面，如果不可见的UI也在做绘制的操作，会导致某些像素区域被绘制了多次。这样就会浪费大量的CPU以及GPU资源。</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%874.png" alt></p>
+<p>overdraw检测：在手机的开发者选项中，选择’调试GPU过度绘制’-&gt;’显示过度绘制区域’</p>
+<p>我们的目标是，减少红色区域的面积大小</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%875.png?imageView2/1/w/200/h/348/q/75" alt></p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%876.png" alt></p>
+<p>示例一：</p>
+<p>去除background</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%877.png?imageView2/1/w/200/h/348/q/75" alt></p>
+<p>对应代码，查看是否可以减少红色区域的面积</p>
+<pre><code>&lt;FrameLayout
+        android:layout_width=&quot;fill_parent&quot;
+        android:layout_height=&quot;fill_parent&quot;
+        android:background=&quot;@color/white&quot;&gt;
+
+        &lt;include layout=&quot;@layout/main_content&quot; /&gt;
+
+        &lt;com.zowee.lib.widget.HeaderLayout
+            xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;
+            android:id=&quot;@+id/header_hl&quot;
+            android:layout_width=&quot;match_parent&quot;
+            android:layout_height=&quot;@dimen/title_height&quot;
+            android:background=&quot;@color/main_title_bg&quot;
+            app:hlNavigationIcon=&quot;@drawable/main_menu_btn&quot;
+            app:hlNavigationMinWidth=&quot;@dimen/title_height&quot;
+            app:hlNavigationScaleType=&quot;centerInside&quot;
+            app:hlSupportTranslucentStatus=&quot;true&quot;
+            app:hlTitleText=&quot;@string/main_title&quot; /&gt;
+    &lt;/FrameLayout&gt;</code></pre><p>发现代码中可能之前无意加的 ‘android:background=”@color/white”‘,把背景去掉试试</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%878.png?imageView2/1/w/200/h/348/q/75" alt></p>
+<p>果然红色区域去掉了<del>~</del></p>
+<p>官方示例:</p>
+<pre><code>protected void onDraw(Canvas canvas) {
+    super.onDraw(canvas);
+    // Don&apos;t draw anything until all the Asynctasks are done and all the DroidCards are ready.
+    if (mDroids.length &gt; 0 &amp;&amp; mDroidCards.size() == mDroids.length) {
+        // Loop over all the droids, except the last one.
+        int i;
+
+        for (i = 0; i &lt; mDroidCards.size()-1; i++) {
+            // Each card is laid out a little to the right of the previous one.
+            mCardLeft = i * mCardSpacing;
+            // Save the canvas state
+            canvas.save();
+
+            // Restrict the drawing area to what is visible
+            canvas.clipRect(mCardLeft, 0, mCardLeft+mCardSpacing, mDroidCards.get(i).getHeight());
+
+            drawDroidCard(canvas, mDroidCards.get(i), mCardLeft, 0);
+
+            // Restore canvas to non-clipping state
+            canvas.restore();
+        }
+        // Draw the final card without clipping
+        drawDroidCard(canvas, mDroidCards.get(i), mCardLeft + mCardSpacing, 0);
+    }
+    // Invalidate the whole view. Doing this calls onDraw() if the view is visible.
+    invalidate();
+}</code></pre><p>canvas.clipRect(mCardLeft, 0, mCardLeft+mCardSpacing, mDroidCards.get(i).getHeight()); 指明画布的可见区域。对比clipRect后，避免过度重绘的效果</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20170710115604.png" alt></p>
+<h3 id="Hierachy"><a href="#Hierachy" class="headerlink" title="Hierachy"></a>Hierachy</h3><p>Hierachy用于查看界面的层级结构。</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/hierarchy.gif" alt></p>
+<p>尽量减少界面的层级结构，尽量使用include、merge、ViewStub标签，尽量不存在冗余嵌套及过于复杂布局，尽量使用GONE替换INVISIBLE，使用weight后尽量将width和heigh设置为0dp减少运算，Item存在非常复杂的嵌套时考虑使用自定义Item View来取代，减少measure与layout次数等。自定义View等绘图与布局优化；尽量避免在draw、measure、layout中做过于耗时及耗内存操作，尤其是draw方法中，尽量减少draw、measure、layout等执行次数。</p>
+<h3 id="Lint"><a href="#Lint" class="headerlink" title="Lint"></a>Lint</h3><p>代码区点击右键-&gt;Analyze-&gt;Inspect Code–&gt;界面选择你要检测的模块-&gt;点击确认开始检测</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%8716.png" alt></p>
+<p>检测结果：</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/lint-1.png" alt></p>
+<h2 id="UI性能分析解决总结"><a href="#UI性能分析解决总结" class="headerlink" title="UI性能分析解决总结"></a>UI性能分析解决总结</h2><ul>
+<li>布局优化；尽量使用include、merge、ViewStub标签，尽量不存在冗余嵌套及过于复杂布局（譬如10层就会直接异常），尽量使用GONE替换INVISIBLE，使用weight后尽量将width和heigh设置为0dp减少运算，Item存在非常复杂的嵌套时考虑使用自定义Item View来取代，减少measure与layout次数等。</li>
+<li>列表及Adapter优化；尽量复用getView方法中的相关View，不重复获取实例导致卡顿，列表尽量在滑动过程中不进行UI元素刷新等。</li>
+<li>背景和图片等内存分配优化；尽量减少不必要的背景设置，图片尽量压缩处理显示，尽量避免频繁内存抖动等问题出现。</li>
+<li>自定义View等绘图与布局优化；尽量避免在draw、measure、layout中做过于耗时及耗内存操作，尤其是draw方法中，尽量减少draw、measure、layout等执行次数。</li>
+<li>canvas.clipRect 限制draw的可见区域</li>
+</ul>
+
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2016/06/25/Proguard error/">使用第三方库后proguard报错问题</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2016-06-25
+        </span><span class="post-category">
+            <a href="/categories/android/">android</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h1 id="添加jar包或者aar库"><a href="#添加jar包或者aar库" class="headerlink" title="添加jar包或者aar库"></a>添加jar包或者aar库</h1><p>在mk源码编译下，当aar做普通的jar包lib库用就可以了<br>Android.mk</p>
+<pre><code>LOCAL_PROGUARD_FLAG_FILES := proguard.flags
+LOCAL_STATIC_JAVA_LIBRARIES := \
+    android-ex-variablespeed \
+    lmlibrary
+
+.......
+
+include $(CLEAR_VARS)
+LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := \
+    lmlibrary:libs/lmlibrary-release.aar
+
+include $(BUILD_MULTI_PREBUILT)</code></pre><p>由于编译后会进行混淆，所以一般如果有proguard报错，需要在proguard文件中添加如下内容：</p>
+<pre><code>-libraryjars libs/lmlibrary-release.aar
+-keep class  com.alibaba.fastjson.** { *;}
+-dontwarn  com.alibaba.fastjson.**</code></pre>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2016/04/23/Simple Android Server/">简易 Android 服务器</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2016-04-23
+        </span><span class="post-category">
+            <a href="/categories/android-server/">android-server</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h1 id="在Android上部署一个简单的服务器"><a href="#在Android上部署一个简单的服务器" class="headerlink" title="在Android上部署一个简单的服务器"></a>在Android上部署一个简单的服务器</h1><p>主要的应用场景：在android端建一个简单的服务器，这样比如在同一个局域网的其他设备，可以通过浏览器访问“ip地址+端口”，访问android服务器端的一些资源。就好像我们经常见，通过浏览器设置wifi配置那样。</p>
+<p>因为业务需求相对简单，而且给我们的研发投入就是，一个人，一周左右的时间。所以，我看到jetty什么的有点头大，就没有用一些商业的现有的android web 服务器，倒是apache的httpcore.jar包解决了我大部分的问题，但是这个在4.0之后都被弃用了。所以需要的，请下载对应的jar 包，下载地址<a href="http://www.apache.org/dist/httpcomponents/httpcore/source/" target="_blank" rel="noopener">httpcomponents/httpcore</a></p>
+<h1 id="搭建web-server"><a href="#搭建web-server" class="headerlink" title="搭建web server"></a>搭建web server</h1><p>首先，我们主要参考一篇博文<a href="http://blog.csdn.net/jiangwei0910410003/article/details/27861135" target="_blank" rel="noopener">Android中如何搭建一个WebServer</a>。</p>
+<p>大部分的服务器代码就是参考他的几个基本模块，可以让你快速的搭建一个Android 端的web服务器。主要的核心代码就是，在Android建一个<code>ServerSocket</code>，然后用httpcore中的一些类来负责处理<code>serversocket.accept()</code>每次接收的socket；分析请求，返回响应。</p>
+<h1 id="动态网页"><a href="#动态网页" class="headerlink" title="动态网页"></a>动态网页</h1><p>大部分的服务器代码如所链接的博文那样，基本上，另外一个连接的设备，通过浏览器访问对应地址，就可以收到回复。但是，在我的简单需求里面，还有一点点小复杂的东西：获取android服务器端的某些信息，需要写到发送给客户端的html代码里面。</p>
+<p>基本思路是：将写号的html 模板（大部分是html代码，具体数值方面，用<code>$valuename</code>来替代)，这样，在response中写入反馈的时候，可以先将template模板中的变量进行过滤，替换为对应的数值和html标签，最终生成一份html代码，在反馈给客户端。</p>
+<p>这就是一个伪动态网页了</p>
+<h1 id="获取post请求中的参数"><a href="#获取post请求中的参数" class="headerlink" title="获取post请求中的参数"></a>获取post请求中的参数</h1><p>另外博文中没有提到的一个很重要的功能，就是获取网页代码中，提交的form表单数据。原先我以为会很简单，比如在request中用个类似于<code>getParameter（XXXX）</code>不就搞定了么。可事实上，这样，你得到的永远都是<code>null</code>。</p>
+<p>后来找了很久，发现了这个<a href="http://stackoverflow.com/questions/7199969/apache-httpcore-simple-server-to-echo-received-post-data" target="_blank" rel="noopener">echo-received-post-data</a>。</p>
+<p>所以获取html 表单数据类似于需要这样：</p>
+<h2 id="html表单代码"><a href="#html表单代码" class="headerlink" title="html表单代码"></a>html表单代码</h2><p>例如，我们有一个如下的表单需要提交，而且，一般有密码的表单都是用POST请求，因为我们可不想浏览器的地址上赫赫然地写着passwork=abc;</p>
+<pre><code>&lt;form method=&quot;POST&quot; action=&quot;/submit&quot; name=&quot;forms&quot; enctype=&quot;text/plain&quot; onsubmit=&quot;return toVaild()&quot;&gt;
+Network SSID: 
+&lt;input type=&quot;text&quot; name=&quot;SSID&quot; id=&quot;SSID&quot; value=&quot;AndroidAp&quot; /&gt;
+&lt;br /&gt;
+Security: 
+&lt;select name=&quot;Security&quot;&gt; 
+&lt;option value=&quot;0&quot;&gt;None&lt;/option&gt; 
+&lt;option value=&quot;1&quot;&gt;WPA PSK&lt;/option&gt; 
+&lt;option value=&quot;2&quot;  selected=&quot;selected&quot;&gt;WPA2 PSK&lt;/option&gt; 
+&lt;/select&gt; 
+&lt;br /&gt;
+Password: 
+&lt;span id=box&gt;&lt;input type=&quot;password&quot; name=&quot;password&quot;  id=&quot;password&quot; value=&quot;&quot; /&gt;&lt;/span&gt; &lt;span id=click&gt;&lt;a href=&quot;javascript:showps()&quot;&gt;Show password&lt;/a&gt;&lt;/span&gt;
+&lt;br /&gt;
+The password must have at least 8 characters
+
+&lt;br /&gt;
+&lt;input type=&quot;submit&quot; id=&quot;submit&quot; value=&quot;Submit&quot; /&gt;
+
+&lt;/form&gt;</code></pre><h2 id="服务器端handler代码"><a href="#服务器端handler代码" class="headerlink" title="服务器端handler代码"></a>服务器端handler代码</h2><p>根据验证发现：当表单采用post方式提交数据后，<code>HttpRequestHandler</code>的handler方法参数中的request，实际上会变成一个<code>BasicHttpEntityEnclosingRequest</code>实例，而普通的get请求request则是<code>BasicHttpRequest</code>实例。</p>
+<p>服务器获取post请求中的数据相关代码：</p>
+<pre><code>static class WebServiceHandler implements HttpRequestHandler {
+        private PageEntity mPageEntity;
+
+        public WebServiceHandler(Context context) {
+            mPageEntity = new PageEntity(context);
+        }
+
+        @Override
+        public void handle(HttpRequest request, HttpResponse response,
+                HttpContext context) throws HttpException, IOException {
+
+            Log.i(TAG, &quot;WebServiceHandler handle request=&quot; + request);
+
+            String method = request.getRequestLine().getMethod()
+                    .toUpperCase(Locale.ENGLISH);
+            String target = request.getRequestLine().getUri();
+
+            Log.i(TAG, &quot;WebServiceHandler handle method=&quot; + method);
+
+            Log.i(TAG, &quot;WebServiceHandler handle target=&quot; + target);
+
+            Log.i(TAG, &quot;WebServiceHandler handle request.getParams()=&quot;
+                    + request.getParams()); //放心，我们要的parameter不在这个里面，never
+
+            if(request instanceof BasicHttpEntityEnclosingRequest){
+                HttpEntity entity = ((BasicHttpEntityEnclosingRequest) request).getEntity();
+
+                byte[] data;
+                if (entity == null) {
+                    data = new byte [0];
+                } else {
+                    data = EntityUtils.toByteArray(entity);
+                }
+
+                Log.i(TAG,new String(data));//把这段话答应出来，里面就是post表单中的键值对。
+            }
+            response.setStatusCode(HttpStatus.SC_OK);
+            response.setEntity(mPageEntity.getPage(&quot;index.html&quot;));
+        }
+}</code></pre><p>我们运行之后，果然在log中打印出来post表单中的键值对<code>SSID=AndroidAp&amp;Security=2&amp;password=ttyyyyyyyyy</code>;</p>
+<p>这样完成服务器和网页客户端的数据互通。其他的问题，就是一个搬运和时间的问题了。</p>
+<h1 id="获取get请求中的参数"><a href="#获取get请求中的参数" class="headerlink" title="获取get请求中的参数"></a>获取get请求中的参数</h1><p>另外提一下，get请求，因为参数直接写在uri中，我们可以通过</p>
+<pre><code>String method = request.getRequestLine().getMethod()
+        .toUpperCase(Locale.ENGLISH);
+String target = request.getRequestLine().getUri();</code></pre><p>直接在target中得到<code>target=/submit?SSID=AndroidAp&amp;Security=2&amp;password=ffffffgggfffff</code><br>所需要的参数。</p>
+<h1 id="效果展示"><a href="#效果展示" class="headerlink" title="效果展示"></a>效果展示</h1><p>基本这个服务器可以完成图片、css、js、文件等传送，看看首页效果：</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160625154803.png" alt></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>因为整体的业务逻辑和需求比较简单，我们估计只需要一个信息页面，然后这个页面可以提交数据，最多再加一两个正确和错误的提示页面。所以这个简单web server就是这样。如果要是复杂的，当然在看资料的是，也发现有人用KSWEB，或者android i-jetty把android 设备作为服务器，运行wordpress等。感觉也可以很强大，不过我下了都是要收费的。我这个小project就算了。还是回到原始，解决问题，最关键。O(∩_∩)O</p>
+
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2016/03/10/c qrcode lib/">MTK feature phone上生成二维码</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2016-03-10
+        </span><span class="post-category">
+            <a href="/categories/QRCODE/">QRCODE</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h1 id="添加LibQREncode"><a href="#添加LibQREncode" class="headerlink" title="添加LibQREncode"></a>添加LibQREncode</h1><p>首先呢，我们在github上可以搜到很多LibQREncode相关的项目，LibQREncode使用C语言编写的二维码编码库 github项目地址：<a href="https://github.com/fukuchi/libqrencode" target="_blank" rel="noopener">libqrencode</a></p>
+<p>然后我还不小心找到一个QRCODE 生成器的c++代码项目<br><a href="https://github.com/thomasdic2000/QRGenerator/" target="_blank" rel="noopener">QRGenerator</a></p>
+<p>那么我接下来的工作就比较简单啦，就将这个C++的二维码生成器移植到feature phone平台上，稍作改良。</p>
+<h1 id="生成二维码bmp图片"><a href="#生成二维码bmp图片" class="headerlink" title="生成二维码bmp图片"></a>生成二维码bmp图片</h1><p>根据QRGenerator可以很快改造一下，调用libqrencode库生成二维码bmp图片。代码如下：</p>
+<p>bitmap图片编码的一些头文件定义：</p>
+<pre><code>#define OUT_FILE_PIXEL_PRESCALER        4
+#define PIXEL_COLOR_R                0
+#define PIXEL_COLOR_G                0
+#define PIXEL_COLOR_B                0
+//rgb 0 0 0,代表 黑色
+#define BI_RGB                        0L
+#pragma pack(push, 1)
+
+typedef struct    
+{
+    U16    bfType;
+    U32    bfSize;
+    U16    bfReserved1;
+    U16    bfReserved2;
+    U32    bfOffBits;
+} BITMAPFILEHEADER;
+
+typedef struct 
+{
+    U32       biSize;
+    S32       biWidth;
+    S32       biHeight;
+    U16       biPlanes;
+    U16       biBitCount;
+    U32       biCompression;
+    U32       biSizeImage;
+    S32       biXPelsPerMeter;
+    S32       biYPelsPerMeter;
+    U32       biClrUsed;
+    U32       biClrImportant;
+} BITMAPINFOHEADER;
+
+typedef struct
+{
+    BITMAPFILEHEADER kFileHeader;
+    BITMAPINFOHEADER kInfoHeader;
+    unsigned char g_rgb_data[100000];
+} BITMAPDATA;
+#pragma pack(pop)</code></pre><p>实现二维码编码具体代码：<br>    BITMAPDATA bitmapData;//定义一个全局变量，用户存放编码图片信息</p>
+<pre><code>// ox要显示的图片的x坐标，Y坐标
+// resize_w 调整图片大小
+// szSourceString 要转换为二维码的字符串，比如网址啊之类的
+int mmi_getQRcode(S32 ox,S32 oy,S32 resize_w, char* szSourceString){
+    //char* szSourceString = QRCODE_TEXT;
+    unsigned int unWidth,x,y,l,n,unWidthAdjusted,unDataBytes;
+    unsigned char* pRGBData,*pSourceData,*pDestData;
+    QRcode*  pQRC;
+    S32 fd;
+    S32 fs_ret;
+    U32 nLen;
+    S32 w,h,rec_x,rec_y,rec_w;
+
+    S32 resize_h=resize_w;
+
+    pQRC = QRcode_encodeString(szSourceString,0,QR_ECLEVEL_H,QR_MODE_8,1);
+    //调用lib库中的函数，获取二维码编码信息。然后接下来的工作都是将获取的这个二维码编码信息转换为图片
+    unWidth = pQRC-&gt;width;
+    kal_prompt_trace(MOD_MMI,&quot;%d unWidth --linlian .\n&quot;,unWidth);
+    unWidthAdjusted = unWidth * OUT_FILE_PIXEL_PRESCALER * 3;
+    kal_prompt_trace(MOD_MMI,&quot;%d unWidthAdjusted --linlian .\n&quot;,unWidthAdjusted);
+    if (unWidthAdjusted % 4)
+        unWidthAdjusted = (unWidthAdjusted / 4 + 1) * 4;
+
+    unDataBytes = unWidthAdjusted * unWidth * OUT_FILE_PIXEL_PRESCALER;
+
+    kal_prompt_trace(MOD_MMI,&quot;%d unDataBytes --linlian .\n&quot;,unDataBytes);
+
+    if (unDataBytes &gt; sizeof(bitmapData.g_rgb_data))
+    {
+        kal_prompt_trace(MOD_MMI,&quot;%d unDataBytes out of memory --linlian .\n&quot;,unDataBytes);
+        return 0; // out of memory
+    }
+    pRGBData = bitmapData.g_rgb_data;
+
+    memset(pRGBData, 0xff, unDataBytes);//将所有的点设置为0XFF，则为白色
+    bitmapData.kFileHeader.bfType = 0x4d42;  // &quot;BM&quot;
+    bitmapData.kFileHeader.bfSize =    sizeof(BITMAPFILEHEADER) +
+                            sizeof(BITMAPINFOHEADER) +
+                            unDataBytes;
+    bitmapData.kFileHeader.bfReserved1 = 0;
+    bitmapData.kFileHeader.bfReserved2 = 0;
+    bitmapData.kFileHeader.bfOffBits =    sizeof(BITMAPFILEHEADER) +
+                            sizeof(BITMAPINFOHEADER);
+    bitmapData.kInfoHeader.biSize = sizeof(BITMAPINFOHEADER);
+    bitmapData.kInfoHeader.biWidth = unWidth * OUT_FILE_PIXEL_PRESCALER;
+    bitmapData.kInfoHeader.biHeight = ((int)unWidth * OUT_FILE_PIXEL_PRESCALER);
+    bitmapData.kInfoHeader.biPlanes = 1;
+    bitmapData.kInfoHeader.biBitCount = 24;
+    bitmapData.kInfoHeader.biCompression = BI_RGB;
+    bitmapData.kInfoHeader.biSizeImage = 0;
+    bitmapData.kInfoHeader.biXPelsPerMeter = 0;
+    bitmapData.kInfoHeader.biYPelsPerMeter = 0;
+    bitmapData.kInfoHeader.biClrUsed = 0;
+    bitmapData.kInfoHeader.biClrImportant = 0;
+    pSourceData = pQRC-&gt;data;
+    qijiReverseData(pSourceData,unWidth);//linlian@2016.03.04 reverse qrcode image vertically
+    for(y = 0; y &lt; unWidth; y++)
+    {
+        pDestData = pRGBData + unWidthAdjusted * y * OUT_FILE_PIXEL_PRESCALER;
+        for(x = 0; x &lt; unWidth; x++)
+            {
+            if (*pSourceData &amp; 1)//在pSourceData数组中值为1的点，将其颜色设置为BGR 000，则对应点变为黑色
+                {
+                for(l = 0; l &lt; OUT_FILE_PIXEL_PRESCALER; l++)
+                    {
+                    for(n = 0; n &lt; OUT_FILE_PIXEL_PRESCALER; n++)
+                        {
+                        *(pDestData +        n * 3 + unWidthAdjusted * l) =    PIXEL_COLOR_B;
+                        *(pDestData + 1 +    n * 3 + unWidthAdjusted * l) =    PIXEL_COLOR_G;
+                        *(pDestData + 2 +    n * 3 + unWidthAdjusted * l) =    PIXEL_COLOR_R;
+                        }
+                    }
+                }
+            pDestData += 3 * OUT_FILE_PIXEL_PRESCALER;
+            pSourceData++;
+        }
+    }
+    //前面这段代码的意思是，初始化好bmp图片文件的头部。
+    //并且在后面追加每个点的颜色定义。最后我们获取了一系列黑白点阵
+
+
+    //OslMfree(pRGBData);
+    nLen = sizeof(BITMAPFILEHEADER)+sizeof(BITMAPINFOHEADER)+sizeof(unsigned char)*unDataBytes;
+    gdi_image_get_dimension_mem(GDI_IMAGE_TYPE_BMP,(U8*)&amp;bitmapData,nLen,&amp;w,&amp;h);
+    kal_prompt_trace(MOD_MMI,&quot; %d w --linlian .\n&quot;,w);
+    kal_prompt_trace(MOD_MMI,&quot; %d h --linlian .\n&quot;,h);
+
+    img_width =w;
+    img_height=h;
+
+    if(w &lt; resize_w || resize_w==0){ //can&apos;t be larger than original width
+        resize_w = w;
+        resize_h = h;
+    }
+    if(resize_w&gt;100){
+        resize_w =100;
+        resize_h =100;
+    }
+    if(ox&lt;=0||oy&lt;=0){
+        ox=(UI_device_width-resize_w)/2;
+        oy=(UI_device_height-resize_h)/2+10;
+    }
+    kal_prompt_trace(MOD_MMI,&quot; %d resize_w --linlian .\n&quot;,resize_w);
+    kal_prompt_trace(MOD_MMI,&quot; %d resize_h--linlian .\n&quot;,resize_h);
+    //gdi_image_draw_mem(ox,oy,(U8*)&amp;bitmapData,GDI_IMAGE_TYPE_BMP,nLen);
+
+    rec_x = ox-2;
+    rec_y = oy-2;
+    rec_w = resize_w +4;
+    gdi_draw_solid_rect(rec_x,rec_y,rec_x+rec_w,rec_y+rec_w,GDI_COLOR_WHITE);
+    gdi_image_draw_resized_mem(ox,oy,resize_w,resize_h,(U8*)&amp;bitmapData,GDI_IMAGE_TYPE_BMP,nLen);
+
+    preWidth = resize_w;
+    QRcode_free(pQRC);
+    return 1;
+}</code></pre><p>这边要说明一下，在pc平台上，将<code>bitmapData.kInfoHeader.biHeight = -((int)unWidth * OUT_FILE_PIXEL_PRESCALER);</code> 也就是biHeight设置为负值的话，可以实现图片的垂直翻转，但是在feature phone上，如果biHeight直接设置为负值，那么图片将不被识别，所以，我们只能将biHeight设置为<code>+((int)unWidth * OUT_FILE_PIXEL_PRESCALER)</code>。因此，在原始的0101数据开始被rgb化的时候，我们先将这串数据组成一个二维正方形数组，并进行以中间高度为中心的上下翻转。即<code>qijiReverseData(pSourceData,unWidth);</code>。对应的代码为</p>
+<pre><code>// vertical reverse image 
+void qijiReverseData(unsigned char* data, unsigned int unWidth){
+    unsigned int i,j;
+    unsigned char temp;
+    for( i=0 ;i&lt;(unWidth/2);i++){
+        for(j=0;j&lt;unWidth;j++){
+            temp = data[j+i*unWidth];
+            data[j+i*unWidth] = data[(unWidth-1-i)*unWidth+j];
+            data[(unWidth-1-i)*unWidth+j]=temp;
+        }
+    }
+}</code></pre><h1 id="平台适配调整"><a href="#平台适配调整" class="headerlink" title="平台适配调整"></a>平台适配调整</h1><p>基本上qrcode lib库的代码在feature phone的模拟器上运行时没有问题的，但是在实际的机子上，需要调整一些内存分配等方法，进行平台适配。例如：</p>
+<ul>
+<li>data = (unsigned char <em>)*</em>malloc<strong>(bstream-&gt;length + arg-&gt;length);<br>需要改为<br>data = (unsigned char *)</strong>OslMalloc**(bstream-&gt;length + arg-&gt;length);</li>
+<li><strong>free</strong>(bstream-&gt;data); –&gt; <strong>OslMfree</strong>(bstream-&gt;data);</li>
+<li>raw-&gt;rsblock = (RSblock <em>)<strong>calloc</strong>(raw-&gt;blocks, sizeof(RSblock));改为    raw-&gt;rsblock = (RSblock <em>)*</em>OslMalloc**((raw-&gt;blocks)</em>(sizeof(RSblock)));memset(raw-&gt;rsblock, 0x00, (raw-&gt;blocks)*(sizeof(RSblock)));</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>有时候我们都不知道自己是怎么完成这一步步的瞎子摸象。例如我突然想不起来，曾经写过一个给校准树写DLL的经历，我只记得接到任务的时候，只有“懵逼”来形容，什么事校准树，什么事DLL，特么我是写android的，C是什么鬼，我只在大学学过C++。然后，我在万用的路上越走越远。也许有圣人相助，反正每个感觉完不成的任务，最后也都完成了，再见了feature phone<del>~</del></p>
+
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2016/03/05/Mtk feature phone - how to add new application/">MTK Feature Phone-Hello World</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2016-03-05
+        </span><span class="post-category">
+            <a href="/categories/feature-phone/">feature phone</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h1 id="What-Feature-phone"><a href="#What-Feature-phone" class="headerlink" title="What, Feature phone"></a>What, Feature phone</h1><p>一开始我是拒绝的，然并卵，要你干，你就得干，返璞归真，走一走先人的路。一搜几乎都是零几年的文章，那个时候，我还在备战高考，那个时候，还不知道编程为何物。从年前一段时间到现在，这个项目有了个初始版本，终于闲下来可以列点总结，以备记忆。么么哒<del>~</del></p>
+<h1 id="如何建一个应用"><a href="#如何建一个应用" class="headerlink" title="如何建一个应用"></a>如何建一个应用</h1><p>MTK的文档是有，但是因为年代久远，平台更新，总是有一些变化，让你没办法依葫芦画瓢，最后郁郁寡欢；但一般这种状态持续一阵子后，总有茅塞顿开的一天。几经摸索，我终于可以建立一个，随后我才发现，认识旧世界，这仅仅只是个开始。如下总结下下，也许没准多少年后，我又回来了呢。</p>
+<h2 id="文件目录"><a href="#文件目录" class="headerlink" title="文件目录"></a>文件目录</h2><p>大部分的应用都是放在<code>plutommi\mmi\</code>下面的，每个应用一个文件夹，文件夹夹下面的目录结构大体是这样的，例如<code>QRcode</code>目录下应该是</p>
+<pre><code>QRcodeInc   //存放头文件
+--QRcodeAppGprot.h  //对外的接口，供外部调用
+--QRcodeAppProt.h   //内部接口，内部原型声明
+--QRcodeAppResDef.h //资源定义
+QRcodeSrc   //存放源文件C
+--QRcodeMain.c</code></pre><h2 id="将项目加入编译"><a href="#将项目加入编译" class="headerlink" title="将项目加入编译"></a>将项目加入编译</h2><p>将我们的代码加入编译，在<code>make/plutommi/mmi_app/mmi_app.mak</code><br>文件中追加：</p>
+<pre><code>//add 源文件
+SRC_LIST += XXXXXX \
+        plutommi\mmi\QRcode\QRcodeSrc\QRcodeMain.c \
+        plutommi\mmi\HelloWorld\HelloWorldSrc\QRcodeMain2.c \
+
+......
+//add 头文件目录
+INC_DIR = XXXXXX＼
+    plutommi\mmi\QRcode\QRcodeInc            </code></pre><h2 id="程序开关"><a href="#程序开关" class="headerlink" title="程序开关"></a>程序开关</h2><p>程序开关，可以不要，全都省了，要加的话，差不多就是</p>
+<ol>
+<li><p>在plutommi\mmi\Inc\MMI_features_switch.h添加<code>#define CFG_MMI_HELLOWORLD    (__ON__)</code></p>
+</li>
+<li><p>在plutommi\Customer\CustResource\PLUTO_MMI\ MMI_features_switchPLUTO.h末尾添加    <code>#define CFG_MMI_HELLOWORLD (__ON__)</code></p>
+</li>
+</ol>
+<ol start="3">
+<li>在\plutommi\Customer\CustResource\项目名<em>MMI 的feature.h文件中追加`#define CFG_MMI_HELLOWORLD    (<em>_ON</em></em>)`</li>
+</ol>
+<ol start="4">
+<li><p>在plutommi\mmi\Inc\MMI_features.h添加</p>
+<pre><code>#if defined(CFG_MMI_HELLOWORLD) &amp;&amp; ((CFG_MMI_HELLOWORLD == __ON__)||(CFG_MMI_HELLOWORLD == __AUTO__)) 
+    #ifndef __MMI_HELLOWORLD__
+    #define __MMI_HELLOWORLD__
+    #endif
+#endif</code></pre></li>
+</ol>
+<p>完成之后，我们就可以在程序中添加如：</p>
+<pre><code>#ifdef __MMI_HELLOWORLD__
+#endif</code></pre><p>这样的代码开关了，但是我觉得菊紧~，不想弄；这步骤不要了；</p>
+<h2 id="界面显示"><a href="#界面显示" class="headerlink" title="界面显示"></a>界面显示</h2><p>如果你的程序不需要文字资源，不需要图片资源，那么上面两步，已经完成了一个应用的添加，接下来要做的事情不过是在c文件里面给一个程序入口，然后再这个程序路口里面，负责显示你的应用界面；最后再把这个程序路口暴露给随便谁谁谁，可以在launcher里面，可以在一个按键的响应里面，反正一按，就跳到你的界面就对了。</p>
+<p>例如：</p>
+<pre><code>void mmi_qrcode_exit(void){
+    mmi_frm_scrn_close_active_id(); //关闭页面
+}
+
+void mmi_qrcode_entry(char* szSourceString){
+    S32 x,y,w,h;
+    EntryNewScreen(SCR_QRCODE_MAIN,NULL,mmi_qrcode_entry,NULL); //SCR_QRCODE_MAIN暂时没有，可以随便拿一个src用一下，后面我们会说到怎么定义这些东西
+    entry_full_screen();//hide status bar
+    clear_screen();
+    gui_measure_string((UI_string_type)GetString(STR_ID_QRCODE_NOTE),&amp;w,&amp;h);
+    x=(UI_device_width-w)/2;
+    y=(UI_device_width-h)/2;
+    gui_move_text_cursor(x,y);
+    gui_print_text((UI_string_type)GetString(STR_ID_QRCODE_NOTE));
+
+    gui_BLT_double_buffer(0,0,UI_device_width-1,UI_device_height-1);
+    SetKeyHandler(mmi_qrcode_exit,KEY_LSK,KEY_EVENT_DOWN);
+}</code></pre><p>在C的代码中，我们做的事情就是，进入我们的页面，获取一段字符串，显示，然后设置点击软键盘左键的时候，退出我们的界面；</p>
+<p>相应的，在头文件中我们需要加入原型声明</p>
+<pre><code>#ifndef _QRCODE_GPROT_H
+#define _QRCODE_GPROT_H
+
+#include &quot;MMI_features.h&quot;
+#include &quot;MMIDataType.h&quot;
+#include &quot;kal_general_types.h&quot;
+
+//interface for outside
+
+extern void mmi_qrcode_exit(void);
+extern void mmi_qrcode_entry(char* szSourceString);
+
+#endif//_QRCODE_GPROT_H</code></pre><h2 id="添加资源"><a href="#添加资源" class="headerlink" title="添加资源"></a>添加资源</h2><p>那上面的这些 STR_ID_QRCODE_NOTE、SCR_QRCODE_MAIN怎么加入的呢？<br>先说下字符串资源</p>
+<ol>
+<li>首先，平台的资源放在plutommi/Customer/CustResource/PLUTO_MMI/ref_list.txt 文件中，请使用 excell 来开打文件，会看到一列一列的资源,在底部添加一句</li>
+</ol>
+<p><code>STR_ID_QRCODE_NOTE    Qrcode    note    tell the use to scan qrcode    Scan to banding    請掃描二維碼綁定    请扫描二维码绑定</code></p>
+<p>底部的数字加上你追加的条目+n； </p>
+<ol start="2">
+<li>在plutommi/Customer/CustResource/PLUTO_MMI/Res_MMI/下添加一个文件Res_QRcode.c。内容如下</li>
+</ol>
+<pre><code>#ifndef __QRCODE_RES_DEF_H__
+#define __QRCODE_RES_DEF_H__
+#include &quot;MMI_features.h&quot;
+#include &quot;MMIDataType.h&quot;
+#include &quot;CustDataProts.h&quot;
+#include &quot;GlobalMenuItems.h&quot;
+#include &quot;StdC.h&quot;
+#ifdef DEVELOPER_BUILD_FIRST_PASS
+#include &quot;PopulateRes.h&quot;
+#include &quot;QRcodeAppResDef.h&quot;
+void PopulateQRcodeRes(void)
+{
+    ADD_APPLICATION_STRING2(STR_ID_QRCODE_NOTE,&quot;Scan to bind&quot;,&quot;QRcode&quot;);
+
+
+
+       ADD_APPLICATION_IMAGE2(
+        IMG_ID_QRCODE,
+        CUST_IMG_PATH&quot;\\\\MainLCD\\\\IdleScreen\\\\Wallpaper\\\\analog.bmp&quot;,
+        &quot;analog image test&quot;);
+}
+
+#endif//DEVELOPER_BUILD_SECOND_PASS
+#endif</code></pre><p>该文件主要讲我们在资源list中添加的字符串资源装载进来，同样的，将对应目录下的图片也可以通过第二个方法装载进来</p>
+<ol start="3">
+<li><p>那么这个文件中的方法由谁来调用呢？我们需要修改 plutommi/mmi/Resource/PopulateRes.c</p>
+<pre><code>//声明外部函数
+extern void PopulateQRcodeRes(void);
+.....
+
+#ifdef __MMI_VUI_ENGINE__
+    PopulateVCPRes();
+#endif
+RESPOP_LOG_V((&quot;Populating QRCODE APP Resource&quot;));
+PopulateQRcodeRes(); //追加我们的资源装载</code></pre></li>
+</ol>
+<ol start="4">
+<li><p>在应用目录下的资源声明头文件中添加 QRcodeAppResDef.h</p>
+<pre><code>#include &quot;MMI_features.h&quot;
+#include &quot;MMIDataType.h&quot;
+#include &quot;mmi_res_range_def.h&quot;
+/* Screen IDs */
+typedef enum
+{
+    SCR_QRCODE_MAIN = QRCODE_APP_BASE+1,
+}SCREEN_LIST_QRCODE;</code></pre></li>
+</ol>
+<pre><code>/* String IDs */
+
+typedef enum
+{
+    STR_ID_QRCODE_NOTE = QRCODE_APP_BASE+1,
+}STRING_LIST_QRCODE;
+
+/* Image IDs */
+typedef enum
+{
+    IMG_ID_QRCODE = QRCODE_APP_BASE+1,
+}IMAGE_LIST_QRCODE;</code></pre><p>5.QRCODE_APP_BASE哪里来的？在plutommi/mmi/Inc/mmi_res_range_def.h，看文件名的大概意思就是，资源范围定义。追加：</p>
+<pre><code>RESOURCE_BASE_RANGE(APP_QRCODE,              100),
+
+.....
+#define QRCODE_APP_BASE                        ((U16) GET_RESOURCE_BASE(APP_QRCODE))
+#define QRCODE_APP_BASE_MAX                   ((U16) GET_RESOURCE_MAX(APP_QRCODE))
+RESOURCE_BASE_TABLE_ITEM(APP_QRCODE)</code></pre><p>不要问我为什么，反正其他应用也这么写，参照着写了；</p>
+<ol start="6">
+<li>最后我们要把声明的这些id告诉给编译器，在plutommi/Custmer/ResGenerator/resgen_default_inc.txt中追加一行<code>../../MMI/QRcode/QRcodeInc</code>告诉编译器<code>QRcodeAppResDef.h</code>的位置，不然会找不到里面定义的这些id。</li>
+</ol>
+<ol start="7">
+<li>图片的位置是放在plutommi/Customer/Images/屏幕对应尺寸/iamge.zip中</li>
+</ol>
+<h1 id="新版本差别"><a href="#新版本差别" class="headerlink" title="新版本差别"></a>新版本差别</h1><p>这篇总要是列出来新建一个应用的大体框架和资源添加的方式，新的版本可以通过在应用目录下添加res文件来声明资源ID。例如添加QRcode/QRcodeRes/QRcode.res文件，写法上也简便很多</p>
+<pre><code>#include &quot;MMI_features.h&quot;
+#include &quot;CustResDef.h&quot;
+
+
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;APP id=&quot;APP_QIJI&quot; type=&quot;venus&quot; name =&quot;STR_ID_QIJI_EXER&quot;&gt;
+    &lt;INCLUDE file=&quot;GlobalResDef.h&quot;/&gt;
+    &lt;!----- String Resource Area ----------------------------------------------&gt;
+    &lt;STRING id=&quot;STR_ID_QRCODE_NOTE&quot;/&gt;
+
+    &lt;!----- Image Resource Area -----------------------------------------------&gt;
+    &lt;IMAGE id=&quot;IMG_ID_QRCODE&quot;&gt;CUST_IMG_PATH&quot;\\\\MainLCD\\\\QiJi\\\\QJ_FONT24_0.png&quot;&lt;/IMAGE&gt;
+
+    &lt;!----- Screen Resource Area ----------------------------------------------&gt;
+    &lt;SCREEN id=&quot;SCR_QRCODE_MAIN&quot;/&gt;
+
+    &lt;!----- Menu Resource Area ------------------------------------------------&gt;
+
+
+    &lt;!----- Timer Resource Area ---- ------------------------------------------&gt;
+&lt;/APP&gt;</code></pre><p>最后需要将新加入的res文件加入编译，修改plutommi/mmi/Inc/mmi_pluto_res_range_def.h文件</p>
+<pre><code>MMI_RES_DECLARE(APP_QRCODE, 100, &quot;.\\mmi\\QRcode\\QRcodeRes\\&quot;)
+#define APP_QRCODE_BASE                            ((U16) GET_RESOURCE_BASE(APP_QRCODE))
+#define APP_QIJI_BASE_MAX                        ((U16) GET_RESOURCE_MAX(APP_QRCODE))</code></pre><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>我们大概了解了一个应用的搭建框架。看名字也知道，哈哈我现在要弄一个二维码的转换显示。虽然这个只是整个流程环节中微不足道的一环，但是面对全新的平台，还是捏了一把汗。但是，本宝宝最后还是完成了，点赞点赞。</p>
+
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2015/12/11/customer framework jar/">自定义framework动态链接库jar</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2015-12-11
+        </span><span class="post-category">
+            <a href="/categories/ANDROID/">ANDROID</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>上一篇总结的是自定义framework资源包的打包和访问，而这一篇，相对要简单一些，是android平台的自定义动态链接库。目的在于定义一个framework级别的jar，供相关应用使用。之前一个项目的common组件采用的是BUILD_STATIC_JAVA_LIBRARY方式，调试起来相对简单，不需要涉及到framework的资源，framework的jar包这样，但是会造成每个应用内都引入一个common的jar包，各自为营，不知不觉加大了整体软件的大小。因此这种common级别的jar包，还是作成动态jar，加入到系统中。</p>
+<h1 id="common-library"><a href="#common-library" class="headerlink" title="common library"></a>common library</h1><p>其实参考android的sample代码就可以完成基本的jar包编译，这里只是记录一下，其实，没那么难，啦啦。jar库的基文件目录如下：</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20151216094557.jpg" alt></p>
+<p>java下存放纯java代码，一些需要的资源，我们就直接使用上一篇中说的自定义framework资源。</p>
+<h2 id="jar包的com-zowee-widget-xml"><a href="#jar包的com-zowee-widget-xml" class="headerlink" title="jar包的com.zowee.widget.xml"></a>jar包的com.zowee.widget.xml</h2><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;permissions&gt;
+    &lt;library name=&quot;com.zowee.widget&quot;
+            file=&quot;/system/framework/com.zowee.widget.jar&quot;/&gt;
+&lt;/permissions&gt;</code></pre><h2 id="项目编译的mk"><a href="#项目编译的mk" class="headerlink" title="项目编译的mk"></a>项目编译的mk</h2><p> 项目编译的mk代码如下</p>
+<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">ifneq ($(TARGET_BUILD_JAVA_SUPPORT_LEVEL),)</span><br><span class="line"># This makefile shows how to build your own shared library that can be</span><br><span class="line"># shipped on the system of a phone, and included additional examples of</span><br><span class="line"># including JNI code with the library and writing client applications against it.</span><br><span class="line">LOCAL_PATH := $(call my-dir)</span><br><span class="line"># the library</span><br><span class="line"># ============================================================</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">LOCAL_SRC_FILES := \</span><br><span class="line">        $(call all-subdir-java-files)</span><br><span class="line">LOCAL_MODULE_TAGS := optional</span><br><span class="line"></span><br><span class="line"># 我们要编译的库名就是com.zowee.widget.jar</span><br><span class="line">LOCAL_MODULE:= com.zowee.widget</span><br><span class="line">include $(BUILD_JAVA_LIBRARY)</span><br><span class="line"># 下面我们需要将com.zowee.widget.xml编译会生出到</span><br><span class="line"># system/etc/permission下，用于作权限声明的</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">LOCAL_MODULE := com.zowee.widget.xml</span><br><span class="line">LOCAL_MODULE_TAGS := optional</span><br><span class="line">LOCAL_MODULE_CLASS :=ETC</span><br><span class="line">LOCAL_MODULE_PATH :=$(TARGET_OUT_ETC)/permissions</span><br><span class="line">LOCAL_SRC_FILES :=$(LOCAL_MODULE)</span><br><span class="line">include $(BUILD_PREBUILT)</span><br><span class="line"></span><br><span class="line"># the documentation</span><br><span class="line"># ============================================================</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">LOCAL_SRC_FILES := $(call all-subdir-java-files) $(call all-subdir-html-files)</span><br><span class="line">LOCAL_MODULE:= com.zowee.widget</span><br><span class="line">LOCAL_DROIDDOC_OPTIONS := com.zowee.widget</span><br><span class="line">LOCAL_MODULE_CLASS := JAVA_LIBRARIES</span><br><span class="line">LOCAL_DROIDDOC_USE_STANDARD_DOCLET := true</span><br><span class="line">include $(BUILD_DROIDDOC)</span><br><span class="line"># The JNI component</span><br><span class="line"># ============================================================</span><br><span class="line"># Also build all of the sub-targets under this one: the library&apos;s</span><br><span class="line"># associated JNI code, and a sample client of the library.</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">include $(call all-makefiles-under,$(LOCAL_PATH))</span><br><span class="line">endif # JAVA_SUPPORT</span><br></pre></td></tr></table></figure></code></pre><p>以上大部分为参考sample代码，编译之后，会生成 </p>
+<p><code>Install:out/target/product/.../system/framework/com.zowee.widget.jar</code><br>和
+ <code>Copy xml: out/target/product/.../system/etc/permissions/com.zowee.widget.xml</code>;</p>
+<h2 id="修改device-mk文件"><a href="#修改device-mk文件" class="headerlink" title="修改device.mk文件"></a>修改device.mk文件</h2><p>将这两个添加到项目编译中，这样生成的system.image才会包含所需要的jar和xml文件；<br>拷贝xml文件：<br><code>PRODUCT_COPY_FILES += vendor/zowee/proprietary/framework/WidgetLibrary/com.zowee.widget.xml:system/etc/permissions/com.zowee.widget.xml</code><br>添加jar模块：<code>PRODUCT_PACKAGES+=com.zowee.widget</code></p>
+<h1 id="app如何访问引入动态链接库"><a href="#app如何访问引入动态链接库" class="headerlink" title="app如何访问引入动态链接库"></a>app如何访问引入动态链接库</h1><p>作为一个普通的app，如何访问系统的framework res资源，如何引入动态的jar包，并在xml和java代码中访问公共资源中的内容.</p>
+<h2 id="app的mk文件"><a href="#app的mk文件" class="headerlink" title="app的mk文件"></a>app的mk文件</h2><pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">LOCAL_PATH:= $(call my-dir)</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">LOCAL_MODULE_TAGS := optional</span><br><span class="line"></span><br><span class="line"># 要编译的app模块名称PlatformLibraryClient.apk</span><br><span class="line">LOCAL_PACKAGE_NAME := PlatformLibraryClient</span><br><span class="line"># Only compile source java files in this apk.</span><br><span class="line">LOCAL_SRC_FILES := $(call all-java-files-under, src)</span><br><span class="line"># 不要用current！，不然无法访问到自定义的framework组件</span><br><span class="line">#LOCAL_SDK_VERSION := current</span><br><span class="line"># 将动态库导入编译</span><br><span class="line">LOCAL_JAVA_LIBRARIES := com.zowee.widget</span><br><span class="line">LOCAL_PROGUARD_ENABLED := disabled</span><br><span class="line">include $(BUILD_PACKAGE)</span><br></pre></td></tr></table></figure></code></pre><h2 id="AndroidManifest-xml文件"><a href="#AndroidManifest-xml文件" class="headerlink" title="AndroidManifest.xml文件"></a>AndroidManifest.xml文件</h2><pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    package=&quot;com.example.android.platform_library.client&quot;&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;application android:label=&quot;Platform Lib Client&quot;&gt;</span><br><span class="line">    </span><br><span class="line">        &lt;!--将 com.zowee.widget 引入--&gt;</span><br><span class="line">        </span><br><span class="line">        &lt;uses-library android:name=&quot;com.zowee.widget&quot; /&gt;</span><br><span class="line">        </span><br><span class="line">        &lt;activity android:name=&quot;Client&quot;&gt;</span><br><span class="line">            &lt;intent-filter&gt;</span><br><span class="line">                &lt;action android:name=&quot;android.intent.action.MAIN&quot;/&gt;</span><br><span class="line">                &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot;/&gt;</span><br><span class="line">            &lt;/intent-filter&gt;</span><br><span class="line">        &lt;/activity&gt;</span><br><span class="line">    &lt;/application&gt;</span><br><span class="line">&lt;/manifest&gt;</span><br></pre></td></tr></table></figure></code></pre><h1 id="app如何访问自定义framework资源"><a href="#app如何访问自定义framework资源" class="headerlink" title="app如何访问自定义framework资源"></a>app如何访问自定义framework资源</h1><h2 id="java代码中"><a href="#java代码中" class="headerlink" title="java代码中"></a>java代码中</h2><p>只要导入编译正常，基本上java代码中就可以直接对自定义framework的资源进行访问，例如：<br>对jar包中的自定义控件，自定义资源的访问</p>
+<p><code>import com.zowee.widget.ToolbarImageTextButton;</code></p>
+<p><code>b2.setText(getString(com.zowee.R.string.zowee),1);</code></p>
+<h2 id="xml中自定义控件的访问"><a href="#xml中自定义控件的访问" class="headerlink" title="xml中自定义控件的访问"></a>xml中自定义控件的访问</h2><p>xml中对自定义控件的访问，自定义属性的访问，自定义资源的访问，可参考如下：</p>
+<pre><code>&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    xmlns:zowee=&quot;http://schemas.android.com/apk/res/com.zowee&quot; 
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    &gt;
+    &lt;com.zowee.widget.ToolbarImageTextButton
+    android:layout_width=&quot;wrap_content&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:text=&quot;@com.zowee:string/zowee&quot;
+    zowee:bracketColor=&quot;#057852dd&quot; 
+    android:id=&quot;@+id/toolbutton&quot;
+    /&gt;
+&lt;/RelativeLayout&gt;</code></pre><p>请注意 <code>xmlns:zowee=&quot;http://schemas.android.com/apk/res/com.zowee&quot;</code> 和 <code>zowee:bracketColor=&quot;#057852dd&quot;</code><br>以及<br><code>android:text=&quot;@com.zowee:string/zowee&quot;</code></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>自此，针对自定义的一套资源和jar的框架已经完成了，这样做的目的是，当整个平台升级的时候，我们可以单独将自定义的framework res 和 framework jar 先进行移植，接着依赖于这些的自定义app,也可以顺利的在新的平台上运行了</p>
+
+        </div></article>
+      <nav class="pagination"><a class="prev" href="/page/2/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text">上一页</span>
+      </a>
+    <a class="next" href="/page/4/">
+        <span class="next-text">下一页</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></section></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/ahonn" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2015 - 2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">lynn8570</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

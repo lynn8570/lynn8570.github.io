@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="gitbook知识服务共享平台搭建"><meta name="keywords" content="android"><link rel="alternate" href="/default" title="Lynn8570's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://lynn8570.github.io/2018/03/15/gitbook/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>gitbook知识服务共享平台搭建 - Lynn8570's Blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Lynn8570's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Lynn8570's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">gitbook知识服务共享平台搭建
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-03-15
+        </span><span class="post-category">
+            <a href="/categories/SERVER/">SERVER</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#git-服务器搭建"><span class="toc-text">git 服务器搭建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#虚拟机"><span class="toc-text">虚拟机</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装npm-nodejs"><span class="toc-text">安装npm,nodejs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gitbook"><span class="toc-text">gitbook</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装gitbook"><span class="toc-text">安装gitbook</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#添加demo-gitbook"><span class="toc-text">添加demo gitbook</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#生成html静态网页"><span class="toc-text">生成html静态网页</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启动服务gitbook-serve"><span class="toc-text">启动服务gitbook serve</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#push触发"><span class="toc-text">push触发</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Git-钩子"><span class="toc-text">Git 钩子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#定时更新"><span class="toc-text">定时更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#访问虚拟机服务器IP"><span class="toc-text">访问虚拟机服务器IP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#本机访问虚拟机服务器"><span class="toc-text">本机访问虚拟机服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他机子如何访问"><span class="toc-text">其他机子如何访问</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#md文件编辑器"><span class="toc-text">md文件编辑器</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><h1 id="git-服务器搭建"><a href="#git-服务器搭建" class="headerlink" title="git 服务器搭建"></a>git 服务器搭建</h1><p>主要参考<a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/00137583770360579bc4b458f044ce7afed3df579123eca000" target="_blank" rel="noopener">廖雪峰搭建git服务器</a>一文主要注意的几个点：</p>
+<ol>
+<li><p>创建的 home/git/.ssh/ 目录的权限和 home/git/.ssh/authorized_keys 的权限问题</p>
+<figure class="highlight plain"><figcaption><span>1 git git 1234 2018-03-10 17:43 authorized_keys</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root@guoyzh-ubuntu:/home/git/.ssh# ls -all</span><br><span class="line">......</span><br><span class="line">-rw-r--r-- 1 git git 1234 2018-03-10 17:43 authorized_keys</span><br><span class="line"></span><br><span class="line"> drwxr-xr-x  2 git  git  4096 2018-03-10 17:43 .ssh</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>/etc/ssh/sshd_config 文件可用于配置验证方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"># Package generated configuration file</span><br><span class="line"># See the sshd_config(5) manpage for details</span><br><span class="line"></span><br><span class="line"># What ports, IPs and protocols we listen for</span><br><span class="line">Port 22</span><br><span class="line"># Use these options to restrict which interfaces/protocols sshd will bind to</span><br><span class="line">#ListenAddress ::</span><br><span class="line">#ListenAddress 0.0.0.0</span><br><span class="line">Protocol 2</span><br><span class="line"># HostKeys for protocol version 2</span><br><span class="line">HostKey /etc/ssh/ssh_host_rsa_key</span><br><span class="line">HostKey /etc/ssh/ssh_host_dsa_key</span><br><span class="line">#Privilege Separation is turned on for security</span><br><span class="line">UsePrivilegeSeparation yes</span><br><span class="line"></span><br><span class="line"># Lifetime and size of ephemeral version 1 server key</span><br><span class="line">KeyRegenerationInterval 3600</span><br><span class="line">ServerKeyBits 768</span><br><span class="line"></span><br><span class="line"># Logging</span><br><span class="line">SyslogFacility AUTH</span><br><span class="line">LogLevel DEBUG3</span><br><span class="line"></span><br><span class="line"># Authentication:</span><br><span class="line">LoginGraceTime 120</span><br><span class="line">PermitRootLogin yes</span><br><span class="line">StrictModes yes</span><br><span class="line"></span><br><span class="line">RSAAuthentication no</span><br><span class="line">PubkeyAuthentication yes   #使用公钥验证</span><br><span class="line">AuthorizedKeysFile	/home/git/.ssh/authorized_keys #公钥文件地址，使我们创建的，并且需要把各个用户的公钥收集起来，然后黏贴到这个文件中</span><br><span class="line"># Don&apos;t read the user&apos;s ~/.rhosts and ~/.shosts files</span><br><span class="line">IgnoreRhosts yes</span><br><span class="line"># For this to work you will also need host keys in /etc/ssh_known_hosts</span><br><span class="line">RhostsRSAAuthentication no</span><br><span class="line"># similar for protocol version 2</span><br><span class="line">HostbasedAuthentication no</span><br><span class="line"># Uncomment if you don&apos;t trust ~/.ssh/known_hosts for RhostsRSAAuthentication</span><br><span class="line">#IgnoreUserKnownHosts yes</span><br><span class="line"></span><br><span class="line"># To enable empty passwords, change to yes (NOT RECOMMENDED)</span><br><span class="line">PermitEmptyPasswords no</span><br><span class="line"></span><br><span class="line"># Change to yes to enable challenge-response passwords (beware issues with</span><br><span class="line"># some PAM modules and threads)</span><br><span class="line">ChallengeResponseAuthentication no</span><br><span class="line"></span><br><span class="line"># Change to no to disable tunnelled clear text passwords</span><br><span class="line">#PasswordAuthentication no  #允许使用密码验证</span><br><span class="line"></span><br><span class="line"># Kerberos options</span><br><span class="line">#KerberosAuthentication no</span><br><span class="line">#KerberosGetAFSToken no</span><br><span class="line">#KerberosOrLocalPasswd yes</span><br><span class="line">#KerberosTicketCleanup yes</span><br><span class="line"></span><br><span class="line"># GSSAPI options</span><br><span class="line">#GSSAPIAuthentication no</span><br><span class="line">#GSSAPICleanupCredentials yes</span><br><span class="line"></span><br><span class="line">X11Forwarding yes</span><br><span class="line">X11DisplayOffset 10</span><br><span class="line">PrintMotd no</span><br><span class="line">PrintLastLog yes</span><br><span class="line">TCPKeepAlive yes</span><br><span class="line">#UseLogin no</span><br><span class="line"></span><br><span class="line">#MaxStartups 10:30:60</span><br><span class="line">#Banner /etc/issue.net</span><br><span class="line"></span><br><span class="line"># Allow client to pass locale environment variables</span><br><span class="line">AcceptEnv LANG LC_*</span><br><span class="line"></span><br><span class="line">Subsystem sftp /usr/lib/openssh/sftp-server</span><br><span class="line"></span><br><span class="line"># Set this to &apos;yes&apos; to enable PAM authentication, account processing,</span><br><span class="line"># and session processing. If this is enabled, PAM authentication will</span><br><span class="line"># be allowed through the ChallengeResponseAuthentication and</span><br><span class="line"># PasswordAuthentication.  Depending on your PAM configuration,</span><br><span class="line"># PAM authentication via ChallengeResponseAuthentication may bypass</span><br><span class="line"># the setting of &quot;PermitRootLogin without-password&quot;.</span><br><span class="line"># If you just want the PAM account and session checks to run without</span><br><span class="line"># PAM authentication, then enable this but set PasswordAuthentication</span><br><span class="line"># and ChallengeResponseAuthentication to &apos;no&apos;.</span><br><span class="line">UsePAM yes</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置不允许通过shell登录git用户账号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">guoyzh:x:1000:1000:guoyzh,,,:/home/guoyzh:/bin/bash</span><br><span class="line">sshd:x:115:65534::/var/run/sshd:/usr/sbin/nologin</span><br><span class="line">huangyc:x:1001:0:huangyc,,,,:/home/huangyc:/bin/bash</span><br><span class="line">git:x:1002:1002:,,,:/home/git:/usr/bin/git-shell  #改成/usr/bin/git-shell</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>测试ssh 登录，查找问题的时候可以使用如下命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ssh -vT git@10.24.9.244</span><br><span class="line">OpenSSH_7.5p1, OpenSSL 1.0.2k  26 Jan 2017</span><br><span class="line">debug1: Reading configuration data /etc/ssh/ssh_config</span><br><span class="line">debug1: Connecting to 10.24.9.244 [10.24.9.244] port 22.</span><br><span class="line">debug1: Connection established.</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>其他用户使用 <code>git clone git@10.24.9.244:/home/gitrepo/zoweedoc.git</code>即可clone仓库</p>
+</li>
+</ol>
+<h1 id="虚拟机"><a href="#虚拟机" class="headerlink" title="虚拟机"></a>虚拟机</h1><p>为了不破坏服务器上的环境，安装了个虚拟机来做下面的事情</p>
+<p>虚拟机安装：</p>
+<p>1.安装VMware workstations</p>
+<p>2.下载Ubuntu镜像</p>
+<h2 id="安装npm-nodejs"><a href="#安装npm-nodejs" class="headerlink" title="安装npm,nodejs"></a>安装npm,nodejs</h2><p>Node.js 是一个基于 Chrome V8 引擎的 JavaScript 运行环境，其使用了一个事件驱动、非阻塞式 I/O 的模型，使其轻量又高效。<br>Node.js 的包管理器 npm，是全球最大的开源库生态系统，功能及其强大。 </p>
+<ol>
+<li><p>安装nvm</p>
+<p> sudo git clone <a href="https://github.com/cnpm/nvm.git" target="_blank" rel="noopener">https://github.com/cnpm/nvm.git</a></p>
+<p> <code>vim ~/.bashrc</code></p>
+<p>添加 source ~/git/nvm/nvm.sh  配置终端启动时自动执行 <code>source ~/git/nvm/nvm.sh</code></p>
+</li>
+<li><p>通过nvm安装node</p>
+<p><code>nvm ls-remote</code> 查看远程版本</p>
+<p>最新的release版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lynn@ubuntu:~$ nvm --version</span><br><span class="line">0.26.1</span><br></pre></td></tr></table></figure>
+
+<p>先安裝一個</p>
+<p>nvm install v9.8.0</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2018-03-13 20:23:26 (1.91 MB/s) - ‘/home/lynn/git/nvm/bin/node-v9.8.0-linux-x64/node-v9.8.0-linux-x64.tar.gz’ saved [18071050/18071050]</span><br><span class="line"></span><br><span class="line">WARNING: checksums are currently disabled for node.js v4.0 and later</span><br><span class="line">Now using node v9.8.0 (npm v5.6.0)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Node.js 的包管理器 npm，但是据说比较慢，可以用cnpm来加速</p>
+<p><code>npm install koa --registry=http://registry.npm.taobao.org</code></p>
+</li>
+<li><p>关闭终端后，输入npm无效了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lynn@ubuntu:~/git/nvm$ nvm use v9.8.0</span><br><span class="line">Now using node v9.8.0 (npm v5.6.0)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="gitbook"><a href="#gitbook" class="headerlink" title="gitbook"></a>gitbook</h2><h3 id="安装gitbook"><a href="#安装gitbook" class="headerlink" title="安装gitbook"></a>安装gitbook</h3><p>利用npm安装gitbook</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> npm install gitbook-cli -g</span><br><span class="line">/home/lynn/git/nvm/versions/node/v9.8.0/bin/gitbook -&gt; /home/lynn/git/nvm/versions/node/v9.8.0/lib/node_modules/gitbook-cli/bin/gitbook.js</span><br><span class="line">+ gitbook-cli@2.3.2</span><br><span class="line">added 578 packages in 116.801s</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加demo-gitbook"><a href="#添加demo-gitbook" class="headerlink" title="添加demo gitbook"></a>添加demo gitbook</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mkdir demo</span><br><span class="line">cd demo</span><br><span class="line">gitbook init</span><br><span class="line">.......</span><br><span class="line">warn: no summary file in this book </span><br><span class="line">info: create README.md </span><br><span class="line">info: create SUMMARY.md </span><br><span class="line">info: initialization is finished</span><br></pre></td></tr></table></figure>
+
+<p>自动生成了readme 和summary</p>
+<h3 id="生成html静态网页"><a href="#生成html静态网页" class="headerlink" title="生成html静态网页"></a>生成html静态网页</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitbook build</span><br></pre></td></tr></table></figure>
+
+<p>多了一个<code>_book</code>的目录</p>
+<p>打开index.html就可以查看书籍内容</p>
+<h3 id="启动服务gitbook-serve"><a href="#启动服务gitbook-serve" class="headerlink" title="启动服务gitbook serve"></a>启动服务gitbook serve</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">lynn@ubuntu:~/gitbook/zoweedoc$ gitbook serve</span><br><span class="line">Live reload server started on port: 35729</span><br><span class="line">Press CTRL+C to quit ...</span><br><span class="line"></span><br><span class="line">info: 7 plugins are installed </span><br><span class="line">info: loading plugin &quot;livereload&quot;... OK </span><br><span class="line">info: loading plugin &quot;highlight&quot;... OK </span><br><span class="line">info: loading plugin &quot;search&quot;... OK </span><br><span class="line">info: loading plugin &quot;lunr&quot;... OK </span><br><span class="line">info: loading plugin &quot;sharing&quot;... OK </span><br><span class="line">info: loading plugin &quot;fontsettings&quot;... OK </span><br><span class="line">info: loading plugin &quot;theme-default&quot;... OK </span><br><span class="line">info: found 1 pages </span><br><span class="line">info: found 11 asset files </span><br><span class="line">info: &gt;&gt; generation finished with success in 1.9s ! </span><br><span class="line"></span><br><span class="line">Starting server ...</span><br><span class="line">Serving book on http://localhost:4000</span><br></pre></td></tr></table></figure>
+
+<p>可通过浏览器访问gitbook了</p>
+<h1 id="push触发"><a href="#push触发" class="headerlink" title="push触发"></a>push触发</h1><p>现在我们可以生成gitbook了，如何在zoweedoc.git有push工作后，立即同步所有的更新，再出发gitbook的build，生成最新的网页代码呢？</p>
+<h2 id="Git-钩子"><a href="#Git-钩子" class="headerlink" title="Git 钩子"></a>Git 钩子</h2><p>和其它版本控制系统一样，Git 能在特定的重要动作发生时触发自定义脚本。 有两组这样的钩子：客户端的和服务器端的。 客户端钩子由诸如提交和合并这样的操作所调用，而服务器端钩子作用于诸如接收被推送的提交这样的联网操作。 你可以随心所欲地运用这些钩子。</p>
+<ol>
+<li>在服务器上建一个普通的Git仓库，用于存放网站</li>
+<li>在源git的post-receive中执行git pull的操作，实现文档更新，然后可以重新build </li>
+</ol>
+<p>但是现在我们的git服务器环境太老了，很多东西没办法安装，上述用hook的方式进行更新，无法实现</p>
+<p>采用在另外一台机子上，采用定时更新</p>
+<h2 id="定时更新"><a href="#定时更新" class="headerlink" title="定时更新"></a>定时更新</h2><ul>
+<li><p>查看当前定时任务</p>
+<p>crontab -l</p>
+</li>
+<li><p>创建编辑定时任务</p>
+<p>crontab -e</p>
+</li>
+<li><p>编辑定时任务</p>
+<p><code>* */1 * * * /home/lynn/gitbook/syn.sh /home/lynn/gitbook/zoweedoc</code></p>
+<p>脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">source ~/git/nvm/nvm.sh</span><br><span class="line">cd $1</span><br><span class="line">unset GIT_DIR</span><br><span class="line">git pull origin master</span><br><span class="line"></span><br><span class="line">nvm use v9.8.0</span><br><span class="line">gitbook serve</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看定時任務執行情況</p>
+<p>看 /var/log/cron这个文件就可以，可以用tail -f /var/log/cron观察</p>
+</li>
+<li><p>定時任務有沒有啟動排查的</p>
+<ul>
+<li><p>确认服务器是否开机定时任务计划服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lynn@ubuntu:/var/log$ service crond status</span><br><span class="line">● crond.service</span><br><span class="line">   Loaded: not-found (Reason: No such file or directory)</span><br><span class="line">   Active: inactive (dead)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>开启服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lynn@ubuntu:~$ service crond start</span><br><span class="line">Failed to start crond.service: Unit crond.service not found.</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>新的服务名字变了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">sudo service cron  start #启动服务</span><br><span class="line">lynn@ubuntu:~$ service cron status</span><br><span class="line">● cron.service - Regular background program processing daemon</span><br><span class="line">   Loaded: loaded (/lib/systemd/system/cron.service; enabled; vendor preset: ena</span><br><span class="line">   Active: active (running) since Wed 2018-03-14 00:49:42 PDT; 1h 47min ago</span><br><span class="line">     Docs: man:cron(8)</span><br><span class="line"> Main PID: 793 (cron)</span><br><span class="line">   CGroup: /system.slice/cron.service</span><br><span class="line">           └─793 /usr/sbin/cron -f</span><br><span class="line"></span><br><span class="line">Mar 14 02:15:01 ubuntu CRON[3456]: (CRON) info (No MTA installed, discarding out</span><br><span class="line">Mar 14 02:15:01 ubuntu CRON[3456]: pam_unix(cron:session): session closed for us</span><br><span class="line">Mar 14 02:17:01 ubuntu CRON[3474]: pam_unix(cron:session): session opened for us</span><br><span class="line">Mar 14 02:17:01 ubuntu CRON[3475]: (root) CMD (   cd / &amp;&amp; run-parts --report /et</span><br><span class="line">Mar 14 02:17:01 ubuntu CRON[3474]: pam_unix(cron:session): session closed for us</span><br><span class="line">Mar 14 02:30:01 ubuntu CRON[3647]: pam_unix(cron:session): session opened for us</span><br><span class="line">Mar 14 02:30:01 ubuntu CRON[3648]: (lynn) CMD (/home/lynn/gitbook/syn.sh /home/l</span><br><span class="line">Mar 14 02:30:01 ubuntu CRON[3647]: (CRON) info (No MTA installed, discarding out</span><br><span class="line">Mar 14 02:30:01 ubuntu CRON[3647]: pam_unix(cron:session): session closed for us</span><br><span class="line">Mar 14 02:36:28 ubuntu systemd[1]: Started Regular background program processing</span><br><span class="line">lines 1-18/18 (END)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>​</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>定时更新<a href="http://blog.csdn.net/csdn_yasin/article/details/70332796" target="_blank" rel="noopener">http://blog.csdn.net/csdn_yasin/article/details/70332796</a></p>
+<p>查看执行情况</p>
+<p><a href="http://blog.csdn.net/u013850277/article/details/54344805" target="_blank" rel="noopener">http://blog.csdn.net/u013850277/article/details/54344805</a></p>
+<h2 id="访问虚拟机服务器IP"><a href="#访问虚拟机服务器IP" class="headerlink" title="访问虚拟机服务器IP"></a>访问虚拟机服务器IP</h2><h3 id="本机访问虚拟机服务器"><a href="#本机访问虚拟机服务器" class="headerlink" title="本机访问虚拟机服务器"></a>本机访问虚拟机服务器</h3><p>虚拟机通过ifconfig查询虚拟机IP</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">lynn@ubuntu:~$ ifconfig</span><br><span class="line">ens33     Link encap:Ethernet  HWaddr 00:0c:29:5d:64:1f  </span><br><span class="line">          inet addr:192.168.32.128  Bcast:192.168.32.255  Mask:255.255.255.0</span><br><span class="line">          inet6 addr: fe80::aae1:44b2:cc44:dbba/64 Scope:Link</span><br><span class="line">          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1</span><br><span class="line">          RX packets:101881 errors:0 dropped:0 overruns:0 frame:0</span><br><span class="line">          TX packets:33601 errors:0 dropped:0 overruns:0 carrier:0</span><br><span class="line">          collisions:0 txqueuelen:1000 </span><br><span class="line">          RX bytes:121150102 (121.1 MB)  TX bytes:2044329 (2.0 MB)</span><br><span class="line"></span><br><span class="line">lo        Link encap:Local Loopback  </span><br><span class="line">          inet addr:127.0.0.1  Mask:255.0.0.0</span><br><span class="line">          inet6 addr: ::1/128 Scope:Host</span><br><span class="line">          UP LOOPBACK RUNNING  MTU:65536  Metric:1</span><br><span class="line">          RX packets:234 errors:0 dropped:0 overruns:0 frame:0</span><br><span class="line">          TX packets:234 errors:0 dropped:0 overruns:0 carrier:0</span><br><span class="line">          collisions:0 txqueuelen:1000 </span><br><span class="line">          RX bytes:18513 (18.5 KB)  TX bytes:18513 (18.5 KB)</span><br></pre></td></tr></table></figure>
+
+<p>本机可直接通过，访问虚拟机服务器，查看gitbook</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.32.128:4000/</span><br></pre></td></tr></table></figure>
+
+<h3 id="其他机子如何访问"><a href="#其他机子如何访问" class="headerlink" title="其他机子如何访问"></a>其他机子如何访问</h3><ol>
+<li>将虚拟机设置成NAT模式</li>
+<li>启动虚拟网络编辑器，选择VMnet8，选择NAT模式，选择NAT设置</li>
+<li>点击添加，主机端口8888，即希望别的机子访问的端口号<code>http://主机IP:8888/</code>，虚拟机地址，虚拟机实际IP地址，ifconfig查看，<code>192.168.32.128</code>，虚拟机端口，因为gitbook serve端口是4000，所以填4000</li>
+<li>完成确定</li>
+</ol>
+<p>这样在其他主机就可以通过<code>http://主机IP:8888/</code>访问主机上虚拟机的4000端口服务了。</p>
+<p>参考设置<a href="https://jingyan.baidu.com/article/8065f87fe9773b23312498a9.html" target="_blank" rel="noopener">如何配置其他主机访问虚拟机</a></p>
+<h1 id="md文件编辑器"><a href="#md文件编辑器" class="headerlink" title="md文件编辑器"></a>md文件编辑器</h1><p>推荐使用typora，window版本的软件安装包地址 <code>\\10.24.9.247\360Downloads\.01应用组共享资料\09软件工具\typora-setup-x64.exe</code> </p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://lynn8570.github.io">lynn8570</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://lynn8570.github.io/2018/03/15/gitbook/">https://lynn8570.github.io/2018/03/15/gitbook/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/2018/03/26/gradle properties/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">gradle properties</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2018/02/27/google VR pana and video/">
+        <span class="next-text nav-default">Google VR SDK 示例 360 media</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/ahonn" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2015 - 2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">lynn8570</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="Leakcanary部分泄露警报无需修复"><meta name="keywords" content="android"><link rel="alternate" href="/default" title="Lynn8570's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://lynn8570.github.io/2015/09/14/some memory leaks that no need to be fixed/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>Leakcanary部分泄露警报无需修复 - Lynn8570's Blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Lynn8570's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Lynn8570's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Leakcanary部分泄露警报无需修复
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2015-09-14
+        </span><span class="post-category">
+            <a href="/categories/android/">android</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AsyncQueryHandler-没有quit"><span class="toc-text">AsyncQueryHandler 没有quit</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TextLine-sCached-泄露"><span class="toc-text">TextLine.sCached 泄露</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>使用leakcanary检查内存泄露之后，由于他的工作原理，造成所有的在上下文关闭之后，还未被释放的资源就会引爆内存泄露通知。但是不是所有的泄露都需要修复的。下面总结几个我的血泪史，希望以后不要重蹈覆辙。</p>
+<p>#InputMethodManager.sInstance泄露</p>
+<p>输入法泄露，具体的泄露路径类似于</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/M_1.jpg" alt></p>
+<p>提示InputMethodManager.sInstance这个静态实例可能通过各种路径对context进行了泄露。具体的路径可能会不一样，但是归根到最后都是提示InputMethodManager.sInstance静态引用泄露。<br>通过网上搜索，可能有类似的修复，如下<br>    public static final class TypedObject<br>    {<br>        private final Object object;<br>        private final Class type;</p>
+<pre><code>    public TypedObject(final Object object, final Class type)
+    {
+    this.object = object;
+    this.type = type;
+    }
+
+    Object getObject()
+    {
+        return object;
+    }
+
+    Class getType()
+    { 
+        return type;
+    }
+}
+
+public static void invokeMethodExceptionSafe(final Object methodOwner, final String method, final TypedObject... arguments)
+{
+    if (null == methodOwner)
+    {
+        return;
+    }
+
+    try
+    {
+        final Class&lt;?&gt;[] types = null == arguments ? new Class[0] : new Class[arguments.length];
+        final Object[] objects = null == arguments ? new Object[0] : new Object[arguments.length];
+
+        if (null != arguments)
+        {
+            for (int i = 0, limit = types.length; i &lt; limit; i++)
+            {
+                types[i] = arguments[i].getType();
+                objects[i] = arguments[i].getObject();
+            }
+        }
+
+        final Method declaredMethod = methodOwner.getClass().getDeclaredMethod(method, types);
+
+        declaredMethod.setAccessible(true);
+        declaredMethod.invoke(methodOwner, objects);
+    }
+    catch (final Throwable ignored)
+    {
+    }
+}
+
+public static void fixInputMethodManager(Activity activity)
+{
+    final Object imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+    final Reflector.TypedObject windowToken
+        = new Reflector.TypedObject(activity.getWindow().getDecorView().getWindowToken(), IBinder.class);
+
+    Reflector.invokeMethodExceptionSafe(imm, &quot;windowDismissed&quot;, windowToken);
+
+    final Reflector.TypedObject view
+        = new Reflector.TypedObject(null, View.class);
+
+    Reflector.invokeMethodExceptionSafe(imm, &quot;startGettingWindowFocus&quot;, view);
+}</code></pre><p>主要通过反射，修复内存泄露。</p>
+<p>但是，下面的话，非常重要，非常重要，非常重要，重要的事情说三遍：这个属于系统级别的泄露，也就是说，你不泄露，别人也会泄露，而且整个android系统，只保留一个static instance的引用，所以这个修复，对整个系统的内存没有太大的改善。而且这个修复的隐患是，你有可能会在页面跳转的时候，遇到各种不可预测的编辑框无法获取焦点的问题。所以，我建议，这个泄露，可以忽略。</p>
+<h1 id="AsyncQueryHandler-没有quit"><a href="#AsyncQueryHandler-没有quit" class="headerlink" title="AsyncQueryHandler 没有quit"></a>AsyncQueryHandler 没有quit</h1><p>有时候我们会遇到HandlerThread没有quit而爆出的泄露，泄露路径如下：</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/M_2.jpg" alt></p>
+<p>而android系统中有个AsyncQueryWorker从源代码看</p>
+<pre><code>public AsyncQueryHandler(ContentResolver cr) {
+    super();
+    mResolver = new WeakReference&lt;ContentResolver&gt;(cr);
+    synchronized (AsyncQueryHandler.class) {
+        if (sLooper == null) {
+            HandlerThread thread = new HandlerThread    (&quot;AsyncQueryWorker&quot;);
+            thread.start();
+            sLooper = thread.getLooper();
+        }
+    }
+    mWorkerThreadHandler = createHandler(sLooper);
+}</code></pre><p>这个名为AsyncQueryWorker的HandlerThread自从start之后就没人管了。这个时候，leakcanary也会提示泄露。<br>于是我曾自作聪明，通过反射将这个sLooper强制退出，代码如下：</p>
+<pre><code>//linlian@2015.06.01 release static sLooper in AsyncQueryHandler
+public static void fixAsyncQueryWorker(){
+    Field sLooperCached = null;
+    try {
+        sLooperCached = Class.forName(&quot;android.content.AsyncQueryHandler&quot;).getDeclaredField(&quot;sLooper&quot;);
+        sLooperCached.setAccessible(true);
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+    if (sLooperCached == null) return;
+    Looper looper = null;
+     try {
+        // Get reference to the sLooperCached 
+        looper = (Looper)sLooperCached.get(null);
+        if(looper!=null){
+            looper.quit();
+            sLooperCached.set(null,null);
+        }
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }</code></pre><p>这个修复的惨痛后果是，有些后台线程直接结束了，所以，对于AsyncQueryHandler的泄露，我也是建议不修复。</p>
+<h1 id="TextLine-sCached-泄露"><a href="#TextLine-sCached-泄露" class="headerlink" title="TextLine.sCached 泄露"></a>TextLine.sCached 泄露</h1><p><img src="http://7xl98n.com1.z0.glb.clouddn.com/M_3.jpg" alt></p>
+<p>和inputManager一样，这个泄露，属于系统的静态引用而造成的泄露，但是这个泄露的修复，目前没有发现什么不良的影响，但是泄露修复的价值意义不知道大不大，也是你不泄露，别人也会泄露，反正总有一个这样的引用存在的。修复的效果也不是很明显<br>修复代码如下</p>
+<pre><code>public static void clearTextLineCache(){
+    Field textLineCached = null;
+    try {
+        textLineCached = Class.forName(&quot;android.text.TextLine&quot;).getDeclaredField(&quot;sCached&quot;);
+        textLineCached.setAccessible(true);
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+    if (textLineCached == null) return;
+    Object cached = null;
+    try {
+        // Get reference to the TextLine sCached array.
+        cached = textLineCached.get(null);
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+    if (cached != null) {
+        // Clear the array.
+        for (int i = 0, size = Array.getLength(cached); i &lt; size; i ++) {
+            Array.set(cached, i, null);
+        }
+    }
+}</code></pre><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>LeakCanary是一个很好检查内存泄露的工具，但不是所有的泄露都需要修复，有些事android系统的泄露bug，通过各种方式曲线救国之后，不一定会达到一个很好的内存改善结果，所以干脆不要去动他，以免引起不可预测的运行异常。只有自己非常肯定的，由于使用不规范等引起的内存泄露才是我们重点关注的部分</p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://lynn8570.github.io">lynn8570</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://lynn8570.github.io/2015/09/14/some memory leaks that no need to be fixed/">https://lynn8570.github.io/2015/09/14/some memory leaks that no need to be fixed/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/2015/09/16/Test Driven Development Learning one/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">TDD测试驱动开发学习（1）</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2015/09/02/Common memory leaks/">
+        <span class="next-text nav-default">常见的内存泄露</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/ahonn" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2015 - 2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">lynn8570</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

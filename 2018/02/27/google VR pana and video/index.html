@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="Google VR SDK 示例 360 media"><meta name="keywords" content="android"><link rel="alternate" href="/default" title="Lynn8570's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://lynn8570.github.io/2018/02/27/google VR pana and video/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>Google VR SDK 示例 360 media - Lynn8570's Blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Lynn8570's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Lynn8570's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Google VR SDK 示例 360 media
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-02-27
+        </span><span class="post-category">
+            <a href="/categories/ANDROID/">ANDROID</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Google-VR-SDK-示例代码全景和视频"><span class="toc-text">Google VR SDK 示例代码全景和视频</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是360-media"><span class="toc-text">什么是360 media</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何拍摄到全景的媒体"><span class="toc-text">如何拍摄到全景的媒体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#全景图片walkthrough"><span class="toc-text">全景图片walkthrough</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#全景视频walkthrough"><span class="toc-text">全景视频walkthrough</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#番外示例video360和videoplayer"><span class="toc-text">番外示例video360和videoplayer</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#sdk-video360"><span class="toc-text">sdk-video360</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sdk-videoplayer"><span class="toc-text">sdk-videoplayer</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><h1 id="Google-VR-SDK-示例代码全景和视频"><a href="#Google-VR-SDK-示例代码全景和视频" class="headerlink" title="Google VR SDK 示例代码全景和视频"></a>Google VR SDK 示例代码全景和视频</h1><p>Google的SDK示例代码中有两个应用 simplepanowidget和simlevrvideo展示了如何内嵌一个360度的图片或者是视频。</p>
+<h2 id="什么是360-media"><a href="#什么是360-media" class="headerlink" title="什么是360 media"></a>什么是360 media</h2><p>360度媒介，包括360度全景图片和360度全景视频。通过他们，可以加强传统应用的沉浸式体验。例如可以在旅游类应用中添加这种视图查看器作为海底世界游览体验，在家装应用中，让消费者可以先体验一下虚拟的效果。</p>
+<p>这些360度媒介支持立体变化并与Google cardboard等vr平台兼容，也支持在浏览器中或者移动应用中查看而不需要特定的vr硬件支持。</p>
+<ul>
+<li><p>常见格式</p>
+<p>360度媒体的格式可以是 mono或者是stereo。图片和视频通常需要存储在equirectangular-panoramic (equirect-pano)格式中，可以理解为柱体全景格式，这种格式为大部分拍摄解决方案所支持的格式。</p>
+<p>Mono 360使用一张全景，stero 360使用两张堆积的全景图片。stero在全景之上，还有一个景深的这样一个概念，我们对前景和背景的距离深度有了一个感官的体验。</p>
+</li>
+<li><p>360度图片</p>
+<p>可以以png,jpeg,gif的格式进行存储，建议使用jpeg来提高压缩率</p>
+<p>为了最大限度的提高兼容性和性能，需要的尺寸是2次幂，2024，4096这样</p>
+<p>mono图片，单张的方案，需要2:1的宽高比 例如4096*4096</p>
+<p>stereo图片，左右两张堆积方案的，需要1:1的宽高比 4096*4096</p>
+</li>
+<li><p>360度视频</p>
+<p>以h2642编码的mp4s格式存储</p>
+<p>mono方案提供2:1宽高比</p>
+<p>stereo提供1:1宽高比</p>
+<p>一些比较老的设备无法对大雨1080p(1920*1080)的视频进行解码，如果要进行兼容，建议提供提供monoscopic 1920 * 1080的视频和stereo 2048 * 2048的的视频</p>
+</li>
+<li><p>如何内嵌和显示这些媒体</p>
+<ul>
+<li><a href="https://developers.google.com/vr/android/samples/vrview" target="_blank" rel="noopener">VR View on Android</a></li>
+<li><a href="https://developers.google.com/vr/concepts/vrview-web" target="_blank" rel="noopener">VR View on the Web</a></li>
+</ul>
+<p>另外也有ios平台等</p>
+</li>
+</ul>
+<h2 id="如何拍摄到全景的媒体"><a href="#如何拍摄到全景的媒体" class="headerlink" title="如何拍摄到全景的媒体"></a>如何拍摄到全景的媒体</h2><ul>
+<li><p>实景拍摄</p>
+<ul>
+<li><a href="https://play.google.com/store/apps/details?id=com.google.vr.cyclops" target="_blank" rel="noopener">Cardboard Camera App</a>:    使用该应用可以快速的拍摄360全景图片，然后可以下载  <a href="https://support.google.com/cardboard/answer/6333620" target="_blank" rel="noopener">download</a>    这些图片然后使用    <a href="https://storage.googleapis.com/cardboard-camera-converter/index.html" target="_blank" rel="noopener">conversion tool</a>    来生成 stereo 360° 图片，就可以符合 Cardboard’s 图片要求了。</li>
+<li><a href="https://theta360.com/" target="_blank" rel="noopener">Ricoh Theta</a>: 可用于拍摄 mono 360° 图片和视频 </li>
+</ul>
+</li>
+<li><p>CG capture</p>
+<p>cgi软件可根据生成全景图片和视频，一些热门的拍摄方案如下</p>
+<ul>
+<li><a href="https://assetstore.unity.com/packages/tools/camera/360-panorama-capture-38755" target="_blank" rel="noopener">360 Panorama Capture for Unity</a>:    A free, easy-to-use 360° capture plugin for <strong>Unity</strong>.</li>
+<li><a href="https://docs.unrealengine.com/latest/INT/Platforms/VR/StereoPanoramicCapture/" target="_blank" rel="noopener">Unreal</a>: Stero panoramic capture in <strong>Unreal</strong>.</li>
+<li>(Unsupported) <a href="https://github.com/zicher3d-org/domemaster-stereo-shader/" target="_blank" rel="noopener">Domemaster3D</a>:    A free solution for capturing mono and stereo 360° images from Maya / Autodesk 3ds Max.</li>
+<li><a href="https://drive.google.com/drive/folders/0B0lYKpimsJgWfjFwa2xLQlVGNnJXcGxvbmNJbzIwUkRWQ2YtOHB5blNMNjlXSUlxbmJNVVU" target="_blank" rel="noopener">Renderman</a>:    Open-source library for capturing 360° content.开源库</li>
+<li><a href="https://developers.google.com/vr/jump/rendering-ods-content.pdf" target="_blank" rel="noopener">Rendering Omnidirectional Stereo Content</a>:    A whitepaper for anyone interested in writing their own 360° capture    solutions.</li>
+</ul>
+</li>
+<li><p>YouTube下载，在YouTube上搜索monoscopic的视频，然后通过 <a href="http://youtubemp4.to/" target="_blank" rel="noopener">http://youtubemp4.to/</a> 来下载mp4格式的文件</p>
+</li>
+</ul>
+<h2 id="全景图片walkthrough"><a href="#全景图片walkthrough" class="headerlink" title="全景图片walkthrough"></a>全景图片walkthrough</h2><p>根据Gsensor的数据展示不同的方位景物；</p>
+<p>全屏模式 和 cardboard 模式切换</p>
+<ul>
+<li><p>代码概览</p>
+<p>在layout XML文件中，嵌入，该组件自身就集成了全屏，立体模式，退出等模式的切换按钮</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;com.google.vr.sdk.widgets.pano.VrPanoramaView</span><br><span class="line">          android:id=&quot;@+id/pano_view&quot;</span><br><span class="line">          android:layout_margin=&quot;5dip&quot;</span><br><span class="line">          android:layout_width=&quot;match_parent&quot;</span><br><span class="line">          android:scrollbars=&quot;@null&quot;</span><br><span class="line">          android:layout_height=&quot;250dip&quot;/&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>activitie 代码</p>
+<p>初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">  @Override</span><br><span class="line">  protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">    super.onCreate(savedInstanceState);</span><br><span class="line">    setContentView(R.layout.main_layout);</span><br><span class="line">.......</span><br><span class="line">    panoWidgetView = (VrPanoramaView) findViewById(R.id.pano_view);</span><br><span class="line">    panoWidgetView.setEventListener(new ActivityEventListener());</span><br><span class="line"></span><br><span class="line">    // Initial launch of the app or an Activity recreation due to rotation.</span><br><span class="line">    handleIntent(getIntent());</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中ActivityEventListener继承自VrPanoramaEventListener，用于监听来自widget的事件，例如当widget加载完图片后的onLoadSuccess回调。或者加载失败后的onLoadError回调。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">   * Listen to the important events from widget.</span><br><span class="line">   */</span><br><span class="line">  private class ActivityEventListener extends VrPanoramaEventListener &#123;</span><br><span class="line">    /**</span><br><span class="line">     * Called by pano widget on the UI thread when it&apos;s done loading the image.</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public void onLoadSuccess() &#123;</span><br><span class="line">      loadImageSuccessful = true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Called by pano widget on the UI thread on any asynchronous error.</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public void onLoadError(String errorMessage) &#123;</span><br><span class="line">      loadImageSuccessful = false;</span><br><span class="line">      Toast.makeText(</span><br><span class="line">          SimpleVrPanoramaActivity.this, &quot;Error loading pano: &quot; + errorMessage, Toast.LENGTH_LONG)</span><br><span class="line">          .show();</span><br><span class="line">      Log.e(TAG, &quot;Error loading pano: &quot; + errorMessage);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>在线程中加载图片</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">   * Helper class to manage threading.</span><br><span class="line">   */</span><br><span class="line">  class ImageLoaderTask extends AsyncTask&lt;Pair&lt;Uri, Options&gt;, Void, Boolean&gt; &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Reads the bitmap from disk in the background and waits until it&apos;s loaded by pano widget.</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    protected Boolean doInBackground(Pair&lt;Uri, Options&gt;... fileInformation) &#123;</span><br><span class="line">      Options panoOptions = null;  // It&apos;s safe to use null VrPanoramaView.Options.</span><br><span class="line">      InputStream istr = null;</span><br><span class="line">      if (fileInformation == null || fileInformation.length &lt; 1</span><br><span class="line">          || fileInformation[0] == null || fileInformation[0].first == null) &#123;</span><br><span class="line">        AssetManager assetManager = getAssets();</span><br><span class="line">        try &#123;</span><br><span class="line">          istr = assetManager.open(&quot;andes.jpg&quot;);／／打开assert文件</span><br><span class="line">          panoOptions = new Options();</span><br><span class="line">          panoOptions.inputType = Options.TYPE_STEREO_OVER_UNDER;</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">          Log.e(TAG, &quot;Could not decode default bitmap: &quot; + e);</span><br><span class="line">          return false;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">          istr = new FileInputStream(new File(fileInformation[0].first.getPath()));</span><br><span class="line">          panoOptions = fileInformation[0].second;</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">          Log.e(TAG, &quot;Could not load file: &quot; + e);</span><br><span class="line">          return false;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      panoWidgetView.loadImageFromBitmap(BitmapFactory.decodeStream(istr), panoOptions);／／将读取的iostream进行加载</span><br><span class="line">      try &#123;</span><br><span class="line">        istr.close();</span><br><span class="line">      &#125; catch (IOException e) &#123;</span><br><span class="line">        Log.e(TAG, &quot;Could not close input stream: &quot; + e);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      return true;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>​</p>
+</li>
+</ul>
+<h2 id="全景视频walkthrough"><a href="#全景视频walkthrough" class="headerlink" title="全景视频walkthrough"></a>全景视频walkthrough</h2><p>全景视频的视图和全景图片的非常相似，使用上也差不多，展现出来的，就是一个是视频画面生动的效果</p>
+<p>XML集成：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;com.google.vr.sdk.widgets.video.VrVideoView</span><br><span class="line">          android:id=&quot;@+id/video_view&quot;</span><br><span class="line">          android:layout_width=&quot;match_parent&quot;</span><br><span class="line">          android:scrollbars=&quot;@null&quot;</span><br><span class="line">          android:layout_height=&quot;250dip&quot;/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// Bind input and output objects for the view.</span><br><span class="line">   videoWidgetView = (VrVideoView) findViewById(R.id.video_view);</span><br><span class="line">   videoWidgetView.setEventListener(new ActivityEventListener());</span><br></pre></td></tr></table></figure>
+
+<p>其中ActivityEventListener</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">   * Listen to the important events from widget.</span><br><span class="line">   */</span><br><span class="line">  private class ActivityEventListener extends VrVideoEventListener  &#123;</span><br><span class="line">    /**</span><br><span class="line">     * Called by video widget on the UI thread when it&apos;s done loading the video.</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public void onLoadSuccess() &#123;</span><br><span class="line">    ／／加载成功的时候，根据视频的长度，设置进度条最大值</span><br><span class="line">      Log.i(TAG, &quot;Successfully loaded video &quot; + videoWidgetView.getDuration());</span><br><span class="line">      loadVideoStatus = LOAD_VIDEO_STATUS_SUCCESS;</span><br><span class="line">      seekBar.setMax((int) videoWidgetView.getDuration());</span><br><span class="line">      updateStatusText();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Called by video widget on the UI thread on any asynchronous error.</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public void onLoadError(String errorMessage) &#123;</span><br><span class="line">      // An error here is normally due to being unable to decode the video format.</span><br><span class="line">      loadVideoStatus = LOAD_VIDEO_STATUS_ERROR;</span><br><span class="line">      Toast.makeText(</span><br><span class="line">          SimpleVrVideoActivity.this, &quot;Error loading video: &quot; + errorMessage, Toast.LENGTH_LONG)</span><br><span class="line">          .show();</span><br><span class="line">      Log.e(TAG, &quot;Error loading video: &quot; + errorMessage);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onClick() &#123;</span><br><span class="line">      togglePause();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Update the UI every frame.每一帧更新进度条</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public void onNewFrame() &#123;</span><br><span class="line">      updateStatusText();</span><br><span class="line">      seekBar.setProgress((int) videoWidgetView.getCurrentPosition());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Make the video play in a loop. This method could also be used to move to the next video in</span><br><span class="line">     * a playlist.</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public void onCompletion() &#123;</span><br><span class="line">      videoWidgetView.seekTo(0);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>加载视频的线程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">   * Helper class to manage threading.</span><br><span class="line">   */</span><br><span class="line">  class VideoLoaderTask extends AsyncTask&lt;Pair&lt;Uri, Options&gt;, Void, Boolean&gt; &#123;</span><br><span class="line">    @Override</span><br><span class="line">    protected Boolean doInBackground(Pair&lt;Uri, Options&gt;... fileInformation) &#123;</span><br><span class="line">      try &#123;</span><br><span class="line">         if (fileInformation == null || fileInformation.length &lt; 1</span><br><span class="line">          || fileInformation[0] == null || fileInformation[0].first == null) &#123;</span><br><span class="line">          // No intent was specified, so we default to playing the local stereo-over-under video.</span><br><span class="line">          Options options = new Options();</span><br><span class="line">          options.inputType = Options.TYPE_STEREO_OVER_UNDER;</span><br><span class="line">          videoWidgetView.loadVideoFromAsset(&quot;congo.mp4&quot;, options);直接根据文件名加载</span><br><span class="line">         &#125; else &#123;</span><br><span class="line">          videoWidgetView.loadVideo(fileInformation[0].first, fileInformation[0].second);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; catch (IOException e) &#123;</span><br><span class="line">        // An error here is normally due to being unable to locate the file.</span><br><span class="line">        loadVideoStatus = LOAD_VIDEO_STATUS_ERROR;</span><br><span class="line">        // Since this is a background thread, we need to switch to the main thread to show a toast.</span><br><span class="line">        videoWidgetView.post(new Runnable() &#123;</span><br><span class="line">          @Override</span><br><span class="line">          public void run() &#123;</span><br><span class="line">            Toast</span><br><span class="line">                .makeText(SimpleVrVideoActivity.this, &quot;Error opening file. &quot;, Toast.LENGTH_LONG)</span><br><span class="line">                .show();</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        Log.e(TAG, &quot;Could not open video: &quot; + e);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      return true;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这两个应用主要展示 VrPanoramaView 和VrVideoView的基本用法</p>
+<h2 id="番外示例video360和videoplayer"><a href="#番外示例video360和videoplayer" class="headerlink" title="番外示例video360和videoplayer"></a>番外示例video360和videoplayer</h2><h3 id="sdk-video360"><a href="#sdk-video360" class="headerlink" title="sdk-video360"></a>sdk-video360</h3><p>video360要求设备最低版本为android 24，android N 7.0以上</p>
+<p>可以渲染全景视频的播放器。 根据intent中的文件uri来进行进行视频播放。应用中定义了两个activity，一个只能在2d的launcher中显示图标，另外一个只能在专属的Daydream Home中显示图标</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- This is a 2D Version of the video player. --&gt;</span><br><span class="line">   &lt;activity</span><br><span class="line">       android:name=&quot;.VideoActivity&quot;</span><br><span class="line">       android:icon=&quot;@drawable/icon&quot;</span><br><span class="line">       android:label=&quot;@string/app_name&quot;</span><br><span class="line">       android:launchMode=&quot;singleTask&quot;</span><br><span class="line">       android:screenOrientation=&quot;portrait&quot;&gt;</span><br><span class="line">     &lt;!-- This Activity only shows up in the 2D launcher.  --&gt;</span><br><span class="line">     &lt;intent-filter&gt;</span><br><span class="line">         &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;</span><br><span class="line">         &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;</span><br><span class="line">     &lt;/intent-filter&gt;</span><br><span class="line">   &lt;/activity&gt;</span><br><span class="line"></span><br><span class="line">   &lt;!-- This is a standard Daydream Activity.  --&gt;</span><br><span class="line">   &lt;activity</span><br><span class="line">       android:name=&quot;.VrVideoActivity&quot;</span><br><span class="line">       android:configChanges=&quot;orientation|keyboardHidden|screenSize|uiMode|navigation&quot;</span><br><span class="line">       android:enableVrMode=&quot;@string/gvr_vr_mode_component&quot;</span><br><span class="line">       android:label=&quot;@string/app_name&quot;</span><br><span class="line">       android:launchMode=&quot;singleTask&quot;</span><br><span class="line">       android:resizeableActivity=&quot;false&quot;</span><br><span class="line">       android:screenOrientation=&quot;landscape&quot;</span><br><span class="line">       android:theme=&quot;@style/VrActivityTheme&quot;&gt;</span><br><span class="line"></span><br><span class="line">     &lt;!-- The VR icon to be used in Daydream Home comes in two parts: a foreground icon and a</span><br><span class="line">          background icon. The foreground icon is also used by the 2D Activity. --&gt;</span><br><span class="line">     &lt;meta-data</span><br><span class="line">         android:name=&quot;com.google.android.vr.icon&quot;</span><br><span class="line">         android:resource=&quot;@drawable/icon&quot; /&gt;</span><br><span class="line">     &lt;meta-data</span><br><span class="line">         android:name=&quot;com.google.android.vr.icon_background&quot;</span><br><span class="line">         android:resource=&quot;@drawable/vr_icon_background&quot; /&gt;</span><br><span class="line"></span><br><span class="line">     &lt;!-- This Activity only shows up in Daydream Home and not the 2D Launcher. --&gt;</span><br><span class="line">     &lt;intent-filter&gt;</span><br><span class="line">       &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;</span><br><span class="line">       &lt;category android:name=&quot;com.google.intent.category.DAYDREAM&quot;/&gt;</span><br><span class="line">     &lt;/intent-filter&gt;</span><br><span class="line">   &lt;/activity&gt;</span><br></pre></td></tr></table></figure>
+
+<p>其中activity的大部分代码都是和权限相关的，真正的视频解析加载在MediaLoader中，从类的说明中可以看到，可以通过adb命令来传递intent来打开视频：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;p&gt;Example intents compatible with adb are:</span><br><span class="line">*   &lt;ul&gt;</span><br><span class="line">*     &lt;li&gt;</span><br><span class="line">*       A top-bottom stereo image in the VR Activity.</span><br><span class="line">*       &lt;b&gt;adb shell am start -a android.intent.action.VIEW  \</span><br><span class="line">*          -n com.google.vr.sdk.samples.video360/.VrVideoActivity \</span><br><span class="line">*          -d &quot;file:///sdcard/IMAGE.JPG&quot; \</span><br><span class="line">*          --ei stereoFormat 2</span><br><span class="line">*       &lt;/b&gt;</span><br><span class="line">*     &lt;/li&gt;</span><br><span class="line">*     &lt;li&gt;</span><br><span class="line">*       A monoscopic video in the 2D Activity.</span><br><span class="line">*       &lt;b&gt;adb shell am start -a android.intent.action.VIEW  \</span><br><span class="line">*          -n com.google.vr.sdk.samples.video360/.VideoActivity \</span><br><span class="line">*          -d &quot;file:///sdcard/VIDEO.MP4&quot; \</span><br><span class="line">*          --ei stereoFormat 0</span><br><span class="line">*       &lt;/b&gt;</span><br><span class="line">*     &lt;/li&gt;</span><br><span class="line">*   &lt;/ul&gt;</span><br><span class="line">*</span><br><span class="line">* &lt;p&gt;This sample does not validiate that a given file is readable by the Android media decoders.</span><br><span class="line">* You should validate that the file plays on your target devices via</span><br><span class="line">* &lt;b&gt;adb shell am start -a android.intent.action.VIEW -t video/mpeg -d &quot;file:///VIDEO.MP4&quot;&lt;/b&gt;</span><br></pre></td></tr></table></figure>
+
+<p>我们从YouTube上下载了一个monoscopic的视频，放在sdcard的目录下，通过运行命令可播放对应的全景视频</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">F:\09androidsdk&gt;adb shell am start -a android.intent.action.VIEW -n com.google.v</span><br><span class="line">r.sdk.samples.video360/.VideoActivity -d &quot;file://storage/sdcard/monoscopicVideo.</span><br><span class="line">mp4&quot; --ei stereoFormat 0</span><br><span class="line">Starting: Intent &#123; act=android.intent.action.VIEW dat=file://storage/sdcard/mono</span><br><span class="line">scopicVideo.mp4 cmp=com.google.vr.sdk.samples.video360/.VideoActivity (has extra</span><br><span class="line">s) &#125;</span><br></pre></td></tr></table></figure>
+
+<p>该命令启用的是VideoActivity来播放全景视频，参数stereoFormat 0表示，视频类型为单个摄像头帧拍摄的全景视频。1表示用左右眼的方式渲染的，如果在非vr的显示中显示的话，则只显示左眼部分。2表示上下部分分割的左右眼渲染方式，如果在非vr显示中显示的话，只显示上部分内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/** Standard media where a single camera frame takes up the entire media frame. */</span><br><span class="line">  public static final int MEDIA_MONOSCOPIC = 0;</span><br><span class="line">  /**</span><br><span class="line">   * Stereo media where the left &amp; right halves of the frame are rendered for the left &amp; right eyes,</span><br><span class="line">   * respectively. If the stereo media is rendered in a non-VR display, only the left half is used.</span><br><span class="line">   */</span><br><span class="line">  public static final int MEDIA_STEREO_LEFT_RIGHT = 1;</span><br><span class="line">  /**</span><br><span class="line">   * Stereo media where the top &amp; bottom halves of the frame are rendered for the left &amp; right eyes,</span><br><span class="line">   * respectively. If the stereo media is rendered in a non-VR display, only the top half is used.</span><br><span class="line">   */</span><br><span class="line">  public static final int MEDIA_STEREO_TOP_BOTTOM = 2;</span><br></pre></td></tr></table></figure>
+
+<p>播放器demo在8996上 android6.0无法运行。</p>
+<p><strong>在8953上可以运行播放3d stereo视频，视频播放不正常，叠加不正确。</strong></p>
+<p>但是切换成cardboard模式的点击 眼镜 标示的图标按钮后，切换到VrVideoActivity提示：</p>
+<blockquote>
+<p>手机不兼容：手机必须与Daydream兼容，请访问Daydream帮助中心了解详情。</p>
+</blockquote>
+<p>在moto     z和pixel等兼容手机上可正常运行，实现左右眼形变播放，中间会弹出和daydream控制器的配对的等。</p>
+<p>对应配合Daydream viewer应该就可以看到立体视频效果。</p>
+<p><em>TODO: 如何与Daydream平台进行兼容，需要做哪些工作，目前官网上列出的课兼容手机有华为mate，三星galaxy note8，pixel，moto z等手机。</em></p>
+<h3 id="sdk-videoplayer"><a href="#sdk-videoplayer" class="headerlink" title="sdk-videoplayer"></a>sdk-videoplayer</h3><p>通过 Asynchronous Reprojection Video Surface API来播放视频，也是一个播放器。</p>
+<p>在5516上，运行出错，暂时不研究了</p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://lynn8570.github.io">lynn8570</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://lynn8570.github.io/2018/02/27/google VR pana and video/">https://lynn8570.github.io/2018/02/27/google VR pana and video/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/2018/03/15/gitbook/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">gitbook知识服务共享平台搭建</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2018/02/26/Understanding the Treasure Hunt sample game/">
+        <span class="next-text nav-default">Understanding the Treasure Hunt sample game</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/ahonn" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2015 - 2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">lynn8570</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

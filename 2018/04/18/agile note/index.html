@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="敏捷开发 小记"><meta name="keywords" content="android"><link rel="alternate" href="/default" title="Lynn8570's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://lynn8570.github.io/2018/04/18/agile note/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>敏捷开发 小记 - Lynn8570's Blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Lynn8570's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Lynn8570's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">敏捷开发 小记
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-18
+        </span><span class="post-category">
+            <a href="/categories/BLOG/">BLOG</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#第一部分-敏捷开发"><span class="toc-text">第一部分 敏捷开发</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#敏捷宣言"><span class="toc-text">敏捷宣言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#敏捷原则："><span class="toc-text">敏捷原则：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#极限编程"><span class="toc-text">极限编程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#计划"><span class="toc-text">计划</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试"><span class="toc-text">测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重构"><span class="toc-text">重构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一次编程实践"><span class="toc-text">一次编程实践</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#第二部分-敏捷设计"><span class="toc-text">第二部分 敏捷设计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#单一职责原则-simple-responsibility-principle"><span class="toc-text">单一职责原则 simple responsibility principle</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开放-封闭原则"><span class="toc-text">开放-封闭原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Liskov替换原则"><span class="toc-text">Liskov替换原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#依赖倒置原则-dip"><span class="toc-text">依赖倒置原则 dip</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接口隔离原则"><span class="toc-text">接口隔离原则</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#第三部分-薪水支付案例研究"><span class="toc-text">第三部分 薪水支付案例研究</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#第一次迭代开始"><span class="toc-text">第一次迭代开始</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#气象站案例研究"><span class="toc-text">气象站案例研究</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ETS案例研究"><span class="toc-text">ETS案例研究</span></a></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><h1 id="第一部分-敏捷开发"><a href="#第一部分-敏捷开发" class="headerlink" title="第一部分 敏捷开发"></a>第一部分 敏捷开发</h1><blockquote>
+<p>人与人之间的交互式复杂的，并且从其效果从来都是难以预期，但却是工作中最为重要的方面</p>
+<p>—人件</p>
+</blockquote>
+<p>构建起具有合作精神的自组织团队</p>
+<blockquote>
+<p>教堂尖顶傻姑娘的风标，即使由钢铁制成，如果不懂得顺应风势的艺术，一样会被风暴立即摧毁</p>
+<p>——海因里希-海涅</p>
+</blockquote>
+<p>让软件团队具有快速工作、响应变化能力的价值观和原则。</p>
+<h2 id="敏捷宣言"><a href="#敏捷宣言" class="headerlink" title="敏捷宣言"></a>敏捷宣言</h2><blockquote>
+<p>个体和交互 胜过 过程和工具</p>
+<p>可以工作的软件 胜过 面面俱到的文档</p>
+<p>客户合作 胜过 合同谈判</p>
+<p>响应变化 胜过 遵循计划</p>
+</blockquote>
+<p>为下<strong>两周</strong>的做详细计划，为下三个月做粗略计划，再为以后做极为粗糙的计划。</p>
+<h2 id="敏捷原则："><a href="#敏捷原则：" class="headerlink" title="敏捷原则："></a>敏捷原则：</h2><ol>
+<li>我们最优先要做的事尽早的，持续的交付有价值的软件来使客户满意</li>
+<li>即使到开发的后期，也欢迎改变需求。敏捷过程利用变化来为客户创建竞争优势。</li>
+<li>经常性的交付可以工作的软件，交付间隔可以从几周到几个月，交付时间间隔越短越好。</li>
+<li>整个项目开发期间，业务人员和开发人员必须天天在一起工作。</li>
+<li>围绕被激励起来的个人来构建项目，给他们提供所需要的环境和支持，并且信任他们能够完成工作。</li>
+<li>团队内部，最具有效果且富有效率的传递信息的方法就是，面对面的交谈。</li>
+<li>工作的软件事收腰的进度度量标准</li>
+<li>敏捷过程提倡可持续的开发速度，责任人，开发者，用户应该能够保持一个长期的，恒定的开发速度。</li>
+<li>不断的关注优秀的技能和好的设计会增强敏捷能力</li>
+<li>简单—使未完成的工作最大化的艺术—是根本。简单</li>
+<li>最好的架构、需求和设计出自于自组织的团队</li>
+<li>每隔和一段时间，团队会在如何更有效的工作方面进行反省，相对应的对自己的行为进行调整。</li>
+</ol>
+<h2 id="极限编程"><a href="#极限编程" class="headerlink" title="极限编程"></a>极限编程</h2><p>xp，极限编程，是敏捷方法中的最著名的一个。</p>
+<p>和客户反复讨论，以获取对于需求细节的理解，但不去捕获那些细节。</p>
+<p>重构；不能容忍代码重复</p>
+<p>重构是持续进行的，不是在项目结束，版本发布的时候</p>
+<p>而是我们，要在每隔一个小时，或者半个小时就要去做的事情！！！</p>
+<p>隐喻</p>
+<p>极限编程是一组简单、具体的实践，这些实践结合起来形成了敏捷开发的过程。</p>
+<h2 id="计划"><a href="#计划" class="headerlink" title="计划"></a>计划</h2><p>初识探索：客户会不断编写新的用户素材。</p>
+<p>开发人员对这些素材进行估算，估算是相对的，不是绝对的。</p>
+<p>大的素材进行拆分，过小的素材进行合并</p>
+<p>用户能够安全的进行存款、取款、转账等活动</p>
+<p>拆分为：</p>
+<ul>
+<li>用户登录</li>
+<li>用户退出</li>
+<li>用户向其账户存款</li>
+<li>用户从其账户取款</li>
+<li>用户从其账户向其他账户转账</li>
+</ul>
+<p>任务计划</p>
+<p>一个任务，是一个开发人员能够在4～16个小时内实现的一些功能。</p>
+<p>在迭代中的点；我们希望看到拥有一半素材点数的完整素材被完成。而不是完成了百分之90的素材点，确没有一个完整的素材被完成。</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><blockquote>
+<p>烈火验真金，逆境磨意志——卢修斯-塞尼加</p>
+</blockquote>
+<p>测试驱动</p>
+<p>Mock object模式。测试方法</p>
+<p>白盒测试</p>
+<p>黑盒测试</p>
+<h2 id="重构"><a href="#重构" class="headerlink" title="重构"></a>重构</h2><p>代码可读性，</p>
+<p>去掉重复的代码</p>
+<p>提炼</p>
+<h2 id="一次编程实践"><a href="#一次编程实践" class="headerlink" title="一次编程实践"></a>一次编程实践</h2><p>如果还没必要引入新的类，先用简单参数。add(int) 二不是 add(Throw)这样。</p>
+<p>单一职责原则。game接受投掷也知道如何计算每轮的得分，好像有点违反了单一职责原则，如果增加一个scorer对象呢？？暂时先放着。因为我们还没想好把分数计算放在哪里</p>
+<p>先把代码写的更容易让人理解。</p>
+<p>各种测试例过了之后，看到乱乱的程序，再来重构一下？？</p>
+<p>从测试开始，至上而下</p>
+<h1 id="第二部分-敏捷设计"><a href="#第二部分-敏捷设计" class="headerlink" title="第二部分 敏捷设计"></a>第二部分 敏捷设计</h1><p>全局视。图和软件一起演化，在每次迭代中，团队改进系统设计，使设计尽可能适合于当前系统。不会花很多时间去预测未来的需求和需要，也不会试图在今天就构建一些基础结构去支撑那些他们认为明天才回需要的特性。</p>
+<p>拙劣的设计：</p>
+<ul>
+<li><p>僵硬化：设计难以改变</p>
+<p>单一的改动导致有依赖关系的模块的连锁改动，必须要改动的模块越多，表示设计越僵硬化</p>
+</li>
+<li><p>脆弱性：设计易于遭到破坏</p>
+<p>一个地方修改后，许多地方就可能出现问题</p>
+</li>
+<li><p>牢固性：设计难以重用</p>
+<p>​</p>
+</li>
+<li><p>粘滞性：难以做正确的事情</p>
+</li>
+<li><p>不必要的复杂性：过分设计</p>
+</li>
+<li><p>不必要的重复：滥用鼠标</p>
+</li>
+<li><p>晦涩性：混乱的表达</p>
+</li>
+</ul>
+<p>原则：</p>
+<ul>
+<li>单一职责原则 the single responsibility principle</li>
+<li>开放-封闭原则 the open-close principle</li>
+<li>Liskov替换原则 the Liskov substitution principle</li>
+<li>依赖倒置原则 the dependency inversion principle</li>
+<li>接口隔离原则 the interface segregation interface</li>
+</ul>
+<p>敏捷开发人员如何知道要做什么？</p>
+<ol>
+<li>遵循敏捷实践去发现问题；</li>
+<li>应用设计原则去诊断问题</li>
+<li>应用适当的设计模式去解决问题</li>
+</ol>
+<h2 id="单一职责原则-simple-responsibility-principle"><a href="#单一职责原则-simple-responsibility-principle" class="headerlink" title="单一职责原则 simple responsibility principle"></a>单一职责原则 simple responsibility principle</h2><p>内聚性——一个模块组成元素之间的功能相关性。</p>
+<p>就一个类而言，应该仅有一个引起它变化的原因；</p>
+<p>例如把game 和 scorer分离，之前game即要跟踪当前比赛，又要计算得分。每个职责的变化都是一个轴线。如果一个类承担的多于一个职责，那么引起这个类变化的原因就有多个</p>
+<p>如果一个类承担的职责过多，就等于把这些职责耦合在一起了。一个职责的变化可能会抑制这个类完成其他职责的能力。</p>
+<h2 id="开放-封闭原则"><a href="#开放-封闭原则" class="headerlink" title="开放-封闭原则"></a>开放-封闭原则</h2><p>对于扩展，是开放的</p>
+<p>对于更改，是封闭的</p>
+<p>关键是抽象！！！</p>
+<h2 id="Liskov替换原则"><a href="#Liskov替换原则" class="headerlink" title="Liskov替换原则"></a>Liskov替换原则</h2><p>子类型必须能够替换掉他们的基类型</p>
+<p>从行为的角度看 A是不是 is-a B，例如我们认为正方形是一种特殊的长方形。</p>
+<p>但在结算面积的时候，设置宽为4，长为5，长方形的面积是<code>4*5</code>，而如果设置了正方形长为4，宽为5，面积，，，就不是<code>4*5</code>这么算的了</p>
+<p>提取公共部分</p>
+<p>派生类中添加了其他类不会抛出的异常，也是违反了lsp原则</p>
+<p>Is-a含义过于宽广，子类型的正确定义是：可替换性的“</p>
+<h2 id="依赖倒置原则-dip"><a href="#依赖倒置原则-dip" class="headerlink" title="依赖倒置原则 dip"></a>依赖倒置原则 dip</h2><p>高层模块不应该依赖于低层模块，二者都应该依赖于抽象</p>
+<p>抽象不应该依赖于细节，细节应该依赖于抽象</p>
+<ul>
+<li>任何变量都不应该持有一个指向具体类的指针或者引用</li>
+<li>任何类都不应该从高具体类派生</li>
+<li>任何方法都不应该复写它的任何基类中已经实现的方法</li>
+</ul>
+<p>高层策略需要和低层实现进行分离</p>
+<h2 id="接口隔离原则"><a href="#接口隔离原则" class="headerlink" title="接口隔离原则"></a>接口隔离原则</h2><p>如果类的借口不是内聚的，就表示该类具有胖的接口</p>
+<h1 id="第三部分-薪水支付案例研究"><a href="#第三部分-薪水支付案例研究" class="headerlink" title="第三部分 薪水支付案例研究"></a>第三部分 薪水支付案例研究</h1><p>系统需求点</p>
+<p>用例分析，列举，异常情况</p>
+<p>介绍熟悉一些常见设计模式，monostate倒是之前没见过的模式，从行为上的单例</p>
+<h2 id="第一次迭代开始"><a href="#第一次迭代开始" class="headerlink" title="第一次迭代开始"></a>第一次迭代开始</h2><ul>
+<li><p>规格说明，与客户交谈中的一些记录，基本需求</p>
+</li>
+<li><p>基于用用例分析，考虑下系统的行为</p>
+<p>进行用例分析的时候，关注素材和验收测试，找出系统的用户会执行的操作种类。</p>
+<p>通过用例设计了系统核心模型图</p>
+</li>
+<li><p>实现，uml作为交流媒介，草图</p>
+<p>测试优先</p>
+</li>
+<li><p>打包，包的设计原则</p>
+<p>重用发布等价原则、共同重用原则、共同封闭原则、包内聚兴总结、稳定性包的耦合性和原则、</p>
+<p>​</p>
+<p>​</p>
+</li>
+</ul>
+<h2 id="气象站案例研究"><a href="#气象站案例研究" class="headerlink" title="气象站案例研究"></a>气象站案例研究</h2><p>todo</p>
+<h2 id="ETS案例研究"><a href="#ETS案例研究" class="headerlink" title="ETS案例研究"></a>ETS案例研究</h2><p>todo</p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://lynn8570.github.io">lynn8570</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://lynn8570.github.io/2018/04/18/agile note/">https://lynn8570.github.io/2018/04/18/agile note/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/2018/05/09/scrapy_test/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">scrapy 入门</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2018/04/13/TextPathView动画/">
+        <span class="next-text nav-default">Textpath动画效果</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/ahonn" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2015 - 2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">lynn8570</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

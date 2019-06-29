@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="scrapy 入门"><meta name="keywords" content="android"><link rel="alternate" href="/default" title="Lynn8570's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://lynn8570.github.io/2018/05/09/scrapy_test/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>scrapy 入门 - Lynn8570's Blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Lynn8570's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Lynn8570's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">scrapy 入门
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-05-09
+        </span><span class="post-category">
+            <a href="/categories/Python/">Python</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#创建项目"><span class="toc-text">创建项目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#示例"><span class="toc-text">示例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#生成爬虫类"><span class="toc-text">生成爬虫类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#定义item字段"><span class="toc-text">定义item字段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#登录数据"><span class="toc-text">登录数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#页面解析"><span class="toc-text">页面解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据保存"><span class="toc-text">数据保存</span></a></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><h1 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#创建项目后，在终端进入项目录入</span><br><span class="line"># source venv/bin/activate 来激活环境，最前面出现 (venv)</span><br><span class="line"># (venv) zowee-laiscdeMacBook-Pro:scrapytest zowee-laisc$ pip install Scrapy 然后安装Scrapy</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>激活虚拟环境后，如果要退出活着删除可以使用如下命令</p>
+<p><strong>退出虚拟环境</strong>$
+    deactivate<br><strong>删除虚拟环境</strong><br>    rm -r venv</p>
+</blockquote>
+<p>创建scrapy项目 <code>scrapy startproject tutorial</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(venv) zowee-laiscdeMacBook-Pro:scrapytest zowee-laisc$ scrapy startproject tutorial</span><br><span class="line">New Scrapy project &apos;tutorial&apos;, using template directory &apos;/Users/zowee-laisc/lynn/pycharmProject/scrapytest/venv/lib/python3.6/site-packages/scrapy/templates/project&apos;, created in:</span><br><span class="line">    /Users/zowee-laisc/lynn/pycharmProject/scrapytest/tutorial</span><br><span class="line"></span><br><span class="line">You can start your first spider with:</span><br><span class="line">    cd tutorial</span><br><span class="line">    scrapy genspider example example.com</span><br></pre></td></tr></table></figure>
+
+<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><ol>
+<li><h2 id="生成爬虫类"><a href="#生成爬虫类" class="headerlink" title="生成爬虫类"></a>生成爬虫类</h2><p>生成一个spider爬虫类 scrappy genspider spiderName xxxxdomain</p>
+<p>会在spider文件夹下生成一个 spiderXXX.py文件</p>
+<p>示例：爬一下公司内网的buglist</p>
+<p>​</p>
+</li>
+<li><h2 id="定义item字段"><a href="#定义item字段" class="headerlink" title="定义item字段"></a>定义item字段</h2><p>定义我们要处理哪些数据在 items.py文件中添加如下定义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import scrapy</span><br><span class="line">class ChandaoItem(scrapy.Item):</span><br><span class="line">    # define the fields for your item here like:</span><br><span class="line">    #bug title</span><br><span class="line">    title = scrapy.Field()</span><br><span class="line">    #严重等级</span><br><span class="line">    severity = scrapy.Field()</span><br><span class="line">    #bug 发现者</span><br><span class="line">    founder = scrapy.Field()</span><br><span class="line">    #当前责任人</span><br><span class="line">    current = scrapy.Field()</span><br></pre></td></tr></table></figure>
+
+<p>​</p>
+</li>
+<li><h2 id="登录数据"><a href="#登录数据" class="headerlink" title="登录数据"></a>登录数据</h2><p>一般网站都要账号密码登录流程</p>
+<p>在进入请求的时候，将用户数据封好后，再返回给引擎，要求请求完成后由after_login来处理。</p>
+<p>在after_login中在重新请求到我们需要爬取的页面，这个时候，已经是登录状态了，然后再将请求后的数据交给parse_buglist处理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">def parse(self, response):</span><br><span class="line">        return scrapy.FormRequest.from_response(</span><br><span class="line">            response,</span><br><span class="line">            formdata=&#123;&apos;account&apos;:&apos;linlian&apos;,&apos;password&apos;:&apos;XXXX&apos;&#125;,</span><br><span class="line">            callback = self.after_login</span><br><span class="line">        )</span><br><span class="line">def after_login(self,response):</span><br><span class="line">        print(&quot;after......&quot;)</span><br><span class="line">        print(response.xpath(&apos;//script&apos;).extract()[0])</span><br><span class="line">        #with open(&quot;body.txt&quot;, &apos;wb&apos;) as f:</span><br><span class="line">        #    f.write(response.body)</span><br><span class="line">        #b&quot;&lt;script&gt;parent.location=&apos;/zentao/index.html&apos;;\n\n&lt;/script&gt;\n&quot;</span><br><span class="line">        return scrapy.Request(&apos;http://192.168.2.27/zentao/bug-browse-21.html&apos;,</span><br><span class="line">                              callback= self.parse_buglist)</span><br></pre></td></tr></table></figure>
+
+<p>​</p>
+</li>
+<li><h2 id="页面解析"><a href="#页面解析" class="headerlink" title="页面解析"></a>页面解析</h2><p>拿到页面数据后，通过xpath拿到我们需要的节点，进行迭代解析我们需要的数据，然后通过页面分析拿到需要进一步请求的连接地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">def parse_buglist(self,response):</span><br><span class="line">       print(&quot;parse_buglist&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">       node_list = response.xpath(&quot;//tr[@class=&apos;text-center&apos;]&quot;)</span><br><span class="line">       for node in node_list:</span><br><span class="line">           item =  ChandaoItem()</span><br><span class="line">           item[&apos;severity&apos;] = node.xpath(&quot;./td[2]/span/text()&quot;).extract()[0]</span><br><span class="line">           item[&apos;title&apos;] = node.xpath(&quot;./td[4]/a/text()&quot;).extract()[0]</span><br><span class="line">           item[&apos;founder&apos;] = node.xpath(&quot;./td[5]/text()&quot;).extract()[0]</span><br><span class="line">           item[&apos;current&apos;] = node.xpath(&quot;./td[6]/text()&quot;).extract()[0]</span><br><span class="line">           yield item</span><br><span class="line"></span><br><span class="line">       try:</span><br><span class="line">           url = response.xpath(&quot;//i[@class=&apos;icon-play&apos;]/../@href&quot;).extract()[0]</span><br><span class="line">           print(url)</span><br><span class="line">           if len(url) !=0:</span><br><span class="line">               yield      scrapy.Request(&apos;http://192.168.2.27&apos;+url,callback=self.parse_buglist)</span><br><span class="line">       except IndexError:</span><br><span class="line">           print(&quot;Get next Error&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>​</p>
+</li>
+<li><h2 id="数据保存"><a href="#数据保存" class="headerlink" title="数据保存"></a>数据保存</h2><p>运行爬虫 <code>scrapey crawl Buglist -o items.json</code> 并将结果保存在 items.json</p>
+</li>
+</ol>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://lynn8570.github.io">lynn8570</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://lynn8570.github.io/2018/05/09/scrapy_test/">https://lynn8570.github.io/2018/05/09/scrapy_test/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/2018/05/11/android_studio_opencv/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">使用Android studio导入open cv 示例代码</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2018/04/18/agile note/">
+        <span class="next-text nav-default">敏捷开发 小记</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/ahonn" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2015 - 2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">lynn8570</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

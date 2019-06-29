@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="自定义framework动态链接库jar"><meta name="keywords" content="android"><link rel="alternate" href="/default" title="Lynn8570's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://lynn8570.github.io/2015/12/11/customer framework jar/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>自定义framework动态链接库jar - Lynn8570's Blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Lynn8570's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Lynn8570's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">自定义framework动态链接库jar
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2015-12-11
+        </span><span class="post-category">
+            <a href="/categories/ANDROID/">ANDROID</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#common-library"><span class="toc-text">common library</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#jar包的com-zowee-widget-xml"><span class="toc-text">jar包的com.zowee.widget.xml</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#项目编译的mk"><span class="toc-text">项目编译的mk</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改device-mk文件"><span class="toc-text">修改device.mk文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#app如何访问引入动态链接库"><span class="toc-text">app如何访问引入动态链接库</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#app的mk文件"><span class="toc-text">app的mk文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AndroidManifest-xml文件"><span class="toc-text">AndroidManifest.xml文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#app如何访问自定义framework资源"><span class="toc-text">app如何访问自定义framework资源</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#java代码中"><span class="toc-text">java代码中</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xml中自定义控件的访问"><span class="toc-text">xml中自定义控件的访问</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>上一篇总结的是自定义framework资源包的打包和访问，而这一篇，相对要简单一些，是android平台的自定义动态链接库。目的在于定义一个framework级别的jar，供相关应用使用。之前一个项目的common组件采用的是BUILD_STATIC_JAVA_LIBRARY方式，调试起来相对简单，不需要涉及到framework的资源，framework的jar包这样，但是会造成每个应用内都引入一个common的jar包，各自为营，不知不觉加大了整体软件的大小。因此这种common级别的jar包，还是作成动态jar，加入到系统中。</p>
+<h1 id="common-library"><a href="#common-library" class="headerlink" title="common library"></a>common library</h1><p>其实参考android的sample代码就可以完成基本的jar包编译，这里只是记录一下，其实，没那么难，啦啦。jar库的基文件目录如下：</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20151216094557.jpg" alt></p>
+<p>java下存放纯java代码，一些需要的资源，我们就直接使用上一篇中说的自定义framework资源。</p>
+<h2 id="jar包的com-zowee-widget-xml"><a href="#jar包的com-zowee-widget-xml" class="headerlink" title="jar包的com.zowee.widget.xml"></a>jar包的com.zowee.widget.xml</h2><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;permissions&gt;
+    &lt;library name=&quot;com.zowee.widget&quot;
+            file=&quot;/system/framework/com.zowee.widget.jar&quot;/&gt;
+&lt;/permissions&gt;</code></pre><h2 id="项目编译的mk"><a href="#项目编译的mk" class="headerlink" title="项目编译的mk"></a>项目编译的mk</h2><p> 项目编译的mk代码如下</p>
+<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">ifneq ($(TARGET_BUILD_JAVA_SUPPORT_LEVEL),)</span><br><span class="line"># This makefile shows how to build your own shared library that can be</span><br><span class="line"># shipped on the system of a phone, and included additional examples of</span><br><span class="line"># including JNI code with the library and writing client applications against it.</span><br><span class="line">LOCAL_PATH := $(call my-dir)</span><br><span class="line"># the library</span><br><span class="line"># ============================================================</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">LOCAL_SRC_FILES := \</span><br><span class="line">        $(call all-subdir-java-files)</span><br><span class="line">LOCAL_MODULE_TAGS := optional</span><br><span class="line"></span><br><span class="line"># 我们要编译的库名就是com.zowee.widget.jar</span><br><span class="line">LOCAL_MODULE:= com.zowee.widget</span><br><span class="line">include $(BUILD_JAVA_LIBRARY)</span><br><span class="line"># 下面我们需要将com.zowee.widget.xml编译会生出到</span><br><span class="line"># system/etc/permission下，用于作权限声明的</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">LOCAL_MODULE := com.zowee.widget.xml</span><br><span class="line">LOCAL_MODULE_TAGS := optional</span><br><span class="line">LOCAL_MODULE_CLASS :=ETC</span><br><span class="line">LOCAL_MODULE_PATH :=$(TARGET_OUT_ETC)/permissions</span><br><span class="line">LOCAL_SRC_FILES :=$(LOCAL_MODULE)</span><br><span class="line">include $(BUILD_PREBUILT)</span><br><span class="line"></span><br><span class="line"># the documentation</span><br><span class="line"># ============================================================</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">LOCAL_SRC_FILES := $(call all-subdir-java-files) $(call all-subdir-html-files)</span><br><span class="line">LOCAL_MODULE:= com.zowee.widget</span><br><span class="line">LOCAL_DROIDDOC_OPTIONS := com.zowee.widget</span><br><span class="line">LOCAL_MODULE_CLASS := JAVA_LIBRARIES</span><br><span class="line">LOCAL_DROIDDOC_USE_STANDARD_DOCLET := true</span><br><span class="line">include $(BUILD_DROIDDOC)</span><br><span class="line"># The JNI component</span><br><span class="line"># ============================================================</span><br><span class="line"># Also build all of the sub-targets under this one: the library&apos;s</span><br><span class="line"># associated JNI code, and a sample client of the library.</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">include $(call all-makefiles-under,$(LOCAL_PATH))</span><br><span class="line">endif # JAVA_SUPPORT</span><br></pre></td></tr></table></figure></code></pre><p>以上大部分为参考sample代码，编译之后，会生成 </p>
+<p><code>Install:out/target/product/.../system/framework/com.zowee.widget.jar</code><br>和
+ <code>Copy xml: out/target/product/.../system/etc/permissions/com.zowee.widget.xml</code>;</p>
+<h2 id="修改device-mk文件"><a href="#修改device-mk文件" class="headerlink" title="修改device.mk文件"></a>修改device.mk文件</h2><p>将这两个添加到项目编译中，这样生成的system.image才会包含所需要的jar和xml文件；<br>拷贝xml文件：<br><code>PRODUCT_COPY_FILES += vendor/zowee/proprietary/framework/WidgetLibrary/com.zowee.widget.xml:system/etc/permissions/com.zowee.widget.xml</code><br>添加jar模块：<code>PRODUCT_PACKAGES+=com.zowee.widget</code></p>
+<h1 id="app如何访问引入动态链接库"><a href="#app如何访问引入动态链接库" class="headerlink" title="app如何访问引入动态链接库"></a>app如何访问引入动态链接库</h1><p>作为一个普通的app，如何访问系统的framework res资源，如何引入动态的jar包，并在xml和java代码中访问公共资源中的内容.</p>
+<h2 id="app的mk文件"><a href="#app的mk文件" class="headerlink" title="app的mk文件"></a>app的mk文件</h2><pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">LOCAL_PATH:= $(call my-dir)</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">LOCAL_MODULE_TAGS := optional</span><br><span class="line"></span><br><span class="line"># 要编译的app模块名称PlatformLibraryClient.apk</span><br><span class="line">LOCAL_PACKAGE_NAME := PlatformLibraryClient</span><br><span class="line"># Only compile source java files in this apk.</span><br><span class="line">LOCAL_SRC_FILES := $(call all-java-files-under, src)</span><br><span class="line"># 不要用current！，不然无法访问到自定义的framework组件</span><br><span class="line">#LOCAL_SDK_VERSION := current</span><br><span class="line"># 将动态库导入编译</span><br><span class="line">LOCAL_JAVA_LIBRARIES := com.zowee.widget</span><br><span class="line">LOCAL_PROGUARD_ENABLED := disabled</span><br><span class="line">include $(BUILD_PACKAGE)</span><br></pre></td></tr></table></figure></code></pre><h2 id="AndroidManifest-xml文件"><a href="#AndroidManifest-xml文件" class="headerlink" title="AndroidManifest.xml文件"></a>AndroidManifest.xml文件</h2><pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    package=&quot;com.example.android.platform_library.client&quot;&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;application android:label=&quot;Platform Lib Client&quot;&gt;</span><br><span class="line">    </span><br><span class="line">        &lt;!--将 com.zowee.widget 引入--&gt;</span><br><span class="line">        </span><br><span class="line">        &lt;uses-library android:name=&quot;com.zowee.widget&quot; /&gt;</span><br><span class="line">        </span><br><span class="line">        &lt;activity android:name=&quot;Client&quot;&gt;</span><br><span class="line">            &lt;intent-filter&gt;</span><br><span class="line">                &lt;action android:name=&quot;android.intent.action.MAIN&quot;/&gt;</span><br><span class="line">                &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot;/&gt;</span><br><span class="line">            &lt;/intent-filter&gt;</span><br><span class="line">        &lt;/activity&gt;</span><br><span class="line">    &lt;/application&gt;</span><br><span class="line">&lt;/manifest&gt;</span><br></pre></td></tr></table></figure></code></pre><h1 id="app如何访问自定义framework资源"><a href="#app如何访问自定义framework资源" class="headerlink" title="app如何访问自定义framework资源"></a>app如何访问自定义framework资源</h1><h2 id="java代码中"><a href="#java代码中" class="headerlink" title="java代码中"></a>java代码中</h2><p>只要导入编译正常，基本上java代码中就可以直接对自定义framework的资源进行访问，例如：<br>对jar包中的自定义控件，自定义资源的访问</p>
+<p><code>import com.zowee.widget.ToolbarImageTextButton;</code></p>
+<p><code>b2.setText(getString(com.zowee.R.string.zowee),1);</code></p>
+<h2 id="xml中自定义控件的访问"><a href="#xml中自定义控件的访问" class="headerlink" title="xml中自定义控件的访问"></a>xml中自定义控件的访问</h2><p>xml中对自定义控件的访问，自定义属性的访问，自定义资源的访问，可参考如下：</p>
+<pre><code>&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    xmlns:zowee=&quot;http://schemas.android.com/apk/res/com.zowee&quot; 
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    &gt;
+    &lt;com.zowee.widget.ToolbarImageTextButton
+    android:layout_width=&quot;wrap_content&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:text=&quot;@com.zowee:string/zowee&quot;
+    zowee:bracketColor=&quot;#057852dd&quot; 
+    android:id=&quot;@+id/toolbutton&quot;
+    /&gt;
+&lt;/RelativeLayout&gt;</code></pre><p>请注意 <code>xmlns:zowee=&quot;http://schemas.android.com/apk/res/com.zowee&quot;</code> 和 <code>zowee:bracketColor=&quot;#057852dd&quot;</code><br>以及<br><code>android:text=&quot;@com.zowee:string/zowee&quot;</code></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>自此，针对自定义的一套资源和jar的框架已经完成了，这样做的目的是，当整个平台升级的时候，我们可以单独将自定义的framework res 和 framework jar 先进行移植，接着依赖于这些的自定义app,也可以顺利的在新的平台上运行了</p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://lynn8570.github.io">lynn8570</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://lynn8570.github.io/2015/12/11/customer framework jar/">https://lynn8570.github.io/2015/12/11/customer framework jar/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/2016/03/05/Mtk feature phone - how to add new application/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">MTK Feature Phone-Hello World</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2015/12/10/customer framework resource/">
+        <span class="next-text nav-default">自定义framework资源apk</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/ahonn" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2015 - 2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">lynn8570</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="常见的内存泄露"><meta name="keywords" content="android"><link rel="alternate" href="/default" title="Lynn8570's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://lynn8570.github.io/2015/09/02/Common memory leaks/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>常见的内存泄露 - Lynn8570's Blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Lynn8570's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Lynn8570's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">常见的内存泄露
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2015-09-02
+        </span><span class="post-category">
+            <a href="/categories/android/">android</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p>利用<a href="https://github.com/square/leakcanary" target="_blank" rel="noopener">LeakCanary</a>检查内存泄露，在出现内存泄露的时候，会弹出内存泄露提醒，点击可显示内存泄露路径。现在我来归纳一下自己遇到的几种常见的内存泄露类型吧<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"># 常见的泄露类型 #</span><br><span class="line"></span><br><span class="line">- 对context，activity的static的引用</span><br><span class="line">	</span><br><span class="line">	没必要的static，移出static</span><br><span class="line">	</span><br><span class="line">	![](http://7xl98n.com1.z0.glb.clouddn.com/QQ截图20150806154414.jpg)</span><br><span class="line"></span><br><span class="line">	上图中`RawContactEditorView.mContext`有时候存在这种没有必要的static应用，看到static的时候，请提高一百八十分的警惕，寻根是否有必要，是否可以用appcontext来替代等，以便防止对activity context的泄露</span><br><span class="line"></span><br><span class="line">- 必要的static，试着用appcontext来替代</span><br><span class="line"></span><br><span class="line">	![](http://7xl98n.com1.z0.glb.clouddn.com/QQ截图20150806154825.jpg)</span><br><span class="line"></span><br><span class="line">	上图中`ContactListFilterController.sFilterController`为静态，而这sFilterController对activity的context存在引用，从而造成了context的泄露。但是为了实现单例，代码又不得不保留static，对于这种情况查看对context引用的实际用处，有时候你就回发现，很多时候可以appcontext来替代。</span><br><span class="line"></span><br><span class="line">- 必须对activity static应用，控制生命周期</span><br><span class="line"></span><br><span class="line">	![](http://7xl98n.com1.z0.glb.clouddn.com/QQ截图20150901135429.jpg)</span><br><span class="line"></span><br><span class="line">	上图中，mDialog为静态，在外部需要直接访问必须为静态，dialog又对activity的context进行了引用，无法用appcontext来替代，像这种情况，可以在相应activity的生命周期中对引用进行解除。就是我们熟悉的`onDestroy()`中设置null，remove之类的操作</span><br><span class="line"></span><br><span class="line">- 非静态的内部类</span><br><span class="line"></span><br><span class="line">	![](http://7xl98n.com1.z0.glb.clouddn.com/QQ截图20150806154825.jpg)</span><br><span class="line">	</span><br><span class="line">	在activity中直接声明的内部类，通常对activity保有一个this的引用，一次容易照成泄露，如果不想去控制这个mPhoneStateListener的生命周期，就采用将其变为静态内部类，通过WeakReference来保留对this的引用。例如：</span><br><span class="line"></span><br><span class="line">```</span><br><span class="line">public static class PhoneStateListenerImpl extends PhoneStateListener &#123;</span><br><span class="line">		protected final WeakReference&lt;DialpadFragment&gt; mDialpadFragment; </span><br><span class="line">		public PhoneStateListenerImpl(DialpadFragment fragment)&#123;</span><br><span class="line">			 mDialpadFragment = new WeakReference&lt;DialpadFragment&gt;(fragment);</span><br><span class="line">		&#125;</span><br><span class="line">        @Override</span><br><span class="line">        public void onCallStateChanged(int state, String incomingNumber) &#123;</span><br><span class="line">		 	final DialpadFragment fragment = mDialpadFragment.get();</span><br><span class="line">			if(fragment==null)return;</span><br><span class="line">			if(fragment.getActivity()==null)return;</span><br><span class="line">            	…….// fragment!=null.</span><br><span class="line">			Balabala…….</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">```</span><br><span class="line"></span><br><span class="line">- HandlerThread 没有quit，cursor没有close，网络连接、IO流没有及时关闭</span><br><span class="line"></span><br><span class="line"># 总结 #</span><br><span class="line"></span><br><span class="line">这些知识一些常见的内存泄露例子，平时我们经常见的在onDestroy的时候，unregistered，close，removelistener之类的操作都是避免因一直引用context而引发内存泄露；另外就是static变量的慎用，还有就是非静态内部类慎用。</span><br><span class="line">遇到内漏的时候，主要是还是根据路径查看代码，具体问题，具体分析~~~</span><br></pre></td></tr></table></figure></p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://lynn8570.github.io">lynn8570</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://lynn8570.github.io/2015/09/02/Common memory leaks/">https://lynn8570.github.io/2015/09/02/Common memory leaks/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/2015/09/14/some memory leaks that no need to be fixed/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Leakcanary部分泄露警报无需修复</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2015/09/01/use leakcanary for memory leak check/">
+        <span class="next-text nav-default">如何使用leakcanary进行内存检查</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/ahonn" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2015 - 2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">lynn8570</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

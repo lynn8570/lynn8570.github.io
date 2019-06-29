@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="Loading 动画效果"><meta name="keywords" content="android"><link rel="alternate" href="/default" title="Lynn8570's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://lynn8570.github.io/2018/04/13/Loading动画效果/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>Loading 动画效果 - Lynn8570's Blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Lynn8570's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Lynn8570's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Loading 动画效果
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-13
+        </span><span class="post-category">
+            <a href="/categories/animation/">animation</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Loading动画效果"><span class="toc-text">Loading动画效果</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#基础类"><span class="toc-text">基础类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BallPulseIndicator"><span class="toc-text">BallPulseIndicator</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BallClipRotateIndicator"><span class="toc-text">BallClipRotateIndicator</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SquareSpinIndicator"><span class="toc-text">SquareSpinIndicator</span></a></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><h1 id="Loading动画效果"><a href="#Loading动画效果" class="headerlink" title="Loading动画效果"></a>Loading动画效果</h1><p>项目地址：<a href="https://github.com/81813780/AVLoadingIndicatorView" target="_blank" rel="noopener">Github</a></p>
+<p>动画效果：</p>
+<p><img src="https://github.com/81813780/AVLoadingIndicatorView/blob/master/screenshots/avi.gif" alt="loading动画"></p>
+<p>进阶升级，主要是一些自定义的view，基本原理是在draw的时候，因某些属性的变化，使得draw的图形发生变化，从而产生动画效果</p>
+<h2 id="基础类"><a href="#基础类" class="headerlink" title="基础类"></a>基础类</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public abstract class Indicator extends Drawable implements Animatable</span><br></pre></td></tr></table></figure>
+
+<p>可以详细了解下Drawable的一些常用方法</p>
+<h2 id="BallPulseIndicator"><a href="#BallPulseIndicator" class="headerlink" title="BallPulseIndicator"></a>BallPulseIndicator</h2><p>三个小圆点，大小相继变化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Created by Jack on 2015/10/16.</span><br><span class="line"> */</span><br><span class="line">public class BallPulseIndicator extends Indicator &#123;</span><br><span class="line"></span><br><span class="line">    public static final float SCALE=1.0f;</span><br><span class="line"></span><br><span class="line">    //scale x ,y</span><br><span class="line">    private float[] scaleFloats=new float[]&#123;SCALE,</span><br><span class="line">            SCALE,</span><br><span class="line">            SCALE&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void draw(Canvas canvas, Paint paint) &#123;</span><br><span class="line">        float circleSpacing=4;</span><br><span class="line">        float radius=(Math.min(getWidth(),getHeight())-circleSpacing*2)/6;</span><br><span class="line">        //根据view的宽度高度，和圆圈的间隔大小计算每个元的半径</span><br><span class="line">        </span><br><span class="line">        float x = getWidth()/ 2-(radius*2+circleSpacing);</span><br><span class="line">        float y=getHeight() / 2;</span><br><span class="line">        第一个小圆圈的位置，</span><br><span class="line">        for (int i = 0; i &lt; 3; i++) &#123;//总共有三个，每个小圆圈的位置相继向右偏移</span><br><span class="line">            canvas.save();</span><br><span class="line">            float translateX=x+(radius*2)*i+circleSpacing*i;</span><br><span class="line">            </span><br><span class="line">            canvas.translate(translateX, y);</span><br><span class="line">           // Log.i(&quot;BallPulseIndicator&quot;,&quot;scaleFloats[&quot;+i+&quot;]=&quot;+scaleFloats[i]);</span><br><span class="line">            canvas.scale(scaleFloats[i], scaleFloats[i]);//scaleFloats[i]根据ValueAnimator的值来变化</span><br><span class="line">            canvas.drawCircle(0, 0, radius, paint);</span><br><span class="line">            canvas.restore();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public ArrayList&lt;ValueAnimator&gt; onCreateAnimators() &#123;</span><br><span class="line">        ArrayList&lt;ValueAnimator&gt; animators=new ArrayList&lt;&gt;();</span><br><span class="line">        int[] delays=new int[]&#123;120,240,360&#125;;</span><br><span class="line">        for (int i = 0; i &lt; 3; i++) &#123;</span><br><span class="line">            final int index=i;</span><br><span class="line"></span><br><span class="line">            ValueAnimator scaleAnim=ValueAnimator.ofFloat(1,0.3f,1);</span><br><span class="line"></span><br><span class="line">            scaleAnim.setDuration(750);</span><br><span class="line">            scaleAnim.setRepeatCount(-1);</span><br><span class="line">            scaleAnim.setStartDelay(delays[i]);//每个小圈的scale变化通过delay来错开</span><br><span class="line"></span><br><span class="line">            addUpdateListener(scaleAnim,new ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line">                @Override</span><br><span class="line">                public void onAnimationUpdate(ValueAnimator animation) &#123;</span><br><span class="line">                    scaleFloats[index] = (float) animation.getAnimatedValue();</span><br><span class="line">                    postInvalidate();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            animators.add(scaleAnim);</span><br><span class="line">        &#125;</span><br><span class="line">        return animators;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过代码分析，基本原理，有一种豁然开朗的感觉，有时候觉得动画这东西就是在变魔术</p>
+<h2 id="BallClipRotateIndicator"><a href="#BallClipRotateIndicator" class="headerlink" title="BallClipRotateIndicator"></a>BallClipRotateIndicator</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">* Created by Jack on 2015/10/16.</span><br><span class="line"> */</span><br><span class="line">public class BallClipRotateIndicator extends Indicator &#123;</span><br><span class="line"></span><br><span class="line">    float scaleFloat=1,degrees;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void draw(Canvas canvas, Paint paint) &#123;</span><br><span class="line">        paint.setStyle(Paint.Style.STROKE);</span><br><span class="line">        paint.setStrokeWidth(3);</span><br><span class="line"></span><br><span class="line">        float circleSpacing=12;</span><br><span class="line">        float x = (getWidth()) / 2;</span><br><span class="line">        float y=(getHeight()) / 2;</span><br><span class="line">        canvas.translate(x, y);</span><br><span class="line">        canvas.scale(scaleFloat, scaleFloat);</span><br><span class="line">        canvas.rotate(degrees);</span><br><span class="line">        RectF rectF=new RectF(-x+circleSpacing,-y+circleSpacing,0+x-circleSpacing,0+y-circleSpacing);</span><br><span class="line">        canvas.drawArc(rectF, -45, 270, false, paint);//画有一段弧形</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public ArrayList&lt;ValueAnimator&gt; onCreateAnimators() &#123;</span><br><span class="line">        ArrayList&lt;ValueAnimator&gt; animators=new ArrayList&lt;&gt;();</span><br><span class="line">        ValueAnimator scaleAnim=ValueAnimator.ofFloat(1,0.6f,0.5f,1);</span><br><span class="line">        scaleAnim.setDuration(750);</span><br><span class="line">        scaleAnim.setRepeatCount(-1);</span><br><span class="line">        addUpdateListener(scaleAnim,new ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onAnimationUpdate(ValueAnimator animation) &#123;</span><br><span class="line">                scaleFloat = (float) animation.getAnimatedValue();</span><br><span class="line">                postInvalidate();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        ValueAnimator rotateAnim=ValueAnimator.ofFloat(0,180,360);</span><br><span class="line">        rotateAnim.setDuration(750);</span><br><span class="line">        rotateAnim.setRepeatCount(-1);</span><br><span class="line">        addUpdateListener(rotateAnim,new ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onAnimationUpdate(ValueAnimator animation) &#123;</span><br><span class="line">                degrees = (float) animation.getAnimatedValue();</span><br><span class="line">                postInvalidate();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        animators.add(scaleAnim);</span><br><span class="line">        animators.add(rotateAnim);</span><br><span class="line">        return animators;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="SquareSpinIndicator"><a href="#SquareSpinIndicator" class="headerlink" title="SquareSpinIndicator"></a>SquareSpinIndicator</h2><p>上下左右翻转的正方形，通过camera的api来用于计算3d的转化，用于生成matrix提供给canvas使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Created by Jack on 2015/10/16.</span><br><span class="line"> */</span><br><span class="line">public class SquareSpinIndicator extends Indicator &#123;</span><br><span class="line"></span><br><span class="line">    private float rotateX;</span><br><span class="line">    private float rotateY;</span><br><span class="line"></span><br><span class="line">    private Camera mCamera;</span><br><span class="line">    private Matrix mMatrix;</span><br><span class="line"></span><br><span class="line">    public SquareSpinIndicator()&#123;</span><br><span class="line">        mCamera=new Camera();</span><br><span class="line">        mMatrix=new Matrix();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void draw(Canvas canvas, Paint paint) &#123;</span><br><span class="line"></span><br><span class="line">        mMatrix.reset();</span><br><span class="line">        mCamera.save();</span><br><span class="line">        mCamera.rotateX(rotateX);</span><br><span class="line">        mCamera.rotateY(rotateY);//通过camera来坐x轴y轴的旋转</span><br><span class="line">        mCamera.getMatrix(mMatrix);//生成matrix</span><br><span class="line">        mCamera.restore();</span><br><span class="line"></span><br><span class="line">        mMatrix.preTranslate(-centerX(), -centerY());</span><br><span class="line">        mMatrix.postTranslate(centerX(), centerY());</span><br><span class="line">        //以上两行主要解决中心对称问题</span><br><span class="line">        //转变之前将0.0的中心点转化到view的中心，转化之后，再恢复回去</span><br><span class="line">        canvas.concat(mMatrix);</span><br><span class="line"></span><br><span class="line">        canvas.drawRect(new RectF(getWidth()/5,getHeight()/5,getWidth()*4/5,getHeight()*4/5),paint);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public ArrayList&lt;ValueAnimator&gt; onCreateAnimators() &#123;</span><br><span class="line">        ArrayList&lt;ValueAnimator&gt; animators=new ArrayList&lt;&gt;();</span><br><span class="line">        ValueAnimator animator=ValueAnimator.ofFloat(0,180,180,0,0);</span><br><span class="line">        addUpdateListener(animator,new ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onAnimationUpdate(ValueAnimator animation) &#123;</span><br><span class="line">                rotateX= (float) animation.getAnimatedValue();</span><br><span class="line">                postInvalidate();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        animator.setInterpolator(new LinearInterpolator());</span><br><span class="line">        animator.setRepeatCount(-1);</span><br><span class="line">        animator.setDuration(2500);</span><br><span class="line"></span><br><span class="line">        ValueAnimator animator1=ValueAnimator.ofFloat(0,0,180,180,0);</span><br><span class="line">        addUpdateListener(animator1,new ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onAnimationUpdate(ValueAnimator animation) &#123;</span><br><span class="line">                rotateY= (float) animation.getAnimatedValue();</span><br><span class="line">                postInvalidate();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        animator1.setInterpolator(new LinearInterpolator());</span><br><span class="line">        animator1.setRepeatCount(-1);</span><br><span class="line">        animator1.setDuration(2500);</span><br><span class="line"></span><br><span class="line">        animators.add(animator);</span><br><span class="line">        animators.add(animator1);</span><br><span class="line">        return animators;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://lynn8570.github.io">lynn8570</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://lynn8570.github.io/2018/04/13/Loading动画效果/">https://lynn8570.github.io/2018/04/13/Loading动画效果/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/2018/04/13/TextPathView动画/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Textpath动画效果</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2018/04/13/常见动画效果/">
+        <span class="next-text nav-default">常见动画效果</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/ahonn" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2015 - 2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">lynn8570</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

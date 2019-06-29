@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="书小白书单功能实现"><meta name="keywords" content="android"><link rel="alternate" href="/default" title="Lynn8570's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://lynn8570.github.io/2018/02/21/bookxiaobai application/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>书小白书单功能实现 - Lynn8570's Blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Lynn8570's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Lynn8570's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">书小白书单功能实现
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-02-21
+        </span><span class="post-category">
+            <a href="/categories/ANDROID/">ANDROID</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Bookxiaobai-书小白书单"><span class="toc-text">Bookxiaobai 书小白书单</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#主要的功能实现介绍"><span class="toc-text">主要的功能实现介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#采用mockplus初步的原型设计"><span class="toc-text">采用mockplus初步的原型设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#扫描图书二维码获取isbn号"><span class="toc-text">扫描图书二维码获取isbn号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通过isbn号查询豆瓣API获取图书信息"><span class="toc-text">通过isbn号查询豆瓣API获取图书信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#采用glide获取网络图片"><span class="toc-text">采用glide获取网络图片</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#timeline组件"><span class="toc-text">timeline组件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ButterKnife使用"><span class="toc-text">ButterKnife使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Todo-添加已读未读存储，数据后台同步"><span class="toc-text">Todo: 添加已读未读存储，数据后台同步</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><h1 id="Bookxiaobai-书小白书单"><a href="#Bookxiaobai-书小白书单" class="headerlink" title="Bookxiaobai 书小白书单"></a>Bookxiaobai 书小白书单</h1><p>书小白书单是个保存书单的小应用。</p>
+<p>主要功能是通过<strong>搜索书名</strong>或者通过<strong>扫描书本的isbn</strong>号来获取书籍信息，并将书籍收入清单中。</p>
+<p>并可通过设置书本状态，设置已读未读。以timeline的形式形成自己的读书清单列表。</p>
+<p>其中书本的信息主要访问的是豆瓣的API</p>
+<p>代码地址：<a href="https://github.com/lynn8570/BookXiaobai" target="_blank" rel="noopener">https://github.com/lynn8570/BookXiaobai</a></p>
+<h2 id="主要的功能实现介绍"><a href="#主要的功能实现介绍" class="headerlink" title="主要的功能实现介绍"></a>主要的功能实现介绍</h2><h3 id="采用mockplus初步的原型设计"><a href="#采用mockplus初步的原型设计" class="headerlink" title="采用mockplus初步的原型设计"></a>采用mockplus初步的原型设计</h3><p>  <a href="https://www.mockplus.cn/" target="_blank" rel="noopener">Mokcplus</a>是一个非常简单好用的原型设计工具，官网上有一些简易的视频教程，看看几本就会一些几本的功能。不管会不会，撸起袖子加油干，试试，就会了。</p>
+<p>  按照几本功能设计的原型大改如下图，细节与最后的实现略有差别</p>
+<p>  <img src="http://7xl98n.com1.z0.glb.clouddn.com/bookxiaobai_protype.gif" alt></p>
+<p>主要包括主页面采用timeline的形式显示收藏的书单列表，顶部为搜索框，右边为条形码扫描按钮。</p>
+<h3 id="扫描图书二维码获取isbn号"><a href="#扫描图书二维码获取isbn号" class="headerlink" title="扫描图书二维码获取isbn号"></a>扫描图书二维码获取isbn号</h3><blockquote>
+<p>ZXing (“zebra crossing”) is an open-source, multi-format 1D/2D barcode image processing<br>library implemented in Java, with ports to other languages.</p>
+</blockquote>
+<p>直接使用zxing库来实现条码的扫描，源码地址：<a href="https://github.com/zxing/zxing" target="_blank" rel="noopener">zxing github地址</a></p>
+<ol>
+<li><p>添加依赖</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">compile &apos;com.google.zxing:core:3.3.2&apos;</span><br><span class="line">compile &apos;com.journeyapps:zxing-android-embedded:3.5.0&apos;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启用内置的activity进行条码扫描</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">imageViewScan.setOnClickListener(new View.OnClickListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onClick(View view) &#123;</span><br><span class="line">                new IntentIntegrator(MainActivity.this).initiateScan();</span><br><span class="line">            &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>在onClick的时候，启动并初始化扫描页面</p>
+</li>
+<li><p>在onActivityResult中获取扫描结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">protected void onActivityResult(int requestCode, int resultCode, Intent data) &#123;</span><br><span class="line">       IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);</span><br><span class="line">       if (result != null) &#123;</span><br><span class="line">           if (result.getContents() == null) &#123;</span><br><span class="line">               Toast.makeText(this, &quot;Cancelled&quot;, Toast.LENGTH_LONG).show();</span><br><span class="line">           &#125; else &#123;</span><br><span class="line">               Toast.makeText(this, &quot;Scanned: &quot; + result.getContents(), Toast.LENGTH_LONG).show();</span><br><span class="line">               String strIsbn = result.getContents();//得到isbn号</span><br><span class="line">               if (!TextUtils.isEmpty(strIsbn)) &#123;</span><br><span class="line">                   mBookPresenter.getBookByIsbn(strIsbn);</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125; else &#123;</span><br><span class="line">           super.onActivityResult(requestCode, resultCode, data);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="通过isbn号查询豆瓣API获取图书信息"><a href="#通过isbn号查询豆瓣API获取图书信息" class="headerlink" title="通过isbn号查询豆瓣API获取图书信息"></a>通过isbn号查询豆瓣API获取图书信息</h3><p>  豆瓣根据isbn号获取图书的API接口：<a href="https://developers.douban.com/wiki/?title=book_v2#get_isbn_book" target="_blank" rel="noopener">api地址</a></p>
+<p>  例如通过访问 <a href="https://api.douban.com/v2/book/isbn/9787115412744" target="_blank" rel="noopener">https://api.douban.com/v2/book/isbn/9787115412744</a></p>
+<p>  即可获取图书信息</p>
+<ol>
+<li>采用MVP的结构，我们可以从接口获取到的json信息直接生成model中的BookBean类：具体方式可搜索插件<strong>GsonFormat</strong>自动生成javabean</li>
+<li>使用<a href="http://square.github.io/retrofit/" target="_blank" rel="noopener">restrofit</a>封装几个需要用到的豆瓣图书API：通过isbn号获取图书信息，通过图书ID获取图书信息。</li>
+</ol>
+<ul>
+<li><p>采用object box保持本地数据</p>
+<p><a href="http://objectbox.io/" target="_blank" rel="noopener">Objectbox</a> is designed for mobile. It is an object-oriented embedded database and a full alternative for SQLite. ObjectBox is <em>incidentally</em> also well-suited for IoT.</p>
+<p>具体介绍可查看官网。</p>
+<ol>
+<li><p>添加依赖</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: &apos;io.objectbox&apos;</span><br><span class="line">....</span><br><span class="line">....</span><br><span class="line">android&#123;</span><br><span class="line">    //add object box</span><br><span class="line">    compile &quot;io.objectbox:objectbox-android:1.4.0&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>初始化，在application 的onCreate中进行初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">BoxConfig.boxStore = MyObjectBox.builder().androidContext(app).build();</span><br><span class="line">Log.i(TAG,&quot;init()............boxstore=&quot;+boxStore);</span><br><span class="line">if (BuildConfig.DEBUG) &#123;</span><br><span class="line">    new AndroidObjectBrowser(boxStore).start(app);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>对象注释</p>
+<p>ObjectBox跟其他的ORM框架一样，通过对象属性注解来决定是否要持久化某个对象，或者某个属性。</p>
+<blockquote>
+<p>@Entity：这个对象需要持久化。</p>
+<p>@Id：这个对象的主键。</p>
+<p>@Index：这个对象中的索引。对经常大量进行查询的字段创建索引，会提高你的查询性能。</p>
+<p>@NameInDb：有的时候数据库中的字段跟你的对象字段不匹配的时候，可以使用此注解。</p>
+<p>@Transient:如果你有某个字段不想被持久化，可以使用此注解。</p>
+<p>@Relation:做一对多，多对一的注解</p>
+</blockquote>
+</li>
+<li><p>基础操作，增删改查</p>
+</li>
+</ol>
+</li>
+</ul>
+<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line">package com.lynn.bookxiaobai.boxstore.base;</span><br><span class="line">import com.lynn.bookxiaobai.boxstore.BoxConfig;</span><br><span class="line">import java.util.List;</span><br><span class="line">import io.objectbox.Box;</span><br><span class="line">import io.objectbox.query.QueryBuilder;</span><br><span class="line">		</span><br><span class="line">/**</span><br><span class="line"> * Created by lynn on 2018/2/10.</span><br><span class="line"> * @param &lt;T&gt; database entity</span><br><span class="line"> *</span><br><span class="line"> */</span><br><span class="line">public abstract class BaseBoxManager&lt;T&gt; &#123;</span><br><span class="line">    protected Box&lt;T&gt; mBox;</span><br><span class="line">    Class&lt;T&gt; tClass;</span><br><span class="line">		</span><br><span class="line">    public BaseBoxManager(Class&lt;T&gt; entityClazz)&#123;</span><br><span class="line">        this.tClass=entityClazz;</span><br><span class="line">        mBox= BoxConfig.getBoxStore().boxFor(tClass);</span><br><span class="line">    &#125;</span><br><span class="line">		</span><br><span class="line">    protected final void closeDatabase()&#123;</span><br><span class="line">        mBox.closeThreadResources();</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * 插入一条记录</span><br><span class="line">     *</span><br><span class="line">     * @return The ID of the object within its box.</span><br><span class="line">     */</span><br><span class="line">    public long insert(T entity) &#123;</span><br><span class="line">        if (entity == null) return -1;</span><br><span class="line">        return mBox.put(entity);</span><br><span class="line">    &#125;</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">    /**</span><br><span class="line">     * 插入多条记录</span><br><span class="line">     */</span><br><span class="line">    public void insert(List&lt;T&gt; entities) &#123;</span><br><span class="line">        if (entities != null)</span><br><span class="line">            mBox.put(entities);</span><br><span class="line">    &#125;</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">    /**</span><br><span class="line">     * 删除所有数据</span><br><span class="line">     */</span><br><span class="line">    public void deleteAll() &#123;</span><br><span class="line">        mBox.removeAll();</span><br><span class="line">    &#125;</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">    /**</span><br><span class="line">     * 根据条件删除数据库中的数据</span><br><span class="line">     */</span><br><span class="line">    public void delete(T object) &#123;</span><br><span class="line">        mBox.remove(object);</span><br><span class="line">    &#125;</span><br><span class="line">		</span><br><span class="line">    /**</span><br><span class="line">     * 删除多条数据</span><br><span class="line">     */</span><br><span class="line">    public void deleteList(List&lt;T&gt; objects) &#123;</span><br><span class="line">        mBox.remove(objects);</span><br><span class="line">    &#125;</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">    /**</span><br><span class="line">     * 更新一条记录</span><br><span class="line">     */</span><br><span class="line">    public long update(T object) &#123;</span><br><span class="line">		</span><br><span class="line">        return mBox.put(object);</span><br><span class="line">    &#125;</span><br><span class="line">		</span><br><span class="line">    /**</span><br><span class="line">     * 更新一条记录</span><br><span class="line">     */</span><br><span class="line">    public void update(List&lt;T&gt; objects) &#123;</span><br><span class="line">        mBox.put(objects);</span><br><span class="line">    &#125;</span><br><span class="line">		</span><br><span class="line">    /**</span><br><span class="line">     * @return Returns a builder to create queries for Object matching supplied criteria.</span><br><span class="line">     */</span><br><span class="line">    public QueryBuilder&lt;T&gt; getQueryBuilder() &#123;</span><br><span class="line">        return mBox.query();</span><br><span class="line">    &#125;</span><br><span class="line">		</span><br><span class="line">    /**</span><br><span class="line">     * 查询并返回所有对象的集合</span><br><span class="line">     */</span><br><span class="line">    public List&lt;T&gt; queryAll() &#123;</span><br><span class="line">        return getQueryBuilder().build().find();</span><br><span class="line">    &#125;</span><br><span class="line">		</span><br><span class="line">    /**</span><br><span class="line">     * 查询并返回 第一个对象</span><br><span class="line">     */</span><br><span class="line">    public T QueryFirst() &#123;</span><br><span class="line">        return getQueryBuilder().build().findFirst();</span><br><span class="line">    &#125;</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">    /**</span><br><span class="line">     * 获取对应的表名</span><br><span class="line">     */</span><br><span class="line">    public abstract String getTableName();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></code></pre><h3 id="采用glide获取网络图片"><a href="#采用glide获取网络图片" class="headerlink" title="采用glide获取网络图片"></a>采用glide获取网络图片</h3><ol>
+<li><p>添加依赖</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//glide</span><br><span class="line">implementation &apos;com.github.bumptech.glide:glide:4.6.1&apos;</span><br><span class="line">annotationProcessor &apos;com.github.bumptech.glide:compiler:4.6.1&apos;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>只需添加一行就可以加载图片</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">private void downloadImage()&#123;</span><br><span class="line">       String imgUrl=mBookbean.getImages().getSmall();</span><br><span class="line">       if(!TextUtils.isEmpty(imgUrl))&#123;</span><br><span class="line">           Glide.with(this).load(imgUrl).into(imgBook);//下载图片并显示到imageview上</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="timeline组件"><a href="#timeline组件" class="headerlink" title="timeline组件"></a>timeline组件</h3><p>  时间线显示列表的组件，找到了一个GitHub上star比较多的组件。<a href="https://github.com/vipulasri/Timeline-View" target="_blank" rel="noopener">Timeline-View</a> 上有详细介绍使用方法，只需要根据设计的样式稍作调整即可集成。</p>
+<h3 id="ButterKnife使用"><a href="#ButterKnife使用" class="headerlink" title="ButterKnife使用"></a>ButterKnife使用</h3><p>  使用butterknife可以减少繁琐的findviewbyid这样的代码，可直接通过注释来绑定组件。</p>
+<ol>
+<li><p>添加依赖</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//butterknife</span><br><span class="line">compile &apos;com.jakewharton:butterknife:8.8.1&apos;</span><br><span class="line">annotationProcessor &apos;com.jakewharton:butterknife-compiler:8.8.1&apos;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>注释组件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@BindView(R.id.txt_book_name)</span><br><span class="line">TextView txtBookName;</span><br><span class="line">@BindView(R.id.txt_author)</span><br><span class="line">TextView txtAuthor;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>绑定</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ButterKnife.bind(BookDetailActivity.this);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="Todo-添加已读未读存储，数据后台同步"><a href="#Todo-添加已读未读存储，数据后台同步" class="headerlink" title="Todo: 添加已读未读存储，数据后台同步"></a>Todo: 添加已读未读存储，数据后台同步</h3>
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://lynn8570.github.io">lynn8570</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://lynn8570.github.io/2018/02/21/bookxiaobai application/">https://lynn8570.github.io/2018/02/21/bookxiaobai application/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/2018/02/25/android vr and ar/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Android vr ar</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2017/12/11/android private so/">
+        <span class="next-text nav-default">Android N  无法调用私有库问题</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/ahonn" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2015 - 2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">lynn8570</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

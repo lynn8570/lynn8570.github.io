@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="svg路径动画"><meta name="keywords" content="android"><link rel="alternate" href="/default" title="Lynn8570's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://lynn8570.github.io/2018/04/13/svg路径动画/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>svg路径动画 - Lynn8570's Blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Lynn8570's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Lynn8570's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">svg路径动画
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-13
+        </span><span class="post-category">
+            <a href="/categories/animation/">animation</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Svg-路径动画效果"><span class="toc-text">Svg 路径动画效果</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是svg"><span class="toc-text">什么是svg</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PathView做了什么"><span class="toc-text">PathView做了什么</span></a></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><h1 id="Svg-路径动画效果"><a href="#Svg-路径动画效果" class="headerlink" title="Svg 路径动画效果"></a>Svg 路径动画效果</h1><p>项目地址：<a href="https://github.com/geftimov/android-pathview" target="_blank" rel="noopener">Github</a></p>
+<p>动画效果：</p>
+<p><img src="https://github.com/geftimov/android-pathview/blob/master/art/fill-after-resize-new.gif" alt="svg path动画"></p>
+<h2 id="什么是svg"><a href="#什么是svg" class="headerlink" title="什么是svg"></a>什么是svg</h2><p>Scalable Vector Graphics (SVG)可缩放的矢量图形，应用几个定义<a href="https://en.wikipedia.org/wiki/Scalable_Vector_Graphics" target="_blank" rel="noopener">wiki</a></p>
+<blockquote>
+<ul>
+<li>SVG 指可伸缩矢量图形 (Scalable Vector Graphics)</li>
+<li>SVG 用来定义用于网络的基于<a href="https://baike.baidu.com/item/%E7%9F%A2%E9%87%8F/1400417" target="_blank" rel="noopener">矢量</a>的图形</li>
+<li>SVG 使用 XML 格式定义图形</li>
+<li>SVG 图像在放大或改变尺寸的情况下其图形质量不会有所损失</li>
+<li>SVG 是万维网<a href="https://baike.baidu.com/item/%E8%81%94%E7%9B%9F/4799014" target="_blank" rel="noopener">联盟</a>的标准</li>
+<li>SVG 与诸如 <a href="https://baike.baidu.com/item/DOM/50288" target="_blank" rel="noopener">DOM</a>和 <a href="https://baike.baidu.com/item/XSL" target="_blank" rel="noopener">XSL</a> 之类的<a href="https://baike.baidu.com/item/W3C" target="_blank" rel="noopener">W3C</a>标准是一个整体</li>
+</ul>
+</blockquote>
+<h2 id="PathView做了什么"><a href="#PathView做了什么" class="headerlink" title="PathView做了什么"></a>PathView做了什么</h2><p>通过XML方式获取svg资源id </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;com.eftimoff.androipathview.PathView</span><br><span class="line">        android:id=&quot;@+id/pathView&quot;</span><br><span class="line">        android:layout_width=&quot;350dp&quot;</span><br><span class="line">        android:layout_height=&quot;350dp&quot;</span><br><span class="line">        app:svg=&quot;@raw/monitor&quot;  //在res/raw文件夹中，</span><br><span class="line">        app:pathColor=&quot;@android:color/white&quot;</span><br><span class="line">        app:pathWidth=&quot;2dp&quot;/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在onSizeChanged的时候加载svg文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">  protected void onSizeChanged(final int w, final int h, int oldw, int oldh) &#123;</span><br><span class="line">      super.onSizeChanged(w, h, oldw, oldh);</span><br><span class="line"></span><br><span class="line">      if (mLoader != null) &#123;</span><br><span class="line">          try &#123;</span><br><span class="line">              mLoader.join();//必须在loader运行完毕后，再运行</span><br><span class="line">          &#125; catch (InterruptedException e) &#123;</span><br><span class="line">              Log.e(LOG_TAG, &quot;Unexpected error&quot;, e);</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      if (svgResourceId != 0) &#123;</span><br><span class="line">          mLoader = new Thread(new Runnable() &#123;</span><br><span class="line">              @Override</span><br><span class="line">              public void run() &#123;</span><br><span class="line"></span><br><span class="line">                  svgUtils.load(getContext(), svgResourceId);通过svg包加载资源文件到 mSvg</span><br><span class="line"></span><br><span class="line">                  synchronized (mSvgLock) &#123;</span><br><span class="line">                      width = w - getPaddingLeft() - getPaddingRight();</span><br><span class="line">                      height = h - getPaddingTop() - getPaddingBottom();</span><br><span class="line">                      paths = svgUtils.getPathsForViewport(width, height);</span><br><span class="line">                      updatePathsPhaseLocked();</span><br><span class="line">                  &#125;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;, &quot;SVG Loader&quot;);</span><br><span class="line">          mLoader.start();</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中load主要是加载资源文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Loading the svg from the resources.</span><br><span class="line"> *</span><br><span class="line"> * @param context     Context object to get the resources.</span><br><span class="line"> * @param svgResource int resource id of the svg.</span><br><span class="line"> */</span><br><span class="line">public void load(Context context, int svgResource) &#123;</span><br><span class="line">    if (mSvg != null) </span><br><span class="line">        return;</span><br><span class="line">    try &#123;</span><br><span class="line">        mSvg = SVG.getFromResource(context, svgResource);//通过 com.caverock.androidsvg api加载</span><br><span class="line">        mSvg.setDocumentPreserveAspectRatio(PreserveAspectRatio.UNSCALED);</span><br><span class="line">    &#125; catch (SVGParseException e) &#123;</span><br><span class="line">        Log.e(LOG_TAG, &quot;Could not load specified SVG resource&quot;, e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>getPathsForViewport，将</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Render the svg to canvas and catch all the paths while rendering.</span><br><span class="line"> *</span><br><span class="line"> * @param width  - the width to scale down the view to,</span><br><span class="line"> * @param height - the height to scale down the view to,</span><br><span class="line"> * @return All the paths from the svg.</span><br><span class="line"> */</span><br><span class="line">public List&lt;SvgPath&gt; getPathsForViewport(final int width, final int height) &#123;</span><br><span class="line">    final float strokeWidth = mSourcePaint.getStrokeWidth();</span><br><span class="line">    Canvas canvas = new Canvas() &#123;</span><br><span class="line">        private final Matrix mMatrix = new Matrix();</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public int getWidth() &#123;</span><br><span class="line">            return width;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public int getHeight() &#123;</span><br><span class="line">            return height;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void drawPath(Path path, Paint paint) &#123;</span><br><span class="line">            Path dst = new Path();</span><br><span class="line"></span><br><span class="line">            //noinspection deprecation</span><br><span class="line">            getMatrix(mMatrix);</span><br><span class="line">            path.transform(mMatrix, dst);//将path中的点进行mMatrix变化后，并将最终的path写到dst path中</span><br><span class="line">            paint.setAntiAlias(true);//抗锯齿</span><br><span class="line">            paint.setStyle(Paint.Style.STROKE);</span><br><span class="line">            paint.setStrokeWidth(strokeWidth);</span><br><span class="line">            mPaths.add(new SvgPath(dst, paint));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    rescaleCanvas(width, height, strokeWidth, canvas);</span><br><span class="line"></span><br><span class="line">    return mPaths;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>rescaleCanvas：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * Rescale the canvas with specific width and height.</span><br><span class="line">    *</span><br><span class="line">    * @param width       The width of the canvas.</span><br><span class="line">    * @param height      The height of the canvas.</span><br><span class="line">    * @param strokeWidth Width of the path to add to scaling.</span><br><span class="line">    * @param canvas      The canvas to be drawn.</span><br><span class="line">    */</span><br><span class="line">   private void rescaleCanvas(int width, int height, float strokeWidth, Canvas canvas) &#123;</span><br><span class="line">       if (mSvg == null) </span><br><span class="line">           return;</span><br><span class="line">       final RectF viewBox = mSvg.getDocumentViewBox();</span><br><span class="line"></span><br><span class="line">       final float scale = Math.min(width</span><br><span class="line">                       / (viewBox.width() + strokeWidth),</span><br><span class="line">               height / (viewBox.height() + strokeWidth));</span><br><span class="line"></span><br><span class="line">       canvas.translate((width - viewBox.width() * scale) / 2.0f,</span><br><span class="line">               (height - viewBox.height() * scale) / 2.0f);</span><br><span class="line">       canvas.scale(scale, scale);</span><br><span class="line"></span><br><span class="line">       mSvg.renderToCanvas(canvas);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于Matrix的学习扩展，请参阅<a href="https://blog.csdn.net/abcdef314159/article/details/52813313" target="_blank" rel="noopener">Matrix源码详解</a></p>
+<p><a href="https://github.com/GcsSloop/AndroidNote/blob/master/CustomView/Advance/[09]Matrix_Basic.md" target="_blank" rel="noopener">matrix原理</a></p>
+<p>动画影响的属性是percentage</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * Default constructor.</span><br><span class="line">  *</span><br><span class="line">  * @param pathView The view that must be animated.</span><br><span class="line">  */</span><br><span class="line"> public AnimatorBuilder(final PathView pathView) &#123;</span><br><span class="line">     anim = ObjectAnimator.ofFloat(pathView, &quot;percentage&quot;, 0.0f, 1.0f);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过影响percentage的值，从而影响</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Animate this property. It is the percentage of the path that is drawn.</span><br><span class="line"> * It must be [0,1].</span><br><span class="line"> *</span><br><span class="line"> * @param percentage float the percentage of the path.</span><br><span class="line"> */</span><br><span class="line">public void setPercentage(float percentage) &#123;</span><br><span class="line">    if (percentage &lt; 0.0f || percentage &gt; 1.0f) &#123;</span><br><span class="line">        throw new IllegalArgumentException(&quot;setPercentage not between 0.0f and 1.0f&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    progress = percentage;</span><br><span class="line">    synchronized (mSvgLock) &#123;</span><br><span class="line">        updatePathsPhaseLocked();//更新path</span><br><span class="line">    &#125;</span><br><span class="line">    invalidate();再重新绘制</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据progress，更新svgPath</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * This refreshes the paths before draw and resize.</span><br><span class="line"> */</span><br><span class="line">private void updatePathsPhaseLocked() &#123;</span><br><span class="line">    final int count = paths.size();</span><br><span class="line">    for (int i = 0; i &lt; count; i++) &#123;</span><br><span class="line">        SvgUtils.SvgPath svgPath = paths.get(i);</span><br><span class="line">        svgPath.path.reset();</span><br><span class="line">        svgPath.measure.getSegment(0.0f, svgPath.length * progress, svgPath.path, true);</span><br><span class="line">        //Given a start and stop distance, return in dst the intervening segment(s). If the segment is zero-length, return false, else return true. startD and stopD are pinned to legal values (0..getLength()). If startD &lt;= stopD then return false (and leave dst untouched). Begin the segment with a moveTo if startWithMoveTo is true</span><br><span class="line">        // Required only for Android 4.4 and earlier</span><br><span class="line">        svgPath.path.rLineTo(0.0f, 0.0f);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从而实现，path动画</p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://lynn8570.github.io">lynn8570</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://lynn8570.github.io/2018/04/13/svg路径动画/">https://lynn8570.github.io/2018/04/13/svg路径动画/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/2018/04/13/引导页面动画/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">引导动画</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2018/04/13/wave动画效果/">
+        <span class="next-text nav-default">wave动画效果</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/ahonn" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2015 - 2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">lynn8570</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

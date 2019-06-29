@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="Android performance par1: Render"><meta name="keywords" content="android"><link rel="alternate" href="/default" title="Lynn8570's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://lynn8570.github.io/2016/07/01/android performance part1/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>Android performance par1: Render - Lynn8570's Blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Lynn8570's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Lynn8570's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Android performance par1: Render
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2016-07-01
+        </span><span class="post-category">
+            <a href="/categories/ANDROID/">ANDROID</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#卡顿原因"><span class="toc-text">卡顿原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UI性能优化策略"><span class="toc-text">UI性能优化策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Overdraw"><span class="toc-text">Overdraw</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hierachy"><span class="toc-text">Hierachy</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lint"><span class="toc-text">Lint</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UI性能分析解决总结"><span class="toc-text">UI性能分析解决总结</span></a></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这几篇文章是根据谷歌出的Android性能的专题视频的总结以及实验的笔记，这个视频主题从Render渲染、compute算法、memory算法、battery电池这几个方面来讲述如何对Android应用进行性能上的优化。主要是介绍了一些检测的工具，和优化的策略。</p>
+<p>#Render#</p>
+<p>CPU负责把UI组件计算成Polygons，Texture纹理，然后交给GPU进行栅格化渲染。<br>每次从CPU转移到GPU是一件很麻烦的事情，OpenGL ES可以把那些需要渲染的纹理Hold在GPU Memory里面，在下次需要渲染的时候直接进行操作<br>在Android里面那些由主题所提供的资源，例如Bitmaps，Drawables都是一起打包到统一的Texture纹理当中，然后再传递到 GPU里面<br>当然随着UI组件的越来越丰富，有了更多演变的形态。例如显示图 片的时候，需要先经过CPU的计算加载到内存中，然后传递给GPU进行渲染。文字的显示更加复杂，需要先经过CPU换算成纹理，然后再交给GPU进行渲 染，回到CPU绘制单个字符之后，再重新引用经过GPU渲染的内容。动画则是一个更加复杂的操作流程。<br><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%871.png" alt></p>
+<h2 id="卡顿原因"><a href="#卡顿原因" class="headerlink" title="卡顿原因"></a>卡顿原因</h2><p>手机的刷新频率为60fps,如果当前需要处理的事情太多了，以至于无法再16ms内完成frame的刷新，就造成了丢帧，在视觉上，就给用户卡顿的感觉。如果此时用户正在进行一些交互，比如滑动屏幕、输入文字等，这种卡顿就会尤为明显。<br><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%872.png" alt></p>
+<p>另外，虚拟机在执行GC垃圾回收操作时所有线程（包括UI线程）都需要暂停，当GC垃圾回收完成之后所有线程才能够继续执行。所以如果此时有大量的GC操作，也会引起卡顿问题。</p>
+<h2 id="UI性能优化策略"><a href="#UI性能优化策略" class="headerlink" title="UI性能优化策略"></a>UI性能优化策略</h2><ol>
+<li><p>CPU side: 不必要的layout和invalidations。过多的view hierarchy和不必要的重绘导致CPU过度的刷新displaylist和相关的GPU资源</p>
+</li>
+<li><p>GPU side: overdraw。</p>
+</li>
+</ol>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%873.png" alt></p>
+<h3 id="Overdraw"><a href="#Overdraw" class="headerlink" title="Overdraw"></a>Overdraw</h3><p>Overdraw(过度绘制)描述的是屏幕上的某个像素在同一帧的时间内被绘制了多次<br>在多层次重叠的UI结构里面，如果不可见的UI也在做绘制的操作，会导致某些像素区域被绘制了多次。这样就会浪费大量的CPU以及GPU资源。</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%874.png" alt></p>
+<p>overdraw检测：在手机的开发者选项中，选择’调试GPU过度绘制’-&gt;’显示过度绘制区域’</p>
+<p>我们的目标是，减少红色区域的面积大小</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%875.png?imageView2/1/w/200/h/348/q/75" alt></p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%876.png" alt></p>
+<p>示例一：</p>
+<p>去除background</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%877.png?imageView2/1/w/200/h/348/q/75" alt></p>
+<p>对应代码，查看是否可以减少红色区域的面积</p>
+<pre><code>&lt;FrameLayout
+        android:layout_width=&quot;fill_parent&quot;
+        android:layout_height=&quot;fill_parent&quot;
+        android:background=&quot;@color/white&quot;&gt;
+
+        &lt;include layout=&quot;@layout/main_content&quot; /&gt;
+
+        &lt;com.zowee.lib.widget.HeaderLayout
+            xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;
+            android:id=&quot;@+id/header_hl&quot;
+            android:layout_width=&quot;match_parent&quot;
+            android:layout_height=&quot;@dimen/title_height&quot;
+            android:background=&quot;@color/main_title_bg&quot;
+            app:hlNavigationIcon=&quot;@drawable/main_menu_btn&quot;
+            app:hlNavigationMinWidth=&quot;@dimen/title_height&quot;
+            app:hlNavigationScaleType=&quot;centerInside&quot;
+            app:hlSupportTranslucentStatus=&quot;true&quot;
+            app:hlTitleText=&quot;@string/main_title&quot; /&gt;
+    &lt;/FrameLayout&gt;</code></pre><p>发现代码中可能之前无意加的 ‘android:background=”@color/white”‘,把背景去掉试试</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%878.png?imageView2/1/w/200/h/348/q/75" alt></p>
+<p>果然红色区域去掉了<del>~</del></p>
+<p>官方示例:</p>
+<pre><code>protected void onDraw(Canvas canvas) {
+    super.onDraw(canvas);
+    // Don&apos;t draw anything until all the Asynctasks are done and all the DroidCards are ready.
+    if (mDroids.length &gt; 0 &amp;&amp; mDroidCards.size() == mDroids.length) {
+        // Loop over all the droids, except the last one.
+        int i;
+
+        for (i = 0; i &lt; mDroidCards.size()-1; i++) {
+            // Each card is laid out a little to the right of the previous one.
+            mCardLeft = i * mCardSpacing;
+            // Save the canvas state
+            canvas.save();
+
+            // Restrict the drawing area to what is visible
+            canvas.clipRect(mCardLeft, 0, mCardLeft+mCardSpacing, mDroidCards.get(i).getHeight());
+
+            drawDroidCard(canvas, mDroidCards.get(i), mCardLeft, 0);
+
+            // Restore canvas to non-clipping state
+            canvas.restore();
+        }
+        // Draw the final card without clipping
+        drawDroidCard(canvas, mDroidCards.get(i), mCardLeft + mCardSpacing, 0);
+    }
+    // Invalidate the whole view. Doing this calls onDraw() if the view is visible.
+    invalidate();
+}</code></pre><p>canvas.clipRect(mCardLeft, 0, mCardLeft+mCardSpacing, mDroidCards.get(i).getHeight()); 指明画布的可见区域。对比clipRect后，避免过度重绘的效果</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20170710115604.png" alt></p>
+<h3 id="Hierachy"><a href="#Hierachy" class="headerlink" title="Hierachy"></a>Hierachy</h3><p>Hierachy用于查看界面的层级结构。</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/hierarchy.gif" alt></p>
+<p>尽量减少界面的层级结构，尽量使用include、merge、ViewStub标签，尽量不存在冗余嵌套及过于复杂布局，尽量使用GONE替换INVISIBLE，使用weight后尽量将width和heigh设置为0dp减少运算，Item存在非常复杂的嵌套时考虑使用自定义Item View来取代，减少measure与layout次数等。自定义View等绘图与布局优化；尽量避免在draw、measure、layout中做过于耗时及耗内存操作，尤其是draw方法中，尽量减少draw、measure、layout等执行次数。</p>
+<h3 id="Lint"><a href="#Lint" class="headerlink" title="Lint"></a>Lint</h3><p>代码区点击右键-&gt;Analyze-&gt;Inspect Code–&gt;界面选择你要检测的模块-&gt;点击确认开始检测</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/%E5%9B%BE%E7%89%8716.png" alt></p>
+<p>检测结果：</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/lint-1.png" alt></p>
+<h2 id="UI性能分析解决总结"><a href="#UI性能分析解决总结" class="headerlink" title="UI性能分析解决总结"></a>UI性能分析解决总结</h2><ul>
+<li>布局优化；尽量使用include、merge、ViewStub标签，尽量不存在冗余嵌套及过于复杂布局（譬如10层就会直接异常），尽量使用GONE替换INVISIBLE，使用weight后尽量将width和heigh设置为0dp减少运算，Item存在非常复杂的嵌套时考虑使用自定义Item View来取代，减少measure与layout次数等。</li>
+<li>列表及Adapter优化；尽量复用getView方法中的相关View，不重复获取实例导致卡顿，列表尽量在滑动过程中不进行UI元素刷新等。</li>
+<li>背景和图片等内存分配优化；尽量减少不必要的背景设置，图片尽量压缩处理显示，尽量避免频繁内存抖动等问题出现。</li>
+<li>自定义View等绘图与布局优化；尽量避免在draw、measure、layout中做过于耗时及耗内存操作，尤其是draw方法中，尽量减少draw、measure、layout等执行次数。</li>
+<li>canvas.clipRect 限制draw的可见区域</li>
+</ul>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://lynn8570.github.io">lynn8570</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://lynn8570.github.io/2016/07/01/android performance part1/">https://lynn8570.github.io/2016/07/01/android performance part1/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/2016/07/08/android performance part2/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Android performance par2: Compute</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2016/06/25/Proguard error/">
+        <span class="next-text nav-default">使用第三方库后proguard报错问题</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/ahonn" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2015 - 2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">lynn8570</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

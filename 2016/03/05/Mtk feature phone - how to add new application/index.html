@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="MTK Feature Phone-Hello World"><meta name="keywords" content="android"><link rel="alternate" href="/default" title="Lynn8570's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://lynn8570.github.io/2016/03/05/Mtk feature phone - how to add new application/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>MTK Feature Phone-Hello World - Lynn8570's Blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Lynn8570's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Lynn8570's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">MTK Feature Phone-Hello World
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2016-03-05
+        </span><span class="post-category">
+            <a href="/categories/feature-phone/">feature phone</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#What-Feature-phone"><span class="toc-text">What, Feature phone</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#如何建一个应用"><span class="toc-text">如何建一个应用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#文件目录"><span class="toc-text">文件目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#将项目加入编译"><span class="toc-text">将项目加入编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#程序开关"><span class="toc-text">程序开关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#界面显示"><span class="toc-text">界面显示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加资源"><span class="toc-text">添加资源</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#新版本差别"><span class="toc-text">新版本差别</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><h1 id="What-Feature-phone"><a href="#What-Feature-phone" class="headerlink" title="What, Feature phone"></a>What, Feature phone</h1><p>一开始我是拒绝的，然并卵，要你干，你就得干，返璞归真，走一走先人的路。一搜几乎都是零几年的文章，那个时候，我还在备战高考，那个时候，还不知道编程为何物。从年前一段时间到现在，这个项目有了个初始版本，终于闲下来可以列点总结，以备记忆。么么哒<del>~</del></p>
+<h1 id="如何建一个应用"><a href="#如何建一个应用" class="headerlink" title="如何建一个应用"></a>如何建一个应用</h1><p>MTK的文档是有，但是因为年代久远，平台更新，总是有一些变化，让你没办法依葫芦画瓢，最后郁郁寡欢；但一般这种状态持续一阵子后，总有茅塞顿开的一天。几经摸索，我终于可以建立一个，随后我才发现，认识旧世界，这仅仅只是个开始。如下总结下下，也许没准多少年后，我又回来了呢。</p>
+<h2 id="文件目录"><a href="#文件目录" class="headerlink" title="文件目录"></a>文件目录</h2><p>大部分的应用都是放在<code>plutommi\mmi\</code>下面的，每个应用一个文件夹，文件夹夹下面的目录结构大体是这样的，例如<code>QRcode</code>目录下应该是</p>
+<pre><code>QRcodeInc   //存放头文件
+--QRcodeAppGprot.h  //对外的接口，供外部调用
+--QRcodeAppProt.h   //内部接口，内部原型声明
+--QRcodeAppResDef.h //资源定义
+QRcodeSrc   //存放源文件C
+--QRcodeMain.c</code></pre><h2 id="将项目加入编译"><a href="#将项目加入编译" class="headerlink" title="将项目加入编译"></a>将项目加入编译</h2><p>将我们的代码加入编译，在<code>make/plutommi/mmi_app/mmi_app.mak</code><br>文件中追加：</p>
+<pre><code>//add 源文件
+SRC_LIST += XXXXXX \
+        plutommi\mmi\QRcode\QRcodeSrc\QRcodeMain.c \
+        plutommi\mmi\HelloWorld\HelloWorldSrc\QRcodeMain2.c \
+
+......
+//add 头文件目录
+INC_DIR = XXXXXX＼
+    plutommi\mmi\QRcode\QRcodeInc            </code></pre><h2 id="程序开关"><a href="#程序开关" class="headerlink" title="程序开关"></a>程序开关</h2><p>程序开关，可以不要，全都省了，要加的话，差不多就是</p>
+<ol>
+<li><p>在plutommi\mmi\Inc\MMI_features_switch.h添加<code>#define CFG_MMI_HELLOWORLD    (__ON__)</code></p>
+</li>
+<li><p>在plutommi\Customer\CustResource\PLUTO_MMI\ MMI_features_switchPLUTO.h末尾添加    <code>#define CFG_MMI_HELLOWORLD (__ON__)</code></p>
+</li>
+</ol>
+<ol start="3">
+<li>在\plutommi\Customer\CustResource\项目名<em>MMI 的feature.h文件中追加`#define CFG_MMI_HELLOWORLD    (<em>_ON</em></em>)`</li>
+</ol>
+<ol start="4">
+<li><p>在plutommi\mmi\Inc\MMI_features.h添加</p>
+<pre><code>#if defined(CFG_MMI_HELLOWORLD) &amp;&amp; ((CFG_MMI_HELLOWORLD == __ON__)||(CFG_MMI_HELLOWORLD == __AUTO__)) 
+    #ifndef __MMI_HELLOWORLD__
+    #define __MMI_HELLOWORLD__
+    #endif
+#endif</code></pre></li>
+</ol>
+<p>完成之后，我们就可以在程序中添加如：</p>
+<pre><code>#ifdef __MMI_HELLOWORLD__
+#endif</code></pre><p>这样的代码开关了，但是我觉得菊紧~，不想弄；这步骤不要了；</p>
+<h2 id="界面显示"><a href="#界面显示" class="headerlink" title="界面显示"></a>界面显示</h2><p>如果你的程序不需要文字资源，不需要图片资源，那么上面两步，已经完成了一个应用的添加，接下来要做的事情不过是在c文件里面给一个程序入口，然后再这个程序路口里面，负责显示你的应用界面；最后再把这个程序路口暴露给随便谁谁谁，可以在launcher里面，可以在一个按键的响应里面，反正一按，就跳到你的界面就对了。</p>
+<p>例如：</p>
+<pre><code>void mmi_qrcode_exit(void){
+    mmi_frm_scrn_close_active_id(); //关闭页面
+}
+
+void mmi_qrcode_entry(char* szSourceString){
+    S32 x,y,w,h;
+    EntryNewScreen(SCR_QRCODE_MAIN,NULL,mmi_qrcode_entry,NULL); //SCR_QRCODE_MAIN暂时没有，可以随便拿一个src用一下，后面我们会说到怎么定义这些东西
+    entry_full_screen();//hide status bar
+    clear_screen();
+    gui_measure_string((UI_string_type)GetString(STR_ID_QRCODE_NOTE),&amp;w,&amp;h);
+    x=(UI_device_width-w)/2;
+    y=(UI_device_width-h)/2;
+    gui_move_text_cursor(x,y);
+    gui_print_text((UI_string_type)GetString(STR_ID_QRCODE_NOTE));
+
+    gui_BLT_double_buffer(0,0,UI_device_width-1,UI_device_height-1);
+    SetKeyHandler(mmi_qrcode_exit,KEY_LSK,KEY_EVENT_DOWN);
+}</code></pre><p>在C的代码中，我们做的事情就是，进入我们的页面，获取一段字符串，显示，然后设置点击软键盘左键的时候，退出我们的界面；</p>
+<p>相应的，在头文件中我们需要加入原型声明</p>
+<pre><code>#ifndef _QRCODE_GPROT_H
+#define _QRCODE_GPROT_H
+
+#include &quot;MMI_features.h&quot;
+#include &quot;MMIDataType.h&quot;
+#include &quot;kal_general_types.h&quot;
+
+//interface for outside
+
+extern void mmi_qrcode_exit(void);
+extern void mmi_qrcode_entry(char* szSourceString);
+
+#endif//_QRCODE_GPROT_H</code></pre><h2 id="添加资源"><a href="#添加资源" class="headerlink" title="添加资源"></a>添加资源</h2><p>那上面的这些 STR_ID_QRCODE_NOTE、SCR_QRCODE_MAIN怎么加入的呢？<br>先说下字符串资源</p>
+<ol>
+<li>首先，平台的资源放在plutommi/Customer/CustResource/PLUTO_MMI/ref_list.txt 文件中，请使用 excell 来开打文件，会看到一列一列的资源,在底部添加一句</li>
+</ol>
+<p><code>STR_ID_QRCODE_NOTE    Qrcode    note    tell the use to scan qrcode    Scan to banding    請掃描二維碼綁定    请扫描二维码绑定</code></p>
+<p>底部的数字加上你追加的条目+n； </p>
+<ol start="2">
+<li>在plutommi/Customer/CustResource/PLUTO_MMI/Res_MMI/下添加一个文件Res_QRcode.c。内容如下</li>
+</ol>
+<pre><code>#ifndef __QRCODE_RES_DEF_H__
+#define __QRCODE_RES_DEF_H__
+#include &quot;MMI_features.h&quot;
+#include &quot;MMIDataType.h&quot;
+#include &quot;CustDataProts.h&quot;
+#include &quot;GlobalMenuItems.h&quot;
+#include &quot;StdC.h&quot;
+#ifdef DEVELOPER_BUILD_FIRST_PASS
+#include &quot;PopulateRes.h&quot;
+#include &quot;QRcodeAppResDef.h&quot;
+void PopulateQRcodeRes(void)
+{
+    ADD_APPLICATION_STRING2(STR_ID_QRCODE_NOTE,&quot;Scan to bind&quot;,&quot;QRcode&quot;);
+
+
+
+       ADD_APPLICATION_IMAGE2(
+        IMG_ID_QRCODE,
+        CUST_IMG_PATH&quot;\\\\MainLCD\\\\IdleScreen\\\\Wallpaper\\\\analog.bmp&quot;,
+        &quot;analog image test&quot;);
+}
+
+#endif//DEVELOPER_BUILD_SECOND_PASS
+#endif</code></pre><p>该文件主要讲我们在资源list中添加的字符串资源装载进来，同样的，将对应目录下的图片也可以通过第二个方法装载进来</p>
+<ol start="3">
+<li><p>那么这个文件中的方法由谁来调用呢？我们需要修改 plutommi/mmi/Resource/PopulateRes.c</p>
+<pre><code>//声明外部函数
+extern void PopulateQRcodeRes(void);
+.....
+
+#ifdef __MMI_VUI_ENGINE__
+    PopulateVCPRes();
+#endif
+RESPOP_LOG_V((&quot;Populating QRCODE APP Resource&quot;));
+PopulateQRcodeRes(); //追加我们的资源装载</code></pre></li>
+</ol>
+<ol start="4">
+<li><p>在应用目录下的资源声明头文件中添加 QRcodeAppResDef.h</p>
+<pre><code>#include &quot;MMI_features.h&quot;
+#include &quot;MMIDataType.h&quot;
+#include &quot;mmi_res_range_def.h&quot;
+/* Screen IDs */
+typedef enum
+{
+    SCR_QRCODE_MAIN = QRCODE_APP_BASE+1,
+}SCREEN_LIST_QRCODE;</code></pre></li>
+</ol>
+<pre><code>/* String IDs */
+
+typedef enum
+{
+    STR_ID_QRCODE_NOTE = QRCODE_APP_BASE+1,
+}STRING_LIST_QRCODE;
+
+/* Image IDs */
+typedef enum
+{
+    IMG_ID_QRCODE = QRCODE_APP_BASE+1,
+}IMAGE_LIST_QRCODE;</code></pre><p>5.QRCODE_APP_BASE哪里来的？在plutommi/mmi/Inc/mmi_res_range_def.h，看文件名的大概意思就是，资源范围定义。追加：</p>
+<pre><code>RESOURCE_BASE_RANGE(APP_QRCODE,              100),
+
+.....
+#define QRCODE_APP_BASE                        ((U16) GET_RESOURCE_BASE(APP_QRCODE))
+#define QRCODE_APP_BASE_MAX                   ((U16) GET_RESOURCE_MAX(APP_QRCODE))
+RESOURCE_BASE_TABLE_ITEM(APP_QRCODE)</code></pre><p>不要问我为什么，反正其他应用也这么写，参照着写了；</p>
+<ol start="6">
+<li>最后我们要把声明的这些id告诉给编译器，在plutommi/Custmer/ResGenerator/resgen_default_inc.txt中追加一行<code>../../MMI/QRcode/QRcodeInc</code>告诉编译器<code>QRcodeAppResDef.h</code>的位置，不然会找不到里面定义的这些id。</li>
+</ol>
+<ol start="7">
+<li>图片的位置是放在plutommi/Customer/Images/屏幕对应尺寸/iamge.zip中</li>
+</ol>
+<h1 id="新版本差别"><a href="#新版本差别" class="headerlink" title="新版本差别"></a>新版本差别</h1><p>这篇总要是列出来新建一个应用的大体框架和资源添加的方式，新的版本可以通过在应用目录下添加res文件来声明资源ID。例如添加QRcode/QRcodeRes/QRcode.res文件，写法上也简便很多</p>
+<pre><code>#include &quot;MMI_features.h&quot;
+#include &quot;CustResDef.h&quot;
+
+
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;APP id=&quot;APP_QIJI&quot; type=&quot;venus&quot; name =&quot;STR_ID_QIJI_EXER&quot;&gt;
+    &lt;INCLUDE file=&quot;GlobalResDef.h&quot;/&gt;
+    &lt;!----- String Resource Area ----------------------------------------------&gt;
+    &lt;STRING id=&quot;STR_ID_QRCODE_NOTE&quot;/&gt;
+
+    &lt;!----- Image Resource Area -----------------------------------------------&gt;
+    &lt;IMAGE id=&quot;IMG_ID_QRCODE&quot;&gt;CUST_IMG_PATH&quot;\\\\MainLCD\\\\QiJi\\\\QJ_FONT24_0.png&quot;&lt;/IMAGE&gt;
+
+    &lt;!----- Screen Resource Area ----------------------------------------------&gt;
+    &lt;SCREEN id=&quot;SCR_QRCODE_MAIN&quot;/&gt;
+
+    &lt;!----- Menu Resource Area ------------------------------------------------&gt;
+
+
+    &lt;!----- Timer Resource Area ---- ------------------------------------------&gt;
+&lt;/APP&gt;</code></pre><p>最后需要将新加入的res文件加入编译，修改plutommi/mmi/Inc/mmi_pluto_res_range_def.h文件</p>
+<pre><code>MMI_RES_DECLARE(APP_QRCODE, 100, &quot;.\\mmi\\QRcode\\QRcodeRes\\&quot;)
+#define APP_QRCODE_BASE                            ((U16) GET_RESOURCE_BASE(APP_QRCODE))
+#define APP_QIJI_BASE_MAX                        ((U16) GET_RESOURCE_MAX(APP_QRCODE))</code></pre><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>我们大概了解了一个应用的搭建框架。看名字也知道，哈哈我现在要弄一个二维码的转换显示。虽然这个只是整个流程环节中微不足道的一环，但是面对全新的平台，还是捏了一把汗。但是，本宝宝最后还是完成了，点赞点赞。</p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://lynn8570.github.io">lynn8570</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://lynn8570.github.io/2016/03/05/Mtk feature phone - how to add new application/">https://lynn8570.github.io/2016/03/05/Mtk feature phone - how to add new application/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/2016/03/10/c qrcode lib/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">MTK feature phone上生成二维码</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2015/12/11/customer framework jar/">
+        <span class="next-text nav-default">自定义framework动态链接库jar</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/ahonn" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2015 - 2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">lynn8570</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

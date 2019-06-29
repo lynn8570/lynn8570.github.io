@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="Android N  无法调用私有库问题"><meta name="keywords" content="android"><link rel="alternate" href="/default" title="Lynn8570's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://lynn8570.github.io/2017/12/11/android private so/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>Android N  无法调用私有库问题 - Lynn8570's Blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Lynn8570's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Lynn8570's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Android N  无法调用私有库问题
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-12-11
+        </span><span class="post-category">
+            <a href="/categories/ANDROID/">ANDROID</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#问题背景"><span class="toc-text">问题背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#方式一：NO"><span class="toc-text">方式一：NO</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#方式二：yes"><span class="toc-text">方式二：yes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#题外话"><span class="toc-text">题外话</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><h1 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h1><p>因项目需要，需要将一个第三方的应用集成到系统平台上，这个第三方应用带有自己的私有so库和jni代码等。按照以前的集成方式，</p>
+<pre><code>LOCAL_PATH:= $(call my-dir)
+include $(CLEAR_VARS)
+
+LOCAL_MODULE_TAGS := optional
+
+LOCAL_TARGET_CPU_ABI := $(TARGET_CPU_ABI)
+LOCAL_MULTILIB := 32
+
+ifeq ($(TARGET_CPU_ABI), arm64-v8a)
+    LOCAL_MULTILIB := 64
+else
+    ifeq ($(TARGET_CPU_ABI), armeabi-v7a)
+        LOCAL_TARGET_CPU_ABI := armeabi
+    endif
+endif
+
+LOCAL_PREBUILT_LIBS  :=    \
+    libs/$(LOCAL_TARGET_CPU_ABI)/xxx.so 
+
+include $(BUILD_MULTI_PREBUILT)</code></pre><p>按照以上MK方式集成后，发现如下错：</p>
+<pre><code>01-01 09:18:59.348  4092  4092 E AndroidRuntime: FATAL EXCEPTION: main
+01-01 09:18:59.348  4092  4092 E AndroidRuntime: Process: com.olc.magicuhf, PID: 4092
+01-01 09:18:59.348  4092  4092 E AndroidRuntime: java.lang.UnsatisfiedLinkError: dlopen failed: library &quot;/system/lib64/libuhf-tools.so&quot; needed or dlopened by &quot;/system/lib64/libnativeloader.so&quot; is not accessible for the namespace &quot;classloader-namespace&quot;
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at java.lang.Runtime.loadLibrary0(Runtime.java:989)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at java.lang.System.loadLibrary(System.java:1562)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at android.hardware.uhf.magic.Reader.&lt;clinit&gt;(Reader.java:1279)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at android.hardware.uhf.magic.Reader.init(Native Method)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at com.olc.magicuhf.App.InitUHF(App.java:22)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at com.olc.magicuhf.App.onCreate(App.java:18)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at android.app.Instrumentation.callApplicationOnCreate(Instrumentation.java:1025)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at android.app.ActivityThread.handleBindApplication(ActivityThread.java:5405)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at android.app.ActivityThread.-wrap2(ActivityThread.java)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1546)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at android.os.Handler.dispatchMessage(Handler.java:102)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at android.os.Looper.loop(Looper.java:154)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at android.app.ActivityThread.main(ActivityThread.java:6121)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at java.lang.reflect.Method.invoke(Native Method)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:889)
+01-01 09:18:59.348  4092  4092 E AndroidRuntime:     at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:779)
+01-01 09:18:59.351  1342  1816 W ActivityManager:   Force finishing activity com.olc.magicuhf/.MainActivity</code></pre><h1 id="方式一：NO"><a href="#方式一：NO" class="headerlink" title="方式一：NO"></a>方式一：NO</h1><p>查了一些资料说：ndroid N 不能直接调用系统的一些私有库了，公用的库都定义在public.libraries.txt里面系统应用刚刷机是能够调用system/lib64下的库，但通过install升级该应用时，应用打开会挂。因为升级后permitted_paths就不再包含system/lib64了。所以我们可以将apk要用到的库名称写到public.libraries.txt中去解决快速调试问题。</p>
+<p>尝试了这种方法，引发更多的编译错误，惹不起，惹不起。</p>
+<h1 id="方式二：yes"><a href="#方式二：yes" class="headerlink" title="方式二：yes"></a>方式二：yes</h1><p>之前都是讲这些SO库集成编译到系统里面，现在需要so库编译到apk中，这样就不是系统的私有库了，是apk自带的库。重点如下</p>
+<pre><code>LOCAL_PATH:= $(call my-dir)
+include $(CLEAR_VARS)
+LOCAL_STATIC_JAVA_LIBRARIES := android-support-v4
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := \
+$(call all-java-files-under, src)
+LOCAL_PACKAGE_NAME := Demo
+LOCAL_CERTIFICATE := platform
+LOCAL_PROGUARD_FLAG_FILES := proguard.flags
+#LOCAL_PROGUARD_ENABLED :=full
+LOCAL_PRIVILEGED_MODULE := false
+LOCAL_JNI_SHARED_LIBRARIES := libfingerprint
+LOCAL_MODULE_INCLUDE_LIBRARY  := true
+LOCAL_PREBUILT_JNI_LIBS := jni/xxx.so
+$(shell cp -rf $(LOCAL_PATH)/jni/xx.so $(TARGET_OUT)/lib64/xxx.so)
+
+# := proguard.flagLOCAL_PROGUARD_FLAG_FILESs
+
+LOCAL_AAPT_FLAGS += -c zz_ZZ
+
+include $(BUILD_PACKAGE)
+
+include $(call all-makefiles-under, jni)
+
+# Use the folloing include to make our test apk.
+include $(call all-makefiles-under,$(LOCAL_PATH))</code></pre><h1 id="题外话"><a href="#题外话" class="headerlink" title="题外话"></a>题外话</h1><p>1.如果需要访问系统文件节点，则需要系统权限，且uid要为android:sharedUserId=”android.uid.system”才可以访问。<br>具体和SELinux的权限设置有关，除非改对应的te文件，不然，根据权限设置，必须系统应用而且UID也需要是系统的才可以访问。</p>
+<p>2.so库需要打包到应用中才可以调用，Android N之后，非系统应用无法调用系统私有库。</p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://lynn8570.github.io">lynn8570</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://lynn8570.github.io/2017/12/11/android private so/">https://lynn8570.github.io/2017/12/11/android private so/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/2018/02/21/bookxiaobai application/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">书小白书单功能实现</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2016/08/18/android performance part3/">
+        <span class="next-text nav-default">Android performance par3: Memory</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/ahonn" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2015 - 2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">lynn8570</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="Understanding the Treasure Hunt sample game"><meta name="keywords" content="android"><link rel="alternate" href="/default" title="Lynn8570's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://lynn8570.github.io/2018/02/26/Understanding the Treasure Hunt sample game/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>Understanding the Treasure Hunt sample game - Lynn8570's Blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Lynn8570's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Lynn8570's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Understanding the Treasure Hunt sample game
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-02-26
+        </span><span class="post-category">
+            <a href="/categories/ANDROID/">ANDROID</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Google-VR-SDK-寻宝游戏code-overview"><span class="toc-text">Google VR SDK 寻宝游戏code overview</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#开发环境"><span class="toc-text">开发环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行Google-VR-SDK"><span class="toc-text">运行Google VR SDK</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Manifest-文件"><span class="toc-text">Manifest 文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#继承-GvrActivity"><span class="toc-text">继承 GvrActivity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#定义GvrView"><span class="toc-text">定义GvrView</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#渲染视图"><span class="toc-text">渲染视图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Render实现"><span class="toc-text">Render实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><h1 id="Google-VR-SDK-寻宝游戏code-overview"><a href="#Google-VR-SDK-寻宝游戏code-overview" class="headerlink" title="Google VR SDK 寻宝游戏code overview"></a>Google VR SDK 寻宝游戏code overview</h1><h2 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h2><ul>
+<li>硬件要求：<ul>
+<li>Daydream平台：可支持Daydream的手机：Galaxy note8，MotoZ force，pixel，Axon7 ZTE，Moto Z，Mate 9，LG v30等 和  Daydream Viewer</li>
+<li>Cardboard平台，运行android 4.4 api19以上的手机和一个 Cardboard viewer</li>
+</ul>
+</li>
+<li>软件要求：<ul>
+<li>android sdk 25以上</li>
+<li>Google VR SDK</li>
+</ul>
+</li>
+</ul>
+<h2 id="运行Google-VR-SDK"><a href="#运行Google-VR-SDK" class="headerlink" title="运行Google VR SDK"></a>运行Google VR SDK</h2><p>运行<strong>samples-sdk-treasurehunt</strong> </p>
+<p>在android 4.4以上就可以运行，但是不一定能用，例如如果没有Gsensor数据等无法进行运动捕捉。虽然可以正常运行，但是无法进行体验。</p>
+<h2 id="Manifest-文件"><a href="#Manifest-文件" class="headerlink" title="Manifest 文件"></a>Manifest 文件</h2><ul>
+<li><p>VR应用属性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;manifest ...&gt;</span><br><span class="line">    &lt;uses-sdk android:minSdkVersion=&quot;19&quot; android:targetSdkVersion=&quot;24&quot;/&gt;</span><br><span class="line">    ...</span><br><span class="line">    &lt;uses-feature android:glEsVersion=&quot;0x00020000&quot; android:required=&quot;true&quot; /&gt;</span><br><span class="line">    &lt;uses-feature android:name=&quot;android.software.vr.mode&quot; android:required=&quot;false&quot;/&gt;</span><br><span class="line">    &lt;uses-feature android:name=&quot;android.hardware.vr.high_performance&quot; android:required=&quot;false&quot;/&gt;</span><br><span class="line">    ...</span><br><span class="line">    &lt;uses-permission android:name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot; /&gt;</span><br><span class="line">    ...</span><br><span class="line">&lt;/manifest&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Google VR SDK 支持的最低版本为api 19, 另外Daydream 应用的target API 要24或者以上级别。需 OpenGL ES 2.0 支持，可正确渲染VR内容。<code>&lt;uses-feature android:name=&quot;android.software.vr.mode&quot; android:required=&quot;false&quot;/&gt;</code>和<code>&lt;uses-feature android:name=&quot;android.hardware.vr.high_performance&quot; android:required=&quot;false&quot;/&gt;</code> 由 Android N加入的新特性，前者表示需要使用Android VR模式，后者表示需要可支持Daydream的设备。</p>
+<p>对于没有Google VR服务的设备，需要安装Google VR 服务，才可以将可支持Daydream的设备与对应的VR viewer配对。因此还需要添加<code>READ_EXTERNAL_STORAGE</code>权限。</p>
+</li>
+</ul>
+<ul>
+<li><p>VR Activity 属性</p>
+<p>Activity也需要添加一些属性声明，才可兼容Daydream</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity</span><br><span class="line">    android:name=&quot;.MyActivity&quot;</span><br><span class="line">    android:screenOrientation=&quot;landscape&quot;</span><br><span class="line">    android:enableVrMode=&quot;@string/gvr_vr_mode_component&quot;</span><br><span class="line">    android:theme=&quot;@style/VrActivityTheme&quot;</span><br><span class="line">    android:resizeableActivity=&quot;false&quot;</span><br><span class="line">    android:configChanges=&quot;density|keyboardHidden|navigation|orientation|screenSize|uiMode&quot;</span><br><span class="line">    ...&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>enableVrMode</code>属性用于启用Android VR 模式，Android 7.0 N 引入的功能特性，用于支持高性能的移动 VR 应用。该属性表示，当启动Activity的时候，系统需要自动启动VR模式。</p>
+<blockquote>
+<p>启动 VR activity的时候，屏幕会有些轻微的闪烁，这是因为当启动VR模式的时候，Android需要切换到低持久性模式显示。</p>
+</blockquote>
+<p><code>android:theme=&quot;@style/VrActivityTheme&quot;</code>确保Activity在VR转换期间正常运行，<code>android:resizeableActivity=&quot;false&quot;</code>表明Activity不可调整显示大小，不与其他的Activity分屏。landscape表明屏幕需要横屏显示。</p>
+<p><code>configChanges</code>可避免activity因为一些配置变化而造成activity的重新创建。</p>
+<p>Google VR应用基本和要求：</p>
+<p><a href="https://developers.google.com/vr/distribute/daydream/app-quality" target="_blank" rel="noopener">https://developers.google.com/vr/distribute/daydream/app-quality</a></p>
+<ul>
+<li><p>设计要求：</p>
+<ol>
+<li>物体对象需要放置在一定的距离，以便用户可以看清楚而不是看到两张图片。如果需要辅助文字，需要保证文字的可读性。建议物体对象需要放置在0.5米距离以上</li>
+<li>需要维护头部动作位置追踪</li>
+<li>地平线维持，不至于倾斜</li>
+<li>相机操作需要用户启动，但可以不是一直直接的控制操作</li>
+<li>app不干涉系统级别的复位行为</li>
+<li>…….</li>
+</ol>
+</li>
+<li><p>功能要求</p>
+<ol>
+<li><p>使用支持的VR SDK版本</p>
+</li>
+<li><p>使用Daydream API进行activity切换<code>daydreamApi.launchVrHomescreen();</code>  <code>daydreamApi.launchInVr(componentName);</code></p>
+</li>
+<li><p>不请求nfc权限，应用不能使用nfc权限，而是Daydream平台需要使用nfc功能来进行配对操作。</p>
+</li>
+<li><p>应用的manifest清单文件中，需要设置正确的VR activity样式：禁止android默认的windowmanager的切换动画；隐藏系统级的ui元素，例如系统状态栏，导航栏和键盘等；采用landscape，禁止方向转化；禁用多窗口支持。</p>
+<p><code>android:theme=&quot;@style/VrActivityTheme&quot;</code>可用于禁止切换动画和隐藏系统ui;</p>
+<p><code>android:enableVrMode=&quot;@string/gvr_vr_mode_component&quot;</code>可用于设置仅从Daydream Home或者另外一个VR activities来启动Activity，以便得到更快的切换。</p>
+<p>示例的activity清单代码可查看前面的示例。</p>
+<p>需要显示在VR Home中的Daydream activity需要设置<code>com.google.intent.category.DAYDREAM</code>，如果不想显示的VR Home中，只要设置<code>android.intent.action.VIEW</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity</span><br><span class="line">    ... &gt;</span><br><span class="line">    ...</span><br><span class="line">    &lt;intent-filter&gt;</span><br><span class="line">        &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;</span><br><span class="line">        &lt;category android:name=&quot;com.google.intent.category.DAYDREAM&quot;/&gt;</span><br><span class="line">    &lt;/intent-filter&gt;</span><br><span class="line">&lt;/activity&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>根据平台设置硬件特性，对于Daydream的应用，以下硬件特性都是必须的。对于某些具有cardboard模式的VR则为可选的。</p>
+<pre><code>android:glEsVersion=&quot;0x00020000&quot;
+android.hardware.sensor.gyroscope
+android.hardware.sensor.accelerometer
+android.hardware.vr.high_performance
+android.software.vr.mode</code></pre></li>
+</ul>
+</li>
+</ul>
+<pre><code>Examples
+
+Application only supports Daydream:
+
+&lt;uses-feature android:glEsVersion=&quot;0x00020000&quot; android:required=&quot;true&quot; /&gt;
+&lt;uses-feature android:name=&quot;android.hardware.sensor.accelerometer&quot; android:required=&quot;true&quot; /&gt;
+&lt;uses-feature android:name=&quot;android.hardware.sensor.gyroscope&quot; android:required=&quot;true&quot; /&gt;
+&lt;uses-feature android:name=&quot;android.hardware.vr.high_performance&quot; android:required=&quot;true&quot; /&gt;
+&lt;uses-feature android:name=&quot;android.software.vr.mode&quot; android:required=&quot;true&quot; /&gt;
+
+Application supports both Daydream and Cardboard devices:
+
+&lt;uses-feature android:glEsVersion=&quot;0x00020000&quot; android:required=&quot;true&quot; /&gt;
+&lt;uses-feature android:name=&quot;android.hardware.sensor.accelerometer&quot; android:required=&quot;true&quot; /&gt;
+&lt;uses-feature android:name=&quot;android.hardware.sensor.gyroscope&quot; android:required=&quot;true&quot; /&gt;
+&lt;uses-feature android:name=&quot;android.hardware.vr.high_performance&quot; android:required=&quot;false&quot; /&gt;
+&lt;uses-feature android:name=&quot;android.software.vr.mode&quot; android:required=&quot;false&quot; /&gt;
+
+Application&apos;s VR mode is optional:
+
+&lt;uses-feature android:glEsVersion=&quot;0x00020000&quot; android:required=&quot;false&quot; /&gt;
+&lt;uses-feature android:name=&quot;android.hardware.sensor.accelerometer&quot; android:required=&quot;false&quot; /&gt;
+&lt;uses-feature android:name=&quot;android.hardware.sensor.gyroscope&quot; android:required=&quot;false&quot; /&gt;
+&lt;uses-feature android:name=&quot;android.hardware.vr.high_performance&quot; android:required=&quot;false&quot; /&gt;
+&lt;uses-feature android:name=&quot;android.software.vr.mode&quot; android:required=&quot;false&quot; /&gt;</code></pre><ul>
+<li><p>应用可以正常的暂停</p>
+<p>这包括很多常见的操作场景暂停和恢复。例如用户通过控制器或者手机按键按下的Home按钮来立即暂停应用还有音频播放等。数据的保存和恢复。</p>
+</li>
+<li><p>应用可正常关闭</p>
+</li>
+</ul>
+<ul>
+<li><p>平台兼容性</p>
+<p>每个activity都必须声明好支持的VR平台；Daydream还是cardboard。两个可兼容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- Example of a Daydream/Cardboard Activity --&gt;</span><br><span class="line">&lt;activity ... &gt;</span><br><span class="line">    &lt;intent-filter&gt;</span><br><span class="line">        &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- This marks the Activity as a Daydream Activity and allows it</span><br><span class="line">             to be launched from the Daydream Home. --&gt;</span><br><span class="line">        &lt;category android:name=&quot;com.google.intent.category.DAYDREAM&quot; /&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- This marks the Activity as a Cardboard Activity and allows it</span><br><span class="line">             to be launched from the Cardboard app. --&gt;</span><br><span class="line">        &lt;category android:name=&quot;com.google.intent.category.CARDBOARD&quot; /&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- This allows this Activity to be launched from the traditional</span><br><span class="line">             Android 2D launcher as well. Remove it if you do not want</span><br><span class="line">             this Activity to be launched directly from the 2D launcher. --&gt;</span><br><span class="line">        &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;</span><br><span class="line">    &lt;/intent-filter&gt;</span><br><span class="line">&lt;/activity&gt;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="继承-GvrActivity"><a href="#继承-GvrActivity" class="headerlink" title="继承 GvrActivity"></a>继承 GvrActivity</h2><p>GvrActivity作为基类可对GoogleVR设备进行简单的集成，可以发布一些事件来与VR环境进行交互并且可以处理创建用于VR渲染的activity的一些通用的细节实现。GvrAcitivity使用的是sticky的沉浸式模式，因为GvrView只能在全屏模式下才可以进行渲染。封装的东西还是比较少的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br></pre></td><td class="code"><pre><span class="line">package com.google.vr.sdk.base;</span><br><span class="line"></span><br><span class="line">import android.app.Activity;</span><br><span class="line">import android.os.Bundle;</span><br><span class="line">import android.view.KeyEvent;</span><br><span class="line">import android.view.View;</span><br><span class="line">import android.view.ViewGroup.LayoutParams;</span><br><span class="line">import com.google.vr.cardboard.AndroidNCompat;</span><br><span class="line">import com.google.vr.cardboard.FullscreenMode;</span><br><span class="line">import com.google.vrtoolkit.cardboard.ScreenOnFlagHelper;</span><br><span class="line"></span><br><span class="line">public class GvrActivity extends Activity &#123;//直接集成的普通的activity</span><br><span class="line">    private FullscreenMode fullscreenMode;//全屏的flag设置和兼容模式</span><br><span class="line">    private final ScreenOnFlagHelper screenOnFlagHelper = new ScreenOnFlagHelper(this);</span><br><span class="line">    //在resume的启动sensor相关的监听</span><br><span class="line">    private GvrView cardboardView;</span><br><span class="line">    private boolean androidVrModeEnabled;</span><br><span class="line"></span><br><span class="line">    public GvrActivity() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setGvrView(GvrView gvrView) &#123;</span><br><span class="line">        this.setGvrView(gvrView, true);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setGvrView(GvrView gvrView, boolean enableVrModeFallbacks) &#123;</span><br><span class="line">        if (this.cardboardView != gvrView) &#123;</span><br><span class="line">            if (this.cardboardView != null) &#123;</span><br><span class="line">                this.cardboardView.setOnCardboardTriggerListener((Runnable)null);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            this.cardboardView = gvrView;</span><br><span class="line">            boolean enableAndroidVrMode = gvrView != null;</span><br><span class="line">            this.androidVrModeEnabled = AndroidNCompat.setVrModeEnabled(this, enableAndroidVrMode, enableVrModeFallbacks ? 1 : 0) &amp;&amp; enableAndroidVrMode;</span><br><span class="line">            if (gvrView != null) &#123;</span><br><span class="line">                gvrView.setOnCardboardTriggerListener(new Runnable() &#123;</span><br><span class="line">                    public void run() &#123;</span><br><span class="line">                        GvrActivity.this.onCardboardTrigger();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public GvrView getGvrView() &#123;</span><br><span class="line">        return this.cardboardView;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void onCardboardTrigger() &#123;//可重写</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected void updateGvrViewerParams(GvrViewerParams newParams) &#123;</span><br><span class="line">        if (this.cardboardView != null) &#123;</span><br><span class="line">            this.cardboardView.updateGvrViewerParams(newParams);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        this.requestWindowFeature(1);</span><br><span class="line">        this.fullscreenMode = new FullscreenMode(this.getWindow());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected void onResume() &#123;</span><br><span class="line">        super.onResume();</span><br><span class="line">        if (this.cardboardView != null) &#123;</span><br><span class="line">            this.cardboardView.onResume();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        this.fullscreenMode.goFullscreen();</span><br><span class="line">        this.screenOnFlagHelper.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected void onPause() &#123;</span><br><span class="line">        super.onPause();</span><br><span class="line">        if (this.cardboardView != null) &#123;</span><br><span class="line">            this.cardboardView.onPause();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        this.screenOnFlagHelper.stop();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected void onDestroy() &#123;</span><br><span class="line">        if (this.cardboardView != null) &#123;</span><br><span class="line">            this.cardboardView.setOnCardboardTriggerListener((Runnable)null);</span><br><span class="line">            this.cardboardView.shutdown();</span><br><span class="line">            this.cardboardView = null;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        super.onDestroy();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setContentView(View view) &#123;</span><br><span class="line">        if (view instanceof GvrView) &#123;</span><br><span class="line">            this.setGvrView((GvrView)view);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        super.setContentView(view);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setContentView(View view, LayoutParams params) &#123;</span><br><span class="line">        if (view instanceof GvrView) &#123;</span><br><span class="line">            this.setGvrView((GvrView)view);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        super.setContentView(view, params);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void onBackPressed() &#123;</span><br><span class="line">        super.onBackPressed();</span><br><span class="line">        this.cardboardView.onBackPressed();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean onKeyDown(int keyCode, KeyEvent event) &#123;</span><br><span class="line">        return this.shouldSuppressKey(keyCode) || super.onKeyDown(keyCode, event);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean onKeyUp(int keyCode, KeyEvent event) &#123;</span><br><span class="line">        return this.shouldSuppressKey(keyCode) || super.onKeyUp(keyCode, event);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void onWindowFocusChanged(boolean hasFocus) &#123;</span><br><span class="line">        super.onWindowFocusChanged(hasFocus);</span><br><span class="line">        this.fullscreenMode.onWindowFocusChanged(hasFocus);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setScreenAlwaysOn(boolean enabled) &#123;</span><br><span class="line">        this.screenOnFlagHelper.setScreenAlwaysOn(enabled);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private boolean shouldSuppressKey(int keyCode) &#123;</span><br><span class="line">        if (!this.androidVrModeEnabled) &#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return keyCode == 24 || keyCode == 25;//处理了音量加减键</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="定义GvrView"><a href="#定义GvrView" class="headerlink" title="定义GvrView"></a>定义GvrView</h2><p>GvrView主要用于VR渲染</p>
+<ul>
+<li>common_ui.xml</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    android:id=&quot;@+id/ui_layout&quot;</span><br><span class="line">    android:orientation=&quot;vertical&quot;</span><br><span class="line">    android:layout_width=&quot;match_parent&quot;</span><br><span class="line">    android:layout_height=&quot;match_parent&quot; &gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &lt;com.google.vr.sdk.base.GvrView</span><br><span class="line">        android:id=&quot;@+id/gvr_view&quot;</span><br><span class="line">        android:layout_width=&quot;match_parent&quot;</span><br><span class="line">        android:layout_height=&quot;match_parent&quot;</span><br><span class="line">        android:layout_alignParentTop=&quot;true&quot;</span><br><span class="line">        android:layout_alignParentLeft=&quot;true&quot; /&gt;</span><br><span class="line"></span><br><span class="line">&lt;/RelativeLayout&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>初始化</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public void initializeGvrView() &#123;</span><br><span class="line">  setContentView(R.layout.common_ui);//设置xml文件</span><br><span class="line"></span><br><span class="line">  GvrView gvrView = (GvrView) findViewById(R.id.gvr_view);</span><br><span class="line">  gvrView.setEGLConfigChooser(8, 8, 8, 8, 16, 8);</span><br><span class="line">  // Android设备往往支持多种EGL配置，可以使用不同数目的通道(channel)，也可以指定每个通道具有不同数目的位(bits)深度。因此， 在渲染器工作之前就应该指定EGL的配置。如果没有调用的话，那么默认的配置是 RGB_888 surface with a depth buffer depth of at least 16 bits. </span><br><span class="line"></span><br><span class="line">  gvrView.setRenderer(this);</span><br><span class="line">  gvrView.setTransitionViewEnabled(true);//提示页面</span><br><span class="line"></span><br><span class="line">  // Enable Cardboard-trigger feedback with Daydream headsets. This is a simple way of supporting</span><br><span class="line">  // Daydream controller input for basic interactions using the existing Cardboard trigger API.</span><br><span class="line">  //即使用现有的trigger API实现与daydream 头戴式设备的交互。</span><br><span class="line">  gvrView.enableCardboardTriggerEmulation();</span><br><span class="line"></span><br><span class="line">  if (gvrView.setAsyncReprojectionEnabled(true)) &#123;</span><br><span class="line">    // Async reprojection decouples the app framerate from the display framerate,</span><br><span class="line">    // allowing immersive interaction even at the throttled clockrates set by</span><br><span class="line">    // sustained performance mode.</span><br><span class="line">    AndroidCompat.setSustainedPerformanceMode(this, true);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  setGvrView(gvrView);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="渲染视图"><a href="#渲染视图" class="headerlink" title="渲染视图"></a>渲染视图</h2><p>Google VR 支持两种renderers，GvrView.StereoRendere和GvrView.Renderer。demo中采用的是前者。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">public interface StereoRenderer &#123;</span><br><span class="line">       @UsedByNative</span><br><span class="line">       void onNewFrame(HeadTransform var1);</span><br><span class="line"></span><br><span class="line">       @UsedByNative</span><br><span class="line">       void onDrawEye(Eye var1);</span><br><span class="line"></span><br><span class="line">       @UsedByNative</span><br><span class="line">       void onFinishFrame(Viewport var1);</span><br><span class="line"></span><br><span class="line">       void onSurfaceChanged(int var1, int var2);</span><br><span class="line"></span><br><span class="line">       void onSurfaceCreated(EGLConfig var1);</span><br><span class="line"></span><br><span class="line">       void onRendererShutdown();</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   public interface Renderer &#123;</span><br><span class="line">       @UsedByNative</span><br><span class="line">       void onDrawFrame(HeadTransform var1, Eye var2, Eye var3);</span><br><span class="line"></span><br><span class="line">       @UsedByNative</span><br><span class="line">       void onFinishFrame(Viewport var1);</span><br><span class="line"></span><br><span class="line">       void onSurfaceChanged(int var1, int var2);</span><br><span class="line"></span><br><span class="line">       void onSurfaceCreated(EGLConfig var1);</span><br><span class="line"></span><br><span class="line">       void onRendererShutdown();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现GvrView.StereoRendere接口饼设置gvrView.setRenderer(this);</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class TreasureHuntActivity extends GvrActivity implements GvrView.StereoRendere&#123;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    private void init()&#123;</span><br><span class="line">        gvrView.setRenderer(this);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>void onNewFrame(HeadTransform var1);app 渲染的时候都会调用</li>
+<li>void onDrawEye(Eye var1);eye参数不同的时候调用</li>
+</ul>
+<p>需要扩展相关OpenGL知识</p>
+<h2 id="Render实现"><a href="#Render实现" class="headerlink" title="Render实现"></a>Render实现</h2><ul>
+<li><p>onSurfaceCreated</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * Creates the buffers we use to store information about the 3D world.</span><br><span class="line">  *</span><br><span class="line">  * &lt;p&gt;OpenGL doesn&apos;t use Java arrays, but rather needs data in a format it can understand.</span><br><span class="line">  * Hence we use ByteBuffers.</span><br><span class="line">  *</span><br><span class="line">  * @param config The EGL configuration used when creating the surface.</span><br><span class="line">  */</span><br><span class="line"> @Override</span><br><span class="line"> public void onSurfaceCreated(EGLConfig config) &#123;</span><br><span class="line">    GLES20.glClearColor(0.1f, 0.1f, 0.1f, 0.5f); // 黑色背景.</span><br><span class="line"></span><br><span class="line">   ／／初始化一些buffer</span><br><span class="line">   ByteBuffer bbVertices = ByteBuffer.allocateDirect(WorldLayoutData.CUBE_COORDS.length * 4);</span><br><span class="line">   bbVertices.order(ByteOrder.nativeOrder());</span><br><span class="line">   cubeVertices = bbVertices.asFloatBuffer();</span><br><span class="line">   cubeVertices.put(WorldLayoutData.CUBE_COORDS);</span><br><span class="line">   cubeVertices.position(0);</span><br><span class="line">   。。。。。。</span><br><span class="line">   int vertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, R.raw.light_vertex);</span><br><span class="line">   int gridShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.grid_fragment);</span><br><span class="line">   int passthroughShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.passthrough_fragment);／／从文件中加载</span><br><span class="line">   </span><br><span class="line">   更多需要扩展下GLES20的相关api</span><br><span class="line">   </span><br><span class="line">  // 另外起一个线程，来对音频文件进行解码</span><br><span class="line">   new Thread(</span><br><span class="line">           new Runnable() &#123;</span><br><span class="line">             @Override</span><br><span class="line">             public void run() &#123;</span><br><span class="line">               </span><br><span class="line">               gvrAudioEngine.preloadSoundFile(OBJECT_SOUND_FILE);//立体音频文件加载</span><br><span class="line">               sourceId = gvrAudioEngine.createSoundObject(OBJECT_SOUND_FILE);</span><br><span class="line">               gvrAudioEngine.setSoundObjectPosition(／／可设置声音发出的位置</span><br><span class="line">                   sourceId, modelPosition[0], modelPosition[1], modelPosition[2]);</span><br><span class="line">               gvrAudioEngine.playSound(sourceId, true /* looped playback */);</span><br><span class="line">               </span><br><span class="line">               gvrAudioEngine.preloadSoundFile(SUCCESS_SOUND_FILE);</span><br><span class="line">             &#125;</span><br><span class="line">           &#125;)</span><br><span class="line">       .start();</span><br><span class="line"> 	</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>​</p>
+</li>
+</ul>
+<ul>
+<li><p>onNewFrame</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">   * Prepares OpenGL ES before we draw a frame.</span><br><span class="line">   *</span><br><span class="line">   * @param headTransform The head transformation in the new frame.</span><br><span class="line">   */</span><br><span class="line">  @Override</span><br><span class="line">  public void onNewFrame(HeadTransform headTransform) &#123;</span><br><span class="line">    setCubeRotation();</span><br><span class="line"></span><br><span class="line">    // Build the camera matrix and apply it to the ModelView.</span><br><span class="line">    Matrix.setLookAtM(camera, 0, 0.0f, 0.0f, CAMERA_Z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);</span><br><span class="line"></span><br><span class="line">    headTransform.getHeadView(headView, 0);</span><br><span class="line"></span><br><span class="line">    // Update the 3d audio engine with the most recent head rotation.</span><br><span class="line">    headTransform.getQuaternion(headRotation, 0);</span><br><span class="line">    gvrAudioEngine.setHeadRotation(</span><br><span class="line">        headRotation[0], headRotation[1], headRotation[2], headRotation[3]);</span><br><span class="line">    // Regular update call to GVR audio engine.</span><br><span class="line">    gvrAudioEngine.update();</span><br><span class="line"></span><br><span class="line">    checkGLError(&quot;onReadyToDraw&quot;);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>public void onNewFrame(HeadTransform headTransform) 其中HeadTransform封装了头部位置动作信息，可获取<strong>四元数，坐标体系</strong>扩张（扩展知识）</p>
+</li>
+<li><p>onDrawEye</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Draws a frame for an eye.</span><br><span class="line"> *</span><br><span class="line"> * @param eye The eye to render. Includes all required transformations.</span><br><span class="line"> */</span><br><span class="line">@Override</span><br><span class="line">public void onDrawEye(Eye eye) &#123;</span><br><span class="line">  GLES20.glEnable(GLES20.GL_DEPTH_TEST);</span><br><span class="line">  GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);</span><br><span class="line"></span><br><span class="line">  checkGLError(&quot;colorParam&quot;);</span><br><span class="line"></span><br><span class="line">  // Apply the eye transformation to the camera.</span><br><span class="line">  Matrix.multiplyMM(view, 0, eye.getEyeView(), 0, camera, 0);</span><br><span class="line"></span><br><span class="line">  // Set the position of the light</span><br><span class="line">  Matrix.multiplyMV(lightPosInEyeSpace, 0, view, 0, LIGHT_POS_IN_WORLD_SPACE, 0);</span><br><span class="line"></span><br><span class="line">  // Build the ModelView and ModelViewProjection matrices</span><br><span class="line">  // for calculating cube position and light.</span><br><span class="line">  float[] perspective = eye.getPerspective(Z_NEAR, Z_FAR);</span><br><span class="line">  Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);</span><br><span class="line">  Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);</span><br><span class="line">  drawCube();</span><br><span class="line"></span><br><span class="line">  // Set modelView for the floor, so we draw floor in the correct location</span><br><span class="line">  Matrix.multiplyMM(modelView, 0, view, 0, modelFloor, 0);</span><br><span class="line">  Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);</span><br><span class="line">  drawFloor();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Google VR 实现左右眼视觉变形操作。</p>
+</li>
+<li><p>响应</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * Called when the Cardboard trigger is pulled.cardboard上的按钮，或者是屏幕点击事件都可以触发</span><br><span class="line">  */</span><br><span class="line"> @Override</span><br><span class="line"> public void onCardboardTrigger() &#123;</span><br><span class="line">   Log.i(TAG, &quot;onCardboardTrigger&quot;);</span><br><span class="line"></span><br><span class="line">   if (isLookingAtObject()) &#123;如果目标物体在视觉范围内，则</span><br><span class="line">     successSourceId = gvrAudioEngine.createStereoSound(SUCCESS_SOUND_FILE);</span><br><span class="line">     gvrAudioEngine.playSound(successSourceId, false /* looping disabled */);</span><br><span class="line">     hideObject();</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   // Always give user feedback.</span><br><span class="line">   vibrator.vibrate(50);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>音频</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gvrAudioEngine =</span><br><span class="line">    new GvrAudioEngine(this, GvrAudioEngine.RenderingMode.BINAURAL_HIGH_QUALITY);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>demo主要展示了GvrActivity，GvrView, GvrAudioEngine d的几个基本用法，SDK主要提供了左右眼形变后产生立体效果的这部分功能，已经声音引擎对应的使用，以及头部位置信息动作的封装。</p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://lynn8570.github.io">lynn8570</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://lynn8570.github.io/2018/02/26/Understanding the Treasure Hunt sample game/">https://lynn8570.github.io/2018/02/26/Understanding the Treasure Hunt sample game/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/2018/02/27/google VR pana and video/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Google VR SDK 示例 360 media</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2018/02/25/android vr and ar/">
+        <span class="next-text nav-default">Android vr ar</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/ahonn" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2015 - 2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">lynn8570</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>
