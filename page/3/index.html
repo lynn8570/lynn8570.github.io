@@ -74,453 +74,6 @@
         <div class="content-wrapper">
           <div id="content" class="content"><section id="posts" class="posts"><article class="post">
     <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2018/02/26/Understanding the Treasure Hunt sample game/">Understanding the Treasure Hunt sample game</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-02-26
-        </span><span class="post-category">
-            <a href="/categories/ANDROID/">ANDROID</a>
-            </span>
-        </div>
-    </header>
-
-    <div class="post-content"><h1 id="Google-VR-SDK-寻宝游戏code-overview"><a href="#Google-VR-SDK-寻宝游戏code-overview" class="headerlink" title="Google VR SDK 寻宝游戏code overview"></a>Google VR SDK 寻宝游戏code overview</h1><h2 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h2><ul>
-<li>硬件要求：<ul>
-<li>Daydream平台：可支持Daydream的手机：Galaxy note8，MotoZ force，pixel，Axon7 ZTE，Moto Z，Mate 9，LG v30等 和  Daydream Viewer</li>
-<li>Cardboard平台，运行android 4.4 api19以上的手机和一个 Cardboard viewer</li>
-</ul>
-</li>
-<li>软件要求：<ul>
-<li>android sdk 25以上</li>
-<li>Google VR SDK</li>
-</ul>
-</li>
-</ul>
-<h2 id="运行Google-VR-SDK"><a href="#运行Google-VR-SDK" class="headerlink" title="运行Google VR SDK"></a>运行Google VR SDK</h2><p>运行<strong>samples-sdk-treasurehunt</strong> </p>
-<p>在android 4.4以上就可以运行，但是不一定能用，例如如果没有Gsensor数据等无法进行运动捕捉。虽然可以正常运行，但是无法进行体验。</p>
-<h2 id="Manifest-文件"><a href="#Manifest-文件" class="headerlink" title="Manifest 文件"></a>Manifest 文件</h2><ul>
-<li><p>VR应用属性</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;manifest ...&gt;</span><br><span class="line">    &lt;uses-sdk android:minSdkVersion=&quot;19&quot; android:targetSdkVersion=&quot;24&quot;/&gt;</span><br><span class="line">    ...</span><br><span class="line">    &lt;uses-feature android:glEsVersion=&quot;0x00020000&quot; android:required=&quot;true&quot; /&gt;</span><br><span class="line">    &lt;uses-feature android:name=&quot;android.software.vr.mode&quot; android:required=&quot;false&quot;/&gt;</span><br><span class="line">    &lt;uses-feature android:name=&quot;android.hardware.vr.high_performance&quot; android:required=&quot;false&quot;/&gt;</span><br><span class="line">    ...</span><br><span class="line">    &lt;uses-permission android:name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot; /&gt;</span><br><span class="line">    ...</span><br><span class="line">&lt;/manifest&gt;</span><br></pre></td></tr></table></figure>
-
-<p>Google VR SDK 支持的最低版本为api 19, 另外Daydream 应用的target API 要24或者以上级别。需 OpenGL ES 2.0 支持，可正确渲染VR内容。<code>&lt;uses-feature android:name=&quot;android.software.vr.mode&quot; android:required=&quot;false&quot;/&gt;</code>和<code>&lt;uses-feature android:name=&quot;android.hardware.vr.high_performance&quot; android:required=&quot;false&quot;/&gt;</code> 由 Android N加入的新特性，前者表示需要使用Android VR模式，后者表示需要可支持Daydream的设备。</p>
-<p>对于没有Google VR服务的设备，需要安装Google VR 服务，才可以将可支持Daydream的设备与对应的VR viewer配对。因此还需要添加<code>READ_EXTERNAL_STORAGE</code>权限。</p>
-</li>
-</ul>
-<ul>
-<li><p>VR Activity 属性</p>
-<p>Activity也需要添加一些属性声明，才可兼容Daydream</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity</span><br><span class="line">    android:name=&quot;.MyActivity&quot;</span><br><span class="line">    android:screenOrientation=&quot;landscape&quot;</span><br><span class="line">    android:enableVrMode=&quot;@string/gvr_vr_mode_component&quot;</span><br><span class="line">    android:theme=&quot;@style/VrActivityTheme&quot;</span><br><span class="line">    android:resizeableActivity=&quot;false&quot;</span><br><span class="line">    android:configChanges=&quot;density|keyboardHidden|navigation|orientation|screenSize|uiMode&quot;</span><br><span class="line">    ...&gt;</span><br></pre></td></tr></table></figure>
-
-<p><code>enableVrMode</code>属性用于启用Android VR 模式，Android 7.0 N 引入的功能特性，用于支持高性能的移动 VR 应用。该属性表示，当启动Activity的时候，系统需要自动启动VR模式。</p>
-<blockquote>
-<p>启动 VR activity的时候，屏幕会有些轻微的闪烁，这是因为当启动VR模式的时候，Android需要切换到低持久性模式显示。</p>
-</blockquote>
-<p><code>android:theme=&quot;@style/VrActivityTheme&quot;</code>确保Activity在VR转换期间正常运行，<code>android:resizeableActivity=&quot;false&quot;</code>表明Activity不可调整显示大小，不与其他的Activity分屏。landscape表明屏幕需要横屏显示。</p>
-<p><code>configChanges</code>可避免activity因为一些配置变化而造成activity的重新创建。</p>
-<p>Google VR应用基本和要求：</p>
-<p><a href="https://developers.google.com/vr/distribute/daydream/app-quality" target="_blank" rel="noopener">https://developers.google.com/vr/distribute/daydream/app-quality</a></p>
-<ul>
-<li><p>设计要求：</p>
-<ol>
-<li>物体对象需要放置在一定的距离，以便用户可以看清楚而不是看到两张图片。如果需要辅助文字，需要保证文字的可读性。建议物体对象需要放置在0.5米距离以上</li>
-<li>需要维护头部动作位置追踪</li>
-<li>地平线维持，不至于倾斜</li>
-<li>相机操作需要用户启动，但可以不是一直直接的控制操作</li>
-<li>app不干涉系统级别的复位行为</li>
-<li>…….</li>
-</ol>
-</li>
-<li><p>功能要求</p>
-<ol>
-<li><p>使用支持的VR SDK版本</p>
-</li>
-<li><p>使用Daydream API进行activity切换<code>daydreamApi.launchVrHomescreen();</code>  <code>daydreamApi.launchInVr(componentName);</code></p>
-</li>
-<li><p>不请求nfc权限，应用不能使用nfc权限，而是Daydream平台需要使用nfc功能来进行配对操作。</p>
-</li>
-<li><p>应用的manifest清单文件中，需要设置正确的VR activity样式：禁止android默认的windowmanager的切换动画；隐藏系统级的ui元素，例如系统状态栏，导航栏和键盘等；采用landscape，禁止方向转化；禁用多窗口支持。</p>
-<p><code>android:theme=&quot;@style/VrActivityTheme&quot;</code>可用于禁止切换动画和隐藏系统ui;</p>
-<p><code>android:enableVrMode=&quot;@string/gvr_vr_mode_component&quot;</code>可用于设置仅从Daydream Home或者另外一个VR activities来启动Activity，以便得到更快的切换。</p>
-<p>示例的activity清单代码可查看前面的示例。</p>
-<p>需要显示在VR Home中的Daydream activity需要设置<code>com.google.intent.category.DAYDREAM</code>，如果不想显示的VR Home中，只要设置<code>android.intent.action.VIEW</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity</span><br><span class="line">    ... &gt;</span><br><span class="line">    ...</span><br><span class="line">    &lt;intent-filter&gt;</span><br><span class="line">        &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;</span><br><span class="line">        &lt;category android:name=&quot;com.google.intent.category.DAYDREAM&quot;/&gt;</span><br><span class="line">    &lt;/intent-filter&gt;</span><br><span class="line">&lt;/activity&gt;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-</li>
-<li><p>根据平台设置硬件特性，对于Daydream的应用，以下硬件特性都是必须的。对于某些具有cardboard模式的VR则为可选的。</p>
-<pre><code>android:glEsVersion=&quot;0x00020000&quot;
-android.hardware.sensor.gyroscope
-android.hardware.sensor.accelerometer
-android.hardware.vr.high_performance
-android.software.vr.mode</code></pre></li>
-</ul>
-</li>
-</ul>
-<pre><code>Examples
-
-Application only supports Daydream:
-
-&lt;uses-feature android:glEsVersion=&quot;0x00020000&quot; android:required=&quot;true&quot; /&gt;
-&lt;uses-feature android:name=&quot;android.hardware.sensor.accelerometer&quot; android:required=&quot;true&quot; /&gt;
-&lt;uses-feature android:name=&quot;android.hardware.sensor.gyroscope&quot; android:required=&quot;true&quot; /&gt;
-&lt;uses-feature android:name=&quot;android.hardware.vr.high_performance&quot; android:required=&quot;true&quot; /&gt;
-&lt;uses-feature android:name=&quot;android.software.vr.mode&quot; android:required=&quot;true&quot; /&gt;
-
-Application supports both Daydream and Cardboard devices:
-
-&lt;uses-feature android:glEsVersion=&quot;0x00020000&quot; android:required=&quot;true&quot; /&gt;
-&lt;uses-feature android:name=&quot;android.hardware.sensor.accelerometer&quot; android:required=&quot;true&quot; /&gt;
-&lt;uses-feature android:name=&quot;android.hardware.sensor.gyroscope&quot; android:required=&quot;true&quot; /&gt;
-&lt;uses-feature android:name=&quot;android.hardware.vr.high_performance&quot; android:required=&quot;false&quot; /&gt;
-&lt;uses-feature android:name=&quot;android.software.vr.mode&quot; android:required=&quot;false&quot; /&gt;
-
-Application&apos;s VR mode is optional:
-
-&lt;uses-feature android:glEsVersion=&quot;0x00020000&quot; android:required=&quot;false&quot; /&gt;
-&lt;uses-feature android:name=&quot;android.hardware.sensor.accelerometer&quot; android:required=&quot;false&quot; /&gt;
-&lt;uses-feature android:name=&quot;android.hardware.sensor.gyroscope&quot; android:required=&quot;false&quot; /&gt;
-&lt;uses-feature android:name=&quot;android.hardware.vr.high_performance&quot; android:required=&quot;false&quot; /&gt;
-&lt;uses-feature android:name=&quot;android.software.vr.mode&quot; android:required=&quot;false&quot; /&gt;</code></pre><ul>
-<li><p>应用可以正常的暂停</p>
-<p>这包括很多常见的操作场景暂停和恢复。例如用户通过控制器或者手机按键按下的Home按钮来立即暂停应用还有音频播放等。数据的保存和恢复。</p>
-</li>
-<li><p>应用可正常关闭</p>
-</li>
-</ul>
-<ul>
-<li><p>平台兼容性</p>
-<p>每个activity都必须声明好支持的VR平台；Daydream还是cardboard。两个可兼容</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- Example of a Daydream/Cardboard Activity --&gt;</span><br><span class="line">&lt;activity ... &gt;</span><br><span class="line">    &lt;intent-filter&gt;</span><br><span class="line">        &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- This marks the Activity as a Daydream Activity and allows it</span><br><span class="line">             to be launched from the Daydream Home. --&gt;</span><br><span class="line">        &lt;category android:name=&quot;com.google.intent.category.DAYDREAM&quot; /&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- This marks the Activity as a Cardboard Activity and allows it</span><br><span class="line">             to be launched from the Cardboard app. --&gt;</span><br><span class="line">        &lt;category android:name=&quot;com.google.intent.category.CARDBOARD&quot; /&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- This allows this Activity to be launched from the traditional</span><br><span class="line">             Android 2D launcher as well. Remove it if you do not want</span><br><span class="line">             this Activity to be launched directly from the 2D launcher. --&gt;</span><br><span class="line">        &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;</span><br><span class="line">    &lt;/intent-filter&gt;</span><br><span class="line">&lt;/activity&gt;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="继承-GvrActivity"><a href="#继承-GvrActivity" class="headerlink" title="继承 GvrActivity"></a>继承 GvrActivity</h2><p>GvrActivity作为基类可对GoogleVR设备进行简单的集成，可以发布一些事件来与VR环境进行交互并且可以处理创建用于VR渲染的activity的一些通用的细节实现。GvrAcitivity使用的是sticky的沉浸式模式，因为GvrView只能在全屏模式下才可以进行渲染。封装的东西还是比较少的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br></pre></td><td class="code"><pre><span class="line">package com.google.vr.sdk.base;</span><br><span class="line"></span><br><span class="line">import android.app.Activity;</span><br><span class="line">import android.os.Bundle;</span><br><span class="line">import android.view.KeyEvent;</span><br><span class="line">import android.view.View;</span><br><span class="line">import android.view.ViewGroup.LayoutParams;</span><br><span class="line">import com.google.vr.cardboard.AndroidNCompat;</span><br><span class="line">import com.google.vr.cardboard.FullscreenMode;</span><br><span class="line">import com.google.vrtoolkit.cardboard.ScreenOnFlagHelper;</span><br><span class="line"></span><br><span class="line">public class GvrActivity extends Activity &#123;//直接集成的普通的activity</span><br><span class="line">    private FullscreenMode fullscreenMode;//全屏的flag设置和兼容模式</span><br><span class="line">    private final ScreenOnFlagHelper screenOnFlagHelper = new ScreenOnFlagHelper(this);</span><br><span class="line">    //在resume的启动sensor相关的监听</span><br><span class="line">    private GvrView cardboardView;</span><br><span class="line">    private boolean androidVrModeEnabled;</span><br><span class="line"></span><br><span class="line">    public GvrActivity() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setGvrView(GvrView gvrView) &#123;</span><br><span class="line">        this.setGvrView(gvrView, true);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setGvrView(GvrView gvrView, boolean enableVrModeFallbacks) &#123;</span><br><span class="line">        if (this.cardboardView != gvrView) &#123;</span><br><span class="line">            if (this.cardboardView != null) &#123;</span><br><span class="line">                this.cardboardView.setOnCardboardTriggerListener((Runnable)null);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            this.cardboardView = gvrView;</span><br><span class="line">            boolean enableAndroidVrMode = gvrView != null;</span><br><span class="line">            this.androidVrModeEnabled = AndroidNCompat.setVrModeEnabled(this, enableAndroidVrMode, enableVrModeFallbacks ? 1 : 0) &amp;&amp; enableAndroidVrMode;</span><br><span class="line">            if (gvrView != null) &#123;</span><br><span class="line">                gvrView.setOnCardboardTriggerListener(new Runnable() &#123;</span><br><span class="line">                    public void run() &#123;</span><br><span class="line">                        GvrActivity.this.onCardboardTrigger();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public GvrView getGvrView() &#123;</span><br><span class="line">        return this.cardboardView;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void onCardboardTrigger() &#123;//可重写</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected void updateGvrViewerParams(GvrViewerParams newParams) &#123;</span><br><span class="line">        if (this.cardboardView != null) &#123;</span><br><span class="line">            this.cardboardView.updateGvrViewerParams(newParams);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        this.requestWindowFeature(1);</span><br><span class="line">        this.fullscreenMode = new FullscreenMode(this.getWindow());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected void onResume() &#123;</span><br><span class="line">        super.onResume();</span><br><span class="line">        if (this.cardboardView != null) &#123;</span><br><span class="line">            this.cardboardView.onResume();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        this.fullscreenMode.goFullscreen();</span><br><span class="line">        this.screenOnFlagHelper.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected void onPause() &#123;</span><br><span class="line">        super.onPause();</span><br><span class="line">        if (this.cardboardView != null) &#123;</span><br><span class="line">            this.cardboardView.onPause();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        this.screenOnFlagHelper.stop();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected void onDestroy() &#123;</span><br><span class="line">        if (this.cardboardView != null) &#123;</span><br><span class="line">            this.cardboardView.setOnCardboardTriggerListener((Runnable)null);</span><br><span class="line">            this.cardboardView.shutdown();</span><br><span class="line">            this.cardboardView = null;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        super.onDestroy();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setContentView(View view) &#123;</span><br><span class="line">        if (view instanceof GvrView) &#123;</span><br><span class="line">            this.setGvrView((GvrView)view);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        super.setContentView(view);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setContentView(View view, LayoutParams params) &#123;</span><br><span class="line">        if (view instanceof GvrView) &#123;</span><br><span class="line">            this.setGvrView((GvrView)view);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        super.setContentView(view, params);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void onBackPressed() &#123;</span><br><span class="line">        super.onBackPressed();</span><br><span class="line">        this.cardboardView.onBackPressed();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean onKeyDown(int keyCode, KeyEvent event) &#123;</span><br><span class="line">        return this.shouldSuppressKey(keyCode) || super.onKeyDown(keyCode, event);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean onKeyUp(int keyCode, KeyEvent event) &#123;</span><br><span class="line">        return this.shouldSuppressKey(keyCode) || super.onKeyUp(keyCode, event);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void onWindowFocusChanged(boolean hasFocus) &#123;</span><br><span class="line">        super.onWindowFocusChanged(hasFocus);</span><br><span class="line">        this.fullscreenMode.onWindowFocusChanged(hasFocus);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setScreenAlwaysOn(boolean enabled) &#123;</span><br><span class="line">        this.screenOnFlagHelper.setScreenAlwaysOn(enabled);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private boolean shouldSuppressKey(int keyCode) &#123;</span><br><span class="line">        if (!this.androidVrModeEnabled) &#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return keyCode == 24 || keyCode == 25;//处理了音量加减键</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="定义GvrView"><a href="#定义GvrView" class="headerlink" title="定义GvrView"></a>定义GvrView</h2><p>GvrView主要用于VR渲染</p>
-<ul>
-<li>common_ui.xml</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    android:id=&quot;@+id/ui_layout&quot;</span><br><span class="line">    android:orientation=&quot;vertical&quot;</span><br><span class="line">    android:layout_width=&quot;match_parent&quot;</span><br><span class="line">    android:layout_height=&quot;match_parent&quot; &gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &lt;com.google.vr.sdk.base.GvrView</span><br><span class="line">        android:id=&quot;@+id/gvr_view&quot;</span><br><span class="line">        android:layout_width=&quot;match_parent&quot;</span><br><span class="line">        android:layout_height=&quot;match_parent&quot;</span><br><span class="line">        android:layout_alignParentTop=&quot;true&quot;</span><br><span class="line">        android:layout_alignParentLeft=&quot;true&quot; /&gt;</span><br><span class="line"></span><br><span class="line">&lt;/RelativeLayout&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>初始化</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public void initializeGvrView() &#123;</span><br><span class="line">  setContentView(R.layout.common_ui);//设置xml文件</span><br><span class="line"></span><br><span class="line">  GvrView gvrView = (GvrView) findViewById(R.id.gvr_view);</span><br><span class="line">  gvrView.setEGLConfigChooser(8, 8, 8, 8, 16, 8);</span><br><span class="line">  // Android设备往往支持多种EGL配置，可以使用不同数目的通道(channel)，也可以指定每个通道具有不同数目的位(bits)深度。因此， 在渲染器工作之前就应该指定EGL的配置。如果没有调用的话，那么默认的配置是 RGB_888 surface with a depth buffer depth of at least 16 bits. </span><br><span class="line"></span><br><span class="line">  gvrView.setRenderer(this);</span><br><span class="line">  gvrView.setTransitionViewEnabled(true);//提示页面</span><br><span class="line"></span><br><span class="line">  // Enable Cardboard-trigger feedback with Daydream headsets. This is a simple way of supporting</span><br><span class="line">  // Daydream controller input for basic interactions using the existing Cardboard trigger API.</span><br><span class="line">  //即使用现有的trigger API实现与daydream 头戴式设备的交互。</span><br><span class="line">  gvrView.enableCardboardTriggerEmulation();</span><br><span class="line"></span><br><span class="line">  if (gvrView.setAsyncReprojectionEnabled(true)) &#123;</span><br><span class="line">    // Async reprojection decouples the app framerate from the display framerate,</span><br><span class="line">    // allowing immersive interaction even at the throttled clockrates set by</span><br><span class="line">    // sustained performance mode.</span><br><span class="line">    AndroidCompat.setSustainedPerformanceMode(this, true);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  setGvrView(gvrView);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="渲染视图"><a href="#渲染视图" class="headerlink" title="渲染视图"></a>渲染视图</h2><p>Google VR 支持两种renderers，GvrView.StereoRendere和GvrView.Renderer。demo中采用的是前者。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">public interface StereoRenderer &#123;</span><br><span class="line">       @UsedByNative</span><br><span class="line">       void onNewFrame(HeadTransform var1);</span><br><span class="line"></span><br><span class="line">       @UsedByNative</span><br><span class="line">       void onDrawEye(Eye var1);</span><br><span class="line"></span><br><span class="line">       @UsedByNative</span><br><span class="line">       void onFinishFrame(Viewport var1);</span><br><span class="line"></span><br><span class="line">       void onSurfaceChanged(int var1, int var2);</span><br><span class="line"></span><br><span class="line">       void onSurfaceCreated(EGLConfig var1);</span><br><span class="line"></span><br><span class="line">       void onRendererShutdown();</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   public interface Renderer &#123;</span><br><span class="line">       @UsedByNative</span><br><span class="line">       void onDrawFrame(HeadTransform var1, Eye var2, Eye var3);</span><br><span class="line"></span><br><span class="line">       @UsedByNative</span><br><span class="line">       void onFinishFrame(Viewport var1);</span><br><span class="line"></span><br><span class="line">       void onSurfaceChanged(int var1, int var2);</span><br><span class="line"></span><br><span class="line">       void onSurfaceCreated(EGLConfig var1);</span><br><span class="line"></span><br><span class="line">       void onRendererShutdown();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-
-<p>实现GvrView.StereoRendere接口饼设置gvrView.setRenderer(this);</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class TreasureHuntActivity extends GvrActivity implements GvrView.StereoRendere&#123;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    private void init()&#123;</span><br><span class="line">        gvrView.setRenderer(this);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>void onNewFrame(HeadTransform var1);app 渲染的时候都会调用</li>
-<li>void onDrawEye(Eye var1);eye参数不同的时候调用</li>
-</ul>
-<p>需要扩展相关OpenGL知识</p>
-<h2 id="Render实现"><a href="#Render实现" class="headerlink" title="Render实现"></a>Render实现</h2><ul>
-<li><p>onSurfaceCreated</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * Creates the buffers we use to store information about the 3D world.</span><br><span class="line">  *</span><br><span class="line">  * &lt;p&gt;OpenGL doesn&apos;t use Java arrays, but rather needs data in a format it can understand.</span><br><span class="line">  * Hence we use ByteBuffers.</span><br><span class="line">  *</span><br><span class="line">  * @param config The EGL configuration used when creating the surface.</span><br><span class="line">  */</span><br><span class="line"> @Override</span><br><span class="line"> public void onSurfaceCreated(EGLConfig config) &#123;</span><br><span class="line">    GLES20.glClearColor(0.1f, 0.1f, 0.1f, 0.5f); // 黑色背景.</span><br><span class="line"></span><br><span class="line">   ／／初始化一些buffer</span><br><span class="line">   ByteBuffer bbVertices = ByteBuffer.allocateDirect(WorldLayoutData.CUBE_COORDS.length * 4);</span><br><span class="line">   bbVertices.order(ByteOrder.nativeOrder());</span><br><span class="line">   cubeVertices = bbVertices.asFloatBuffer();</span><br><span class="line">   cubeVertices.put(WorldLayoutData.CUBE_COORDS);</span><br><span class="line">   cubeVertices.position(0);</span><br><span class="line">   。。。。。。</span><br><span class="line">   int vertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, R.raw.light_vertex);</span><br><span class="line">   int gridShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.grid_fragment);</span><br><span class="line">   int passthroughShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.passthrough_fragment);／／从文件中加载</span><br><span class="line">   </span><br><span class="line">   更多需要扩展下GLES20的相关api</span><br><span class="line">   </span><br><span class="line">  // 另外起一个线程，来对音频文件进行解码</span><br><span class="line">   new Thread(</span><br><span class="line">           new Runnable() &#123;</span><br><span class="line">             @Override</span><br><span class="line">             public void run() &#123;</span><br><span class="line">               </span><br><span class="line">               gvrAudioEngine.preloadSoundFile(OBJECT_SOUND_FILE);//立体音频文件加载</span><br><span class="line">               sourceId = gvrAudioEngine.createSoundObject(OBJECT_SOUND_FILE);</span><br><span class="line">               gvrAudioEngine.setSoundObjectPosition(／／可设置声音发出的位置</span><br><span class="line">                   sourceId, modelPosition[0], modelPosition[1], modelPosition[2]);</span><br><span class="line">               gvrAudioEngine.playSound(sourceId, true /* looped playback */);</span><br><span class="line">               </span><br><span class="line">               gvrAudioEngine.preloadSoundFile(SUCCESS_SOUND_FILE);</span><br><span class="line">             &#125;</span><br><span class="line">           &#125;)</span><br><span class="line">       .start();</span><br><span class="line"> 	</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>​</p>
-</li>
-</ul>
-<ul>
-<li><p>onNewFrame</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">   * Prepares OpenGL ES before we draw a frame.</span><br><span class="line">   *</span><br><span class="line">   * @param headTransform The head transformation in the new frame.</span><br><span class="line">   */</span><br><span class="line">  @Override</span><br><span class="line">  public void onNewFrame(HeadTransform headTransform) &#123;</span><br><span class="line">    setCubeRotation();</span><br><span class="line"></span><br><span class="line">    // Build the camera matrix and apply it to the ModelView.</span><br><span class="line">    Matrix.setLookAtM(camera, 0, 0.0f, 0.0f, CAMERA_Z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);</span><br><span class="line"></span><br><span class="line">    headTransform.getHeadView(headView, 0);</span><br><span class="line"></span><br><span class="line">    // Update the 3d audio engine with the most recent head rotation.</span><br><span class="line">    headTransform.getQuaternion(headRotation, 0);</span><br><span class="line">    gvrAudioEngine.setHeadRotation(</span><br><span class="line">        headRotation[0], headRotation[1], headRotation[2], headRotation[3]);</span><br><span class="line">    // Regular update call to GVR audio engine.</span><br><span class="line">    gvrAudioEngine.update();</span><br><span class="line"></span><br><span class="line">    checkGLError(&quot;onReadyToDraw&quot;);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<p>public void onNewFrame(HeadTransform headTransform) 其中HeadTransform封装了头部位置动作信息，可获取<strong>四元数，坐标体系</strong>扩张（扩展知识）</p>
-</li>
-<li><p>onDrawEye</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Draws a frame for an eye.</span><br><span class="line"> *</span><br><span class="line"> * @param eye The eye to render. Includes all required transformations.</span><br><span class="line"> */</span><br><span class="line">@Override</span><br><span class="line">public void onDrawEye(Eye eye) &#123;</span><br><span class="line">  GLES20.glEnable(GLES20.GL_DEPTH_TEST);</span><br><span class="line">  GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);</span><br><span class="line"></span><br><span class="line">  checkGLError(&quot;colorParam&quot;);</span><br><span class="line"></span><br><span class="line">  // Apply the eye transformation to the camera.</span><br><span class="line">  Matrix.multiplyMM(view, 0, eye.getEyeView(), 0, camera, 0);</span><br><span class="line"></span><br><span class="line">  // Set the position of the light</span><br><span class="line">  Matrix.multiplyMV(lightPosInEyeSpace, 0, view, 0, LIGHT_POS_IN_WORLD_SPACE, 0);</span><br><span class="line"></span><br><span class="line">  // Build the ModelView and ModelViewProjection matrices</span><br><span class="line">  // for calculating cube position and light.</span><br><span class="line">  float[] perspective = eye.getPerspective(Z_NEAR, Z_FAR);</span><br><span class="line">  Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);</span><br><span class="line">  Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);</span><br><span class="line">  drawCube();</span><br><span class="line"></span><br><span class="line">  // Set modelView for the floor, so we draw floor in the correct location</span><br><span class="line">  Matrix.multiplyMM(modelView, 0, view, 0, modelFloor, 0);</span><br><span class="line">  Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);</span><br><span class="line">  drawFloor();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Google VR 实现左右眼视觉变形操作。</p>
-</li>
-<li><p>响应</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * Called when the Cardboard trigger is pulled.cardboard上的按钮，或者是屏幕点击事件都可以触发</span><br><span class="line">  */</span><br><span class="line"> @Override</span><br><span class="line"> public void onCardboardTrigger() &#123;</span><br><span class="line">   Log.i(TAG, &quot;onCardboardTrigger&quot;);</span><br><span class="line"></span><br><span class="line">   if (isLookingAtObject()) &#123;如果目标物体在视觉范围内，则</span><br><span class="line">     successSourceId = gvrAudioEngine.createStereoSound(SUCCESS_SOUND_FILE);</span><br><span class="line">     gvrAudioEngine.playSound(successSourceId, false /* looping disabled */);</span><br><span class="line">     hideObject();</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   // Always give user feedback.</span><br><span class="line">   vibrator.vibrate(50);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>音频</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gvrAudioEngine =</span><br><span class="line">    new GvrAudioEngine(this, GvrAudioEngine.RenderingMode.BINAURAL_HIGH_QUALITY);</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>demo主要展示了GvrActivity，GvrView, GvrAudioEngine d的几个基本用法，SDK主要提供了左右眼形变后产生立体效果的这部分功能，已经声音引擎对应的使用，以及头部位置信息动作的封装。</p>
-
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2018/02/25/android vr and ar/">Android vr ar</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-02-25
-        </span><span class="post-category">
-            <a href="/categories/ANDROID/">ANDROID</a>
-            </span>
-        </div>
-    </header>
-
-    <div class="post-content"><h1 id="Android-VR-AR"><a href="#Android-VR-AR" class="headerlink" title="Android VR-AR"></a>Android VR-AR</h1><p>如果接下来要做AR眼镜相关的项目，目前需要做一些知识储备。所以本文做为一个项目开始前的准备工作。了解目前已知行业先行者已经实现的技术是已经到了一个什么样的程度后，才知道我们要前进的方向。着重了解Google和目前接触到的一个比较完善的vr-ar系统公司睿悦Niburu。</p>
-<h2 id="VR和AR的概念"><a href="#VR和AR的概念" class="headerlink" title="VR和AR的概念"></a>VR和AR的概念</h2><p>VR(Vritual Reality)虚拟现实，最直白的说就是纯虚拟的数字画面。理解起来就是，用户在VR中看到的所有东西都是虚拟的，但是这些虚拟的东西又需要让用户感觉到很真实。</p>
-<p>AR(Argumented Reality)增强现实，虚拟数字画面+裸眼现实</p>
-<p>此外现在还有一个概念提出来，MR(Mediatd Reality)介导现实，数字化现实+虚拟数字画面</p>
-<ul>
-<li><p>VR和AR的关系，可以理解为，VR为AR的一种极端情况。即假设我们把人眼的内容分为现实中真实的部分+数字投放的Argumentation（增强）部分。那么如果这种虚拟的部分越来越多以至于一种极端的情况，几乎没有的真实的部分，这种情况下叫：VR。所以这样理解起来，VR是AR的一个真子集。虚拟的东西占了全部，以至于越来越偏离了原来的现实原点。</p>
-</li>
-<li><p>MR 数字化的视觉感知。对本身现实的感知能力的大小。例如让你有能力看到更小的东西，例如让佩戴者像有了X射线般的超级视力，看到皮肤下的血管？？？超能力！！或者是在现实的景物傻姑娘加以渲染，置身奇幻世界等等。所以MR是视觉能力维度上的提升。</p>
-<p><img src="https://pic3.zhimg.com/80/817549fc583ef153904ef2f324e3fa0f_hd.jpg" alt="知乎图示"></p>
-<p>他们三者的关系像是：在AR之外，增加了数字化的感知能力。</p>
-<p><img src="https://pic4.zhimg.com/80/f208e8d885ed7749c9b1c53988f85593_hd.jpg" alt="知乎图示"></p>
-</li>
-</ul>
-<blockquote>
-<p>以上整理自36kr，作者艾韬，易瞳科技CTO，师从Steve Mann。</p>
-</blockquote>
-<p>为什么不是同心圆，而是有偏离呢？全图其实还有：</p>
-<p><img src="http://a.36krcnd.com/nil_class/6d8fab32-010b-4d77-bf31-20af3eb0358e/7B22.tmp.jpg!heading" alt></p>
-<p>还有个Mixed，混合现实。如果我们把同心圆的原点认为是真实世界的原点。这几个概念给我们的感受是怎样的？</p>
-<h2 id="市面上的AR-VR眼镜"><a href="#市面上的AR-VR眼镜" class="headerlink" title="市面上的AR-VR眼镜"></a>市面上的AR-VR眼镜</h2><ul>
-<li>轻量级AR - Google Glass，单眼棱镜光学透视的设计方案，提示型系统</li>
-<li>中量级AR - Hololens，双目棱镜光学透视方案，还有例如亮风台</li>
-<li>重量级AR - HTC the Void 动态VR 眼镜，头戴VR显示，背上电脑，将真实的环境渲染成游戏场景。</li>
-<li>纯VR - VR头盔</li>
-</ul>
-<h2 id="Google-VR-做了什么"><a href="#Google-VR-做了什么" class="headerlink" title="Google VR 做了什么"></a>Google VR 做了什么</h2><ul>
-<li><p>DayDream</p>
-<blockquote>
-<p>Daydream是由谷歌2016年11月10日发布的一个vr平台，由一个头盔，一个控制杆盒很多兼容的智能手机组成。</p>
-</blockquote>
-<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/QQ20180225-151253@2x.png" alt></p>
-<p>我们可以使用google提供的VR SDK来开发Daydream app</p>
-<ul>
-<li><p>硬件</p>
-<p>Daydream 或者 cardboard</p>
-<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/QQ20180225-153056@2x.png" alt></p>
-</li>
-<li><p>软件</p>
-<p>android studio，Nougat（API 25）or higher, Google VR SDK</p>
-</li>
-<li><p>VR SDK sample</p>
-<p>sdk-treasurehunt：示例应用，可以展示搜索和搜集物品。</p>
-<p>sdk-controllerclient     主要演示接收和处理daydream的控制输入</p>
-<p>sdk-simplepanowidget     可以载入全景视图的组件<br>sdk-simplevideowidget     可以渲染360度视频的视图组件 VRView<br>sdk-video360     可以渲染360度视频的视图组件，在可支持的手机上运行vr效果的播放器时候，<strong>屏幕会闪烁</strong><br>sdk-videoplayer     通过 Asynchronous Reprojection Video Surface API来播放视频，</p>
-</li>
-<li><p>Treasure Hunt 示例应用演练</p>
-<p>这个应用体现的Google VR SDK的核心功能：<strong>Stereo rendering</strong> 立体渲染，将app的view进行立体渲染，从而创造出3D的体验；<strong>Spatial audio</strong> 空间音效，制造出声音从不同地方出来的效果，增强现实体验；<strong>Head movement tracking</strong>根据头部动作，更新视图；<strong>User input</strong>用户输入响应，接收Daydream controller或者Cardboard 按钮的输入。</p>
-<p><em>Todo: <a href="https://developers.google.com/vr/android/samples/treasure-hunt" target="_blank" rel="noopener">Treasure Hunt walkthrough</a> 详细走一遍sample的代码</em> </p>
-</li>
-<li><p>开发GoogleVR项目步骤</p>
-<ol>
-<li><p>配置项目等级</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// The Google VR SDK requires version 2.3.3 or higher.</span><br><span class="line">    classpath &apos;com.android.tools.build:gradle:2.3.3&apos;</span><br><span class="line"></span><br><span class="line">    // The Google VR NDK requires experimental version 0.9.3 or higher.</span><br><span class="line">    // classpath &apos;com.android.tools.build:gradle-experimental:0.9.3&apos;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>添加依赖库</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">     // Adds Google VR spatial audio support</span><br><span class="line">     compile &apos;com.google.vr:sdk-audio:1.80.0&apos;</span><br><span class="line"></span><br><span class="line">     // Required for all Google VR apps</span><br><span class="line">     compile &apos;com.google.vr:sdk-base:1.80.0&apos;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置ProGuard</p>
-<p>如果需要使用proguard来减小apk文件大小的话，需要添加</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">buildTypes &#123;</span><br><span class="line">        release &#123;</span><br><span class="line">            minifyEnabled true</span><br><span class="line">            proguardFiles.add(file(&apos;../../proguard-gvr.txt&apos;))</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>接下来需要哪些知识储备：</p>
-<ul>
-<li><p>浏览一遍谷歌VR示例代码 Treasure Hunt，寻宝游戏</p>
-</li>
-<li><p>GoogleVRSDK视频和全景图片示例应用</p>
-</li>
-<li><p>GoogleVR设计和开发准则</p>
-</li>
-<li><p>android空间音频效果开发向导</p>
-</li>
-<li><p>Google VR API</p>
-</li>
-<li><p>Daydream，学习Daydream用户交互控制器相关操作，可查看Review the controller library in <strong>gvr-android-sdk</strong> &gt; <strong>libraries</strong> &gt;<br>  <strong>sdk-controller</strong> ，查阅 库api 控制器 API</p>
-<blockquote>
-<p>原文链接如下：</p>
-</blockquote>
-</li>
-<li><p><a href="https://developers.google.com/vr/android/samples/treasure-hunt" target="_blank" rel="noopener">Treasure Hunt sample code walkthrough</a></p>
-</li>
-<li><p><a href="https://developers.google.com/vr/android/samples/vrview" target="_blank" rel="noopener">Google VR SDK video and panoramic image sample app walkthrough</a></p>
-</li>
-<li><p>Learn about Google VR design and development principles in <a href="https://developers.google.com/vr/elements/overview" target="_blank" rel="noopener">Daydream elements</a>.</p>
-</li>
-<li><p><a href="https://developers.google.com/vr/android/spatial-audio" target="_blank" rel="noopener">Spatial audio for Android tutorial</a></p>
-</li>
-<li><p><a href="https://developers.google.com/vr/android/reference_overview" target="_blank" rel="noopener">Google VR API Reference</a></p>
-</li>
-<li><p>Daydream:</p>
-<p> Learn about implementing Daydream controller user interactions   in your app:</p>
-<ul>
-<li>Review the controller library in <strong>gvr-android-sdk</strong> &gt; <strong>libraries</strong> &gt;  <strong>sdk-controller</strong>.</li>
-<li>See also the <a href="https://developers.google.com/vr/android/reference/com/google/vr/sdk/controller/package-summary" target="_blank" rel="noopener">controller library API reference</a>.</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><p>Tilt Brush</p>
-<p>3d空间绘画</p>
-<p>Oculus Rift and HTC VIVE可支持该功能。</p>
-<p>都是vr头戴式设备</p>
-<p>​</p>
-</li>
-<li><p>Earth VR</p>
-<p>vr 视角来查看一些风景名胜</p>
-</li>
-<li><p>Cardboard</p>
-</li>
-<li><p>Expeditions</p>
-<p>教育类相关，旅行远征，例如体验在火星表面，老师可以带着孩子进行更有沉浸式的体验</p>
-</li>
-<li><p>Jump</p>
-<p>Jump is Google’s professional VR video solution. Jump makes 3D-360 video<br> production at scale possible with best-in-class automated stitching.<br>Jump cameras are designed to work with the Jump Assembler to enable<br>seamless VR video production.</p>
-<p>一系列的摄像头产品，用于拍摄全景视频，自动缝合技术，实现</p>
-</li>
-<li><p>Developers</p>
-</li>
-</ul>
-<h2 id="Google-AR-提供了什么"><a href="#Google-AR-提供了什么" class="headerlink" title="Google AR 提供了什么"></a>Google AR 提供了什么</h2><p><a href="https://developers.google.com/ar/discover/" target="_blank" rel="noopener">https://developers.google.com/ar/discover/</a></p>
-<p>ARCore 是一个用于在 Android 上构建增强现实应用的平台。ARCore 使用三个主要技术将虚拟内容与通过手机摄像头看到的现实世界整合：</p>
-<ul>
-<li><a href="https://developers.google.com/ar/discover/concepts#motion_tracking" target="_blank" rel="noopener"><strong>运动跟踪</strong></a>让手机可以理解和跟踪它相对于现实世界的位置。</li>
-<li><a href="https://developers.google.com/ar/discover/concepts#environmental_understanding" target="_blank" rel="noopener"><strong>环境理解</strong></a>让手机可以检测平坦水平表面（例如地面或咖啡桌）的大小和位置。</li>
-<li><a href="https://developers.google.com/ar/discover/concepts#light_estimation" target="_blank" rel="noopener"><strong>光估测</strong></a>让手机可以估测环境当前的光照条件。</li>
-</ul>
-<h3 id="ARCore基本工作原理"><a href="#ARCore基本工作原理" class="headerlink" title="ARCore基本工作原理"></a>ARCore基本工作原理</h3><blockquote>
-<p>ARCore 在做两件事：在移动设备移动时跟踪它的位置和构建自己对现实世界的理解。</p>
-<p>ARCore 的运动跟踪技术使用手机摄像头标识兴趣点（称为特征点），并跟踪这些点随着时间变化的移动。将这些点的移动与手机惯性传感器的读数组合，ARCore 可以在手机移动时确定它的位置和屏幕方向。</p>
-<p>除了标识关键点外，ARCore 还会检测平坦的表面（例如桌子或地面），并估测周围区域的平均光照强度。 这些功能共同让 ARCore 可以构建自己对周围世界的理解。</p>
-<p>借助 ARCore 对现实世界的理解，您能够以一种与现实世界无缝整合的方式添加物体、注释或其他信息。 您可以将一只打盹的小猫放在咖啡桌的一角，或者利用艺术家的生平信息为一幅画添加注释。 运动跟踪意味着您可以移动和从任意角度查看这些物体，即使您转身离开房间，当您回来后，小猫或注释还会在您添加的地方。</p>
-</blockquote>
-<h3 id="Arcore-SDK概览"><a href="#Arcore-SDK概览" class="headerlink" title="Arcore SDK概览"></a>Arcore SDK概览</h3><h4 id="Hello-AR-java"><a href="#Hello-AR-java" class="headerlink" title="Hello AR java"></a>Hello AR java</h4><p>需要android 7.0以上，需要安装arcore</p>
-<ul>
-<li><p>清单文件，声明需要android.hardware.camera.ar，且需要安装Arcore，文件表明应用在Google的应用市场上只能在支持arcore的设备上可见</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    xmlns:tools=&quot;http://schemas.android.com/tools&quot;</span><br><span class="line">    package=&quot;com.google.ar.core.examples.java.helloar&quot;&gt;</span><br><span class="line"></span><br><span class="line">  &lt;uses-permission android:name=&quot;android.permission.CAMERA&quot;/&gt;</span><br><span class="line">  &lt;!-- This tag indicates that this application requires ARCore.  This results in the application</span><br><span class="line">       only being visible in the Google Play Store on devices that support ARCore. --&gt;</span><br><span class="line">  &lt;uses-feature android:name=&quot;android.hardware.camera.ar&quot; android:required=&quot;true&quot;/&gt;</span><br><span class="line"></span><br><span class="line">  &lt;application</span><br><span class="line">      android:allowBackup=&quot;false&quot;</span><br><span class="line">      android:icon=&quot;@drawable/ic_launcher&quot;</span><br><span class="line">      android:label=&quot;@string/app_name&quot;</span><br><span class="line">      android:theme=&quot;@style/AppTheme&quot;</span><br><span class="line">      android:usesCleartextTraffic=&quot;false&quot;</span><br><span class="line">      tools:ignore=&quot;GoogleAppIndexingWarning&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;activity</span><br><span class="line">        android:name=&quot;.HelloArActivity&quot;</span><br><span class="line">        android:label=&quot;@string/app_name&quot;</span><br><span class="line">        android:configChanges=&quot;orientation|screenSize&quot;</span><br><span class="line">        android:exported=&quot;true&quot;</span><br><span class="line">        android:theme=&quot;@style/Theme.AppCompat.NoActionBar&quot;</span><br><span class="line">        android:screenOrientation=&quot;locked&quot;&gt;</span><br><span class="line">      &lt;intent-filter&gt;</span><br><span class="line">        &lt;action android:name=&quot;android.intent.action.MAIN&quot;/&gt;</span><br><span class="line">        &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot;/&gt;</span><br><span class="line">      &lt;/intent-filter&gt;</span><br><span class="line">    &lt;/activity&gt;</span><br><span class="line">    &lt;!-- 需要安装arcore --&gt;</span><br><span class="line">    &lt;meta-data android:name=&quot;com.google.ar.core&quot; android:value=&quot;required&quot; /&gt;</span><br><span class="line">  &lt;/application&gt;</span><br><span class="line">&lt;/manifest&gt;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h4 id="computevision"><a href="#computevision" class="headerlink" title="computevision"></a>computevision</h4><ul>
-<li><p>清单文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    xmlns:tools=&quot;http://schemas.android.com/tools&quot;</span><br><span class="line">    package=&quot;com.google.ar.core.examples.java.computervision&quot;&gt;</span><br><span class="line"></span><br><span class="line">  &lt;uses-permission android:name=&quot;android.permission.CAMERA&quot;/&gt;</span><br><span class="line"></span><br><span class="line">  &lt;application</span><br><span class="line">      android:allowBackup=&quot;false&quot;</span><br><span class="line">      android:icon=&quot;@drawable/ic_launcher&quot;</span><br><span class="line">      android:label=&quot;@string/app_name&quot;</span><br><span class="line">      android:theme=&quot;@style/AppTheme&quot;</span><br><span class="line">      android:usesCleartextTraffic=&quot;false&quot;</span><br><span class="line">      tools:ignore=&quot;GoogleAppIndexingWarning&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;activity</span><br><span class="line">        android:name=&quot;.MainActivity&quot;</span><br><span class="line">        android:label=&quot;@string/app_name&quot;</span><br><span class="line">        android:configChanges=&quot;orientation|screenSize&quot;</span><br><span class="line">        android:exported=&quot;true&quot;</span><br><span class="line">        android:theme=&quot;@style/Theme.AppCompat.NoActionBar&quot;</span><br><span class="line">        android:screenOrientation=&quot;locked&quot;&gt;</span><br><span class="line">      &lt;intent-filter&gt;</span><br><span class="line">        &lt;action android:name=&quot;android.intent.action.MAIN&quot;/&gt;</span><br><span class="line">        &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot;/&gt;</span><br><span class="line">      &lt;/intent-filter&gt;</span><br><span class="line">    &lt;/activity&gt;</span><br><span class="line">  &lt;/application&gt;</span><br><span class="line">&lt;/manifest&gt;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<blockquote>
-<p>TODO: ARdemo walkthrough</p>
-</blockquote>
-<p>Api 查阅</p>
-<ul>
-<li><a href="https://developers.google.com/ar/reference/java/com/google/ar/core/package-summary" target="_blank" rel="noopener">com.google.ar.core</a> ARCore API implementation.</li>
-<li><a href="https://developers.google.com/ar/reference/java/com/google/ar/core/exceptions/package-summary" target="_blank" rel="noopener">com.google.ar.core.exceptions</a> ARCore exceptions.</li>
-</ul>
-<h3 id="如何启用ARCore"><a href="#如何启用ARCore" class="headerlink" title="如何启用ARCore"></a>如何启用ARCore</h3><h4 id="清单文件配置"><a href="#清单文件配置" class="headerlink" title="清单文件配置"></a>清单文件配置</h4><ul>
-<li><p>AR only: 以下定义表示应用只能在支持android.hardware.camera.ar，且安装了com.google.ar.core的设备上运行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;uses-sdk android:minSdkVersion=&quot;&#123;24 or higher&#125;&quot; /&gt;</span><br><span class="line">24以上版本</span><br><span class="line">  ...</span><br><span class="line">  &lt;uses-feature android:name=&quot;android.hardware.camera.ar&quot; android:required=&quot;true&quot; /&gt;</span><br><span class="line"></span><br><span class="line">  &lt;application&gt;</span><br><span class="line">    ...</span><br><span class="line">        &lt;meta-data android:name=&quot;com.google.ar.core&quot; android:value=&quot;required&quot; /&gt;</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>AR可选，表示可以在不支持AR Core的设备上运行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;uses-sdk android:minSdkVersion=&quot;&#123;14 or higher&#125;&quot; /&gt;</span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">  &lt;application&gt;</span><br><span class="line">    ...</span><br><span class="line">        &lt;meta-data android:name=&quot;com.google.ar.core&quot; android:value=&quot;optional&quot; /&gt;</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h4 id="添加依赖"><a href="#添加依赖" class="headerlink" title="添加依赖"></a>添加依赖</h4><p>确认已经在项目的  <code>build.gradle</code> 文件中添加了 Google’s Maven 仓库：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">allprojects &#123;</span><br><span class="line">repositories &#123;</span><br><span class="line">    google()</span><br><span class="line">        ...</span><br></pre></td></tr></table></figure>
-
-<p>添加 ARCore 库依赖</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    // ARCore library</span><br><span class="line">    implementation &apos;com.google.ar:core:1.0.0&apos;</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Gradle会自动的将ARcore中的标签合并到应用的清单文件中。</p>
-</blockquote>
-<h4 id="执行运行时检查"><a href="#执行运行时检查" class="headerlink" title="执行运行时检查"></a>执行运行时检查</h4><p>确认是否已安装ARcore</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">// Set to true ensures requestInstall() triggers installation if necessary.</span><br><span class="line">private boolean mUserRequestedInstall = true;</span><br><span class="line"></span><br><span class="line">// in onResume:</span><br><span class="line">try &#123;</span><br><span class="line">  if (mSession == null) &#123;</span><br><span class="line">    switch (ArCoreApk.getInstance().requestInstall(this, mUserRequestedInstall)) &#123;</span><br><span class="line">      case INSTALLED:</span><br><span class="line">        mSession = new Session(this);</span><br><span class="line">        // Success.</span><br><span class="line">        break;</span><br><span class="line">      case INSTALL_REQUESTED:</span><br><span class="line">        // Ensures next invocation of requestInstall() will either return</span><br><span class="line">        // INSTALLED or throw an exception.</span><br><span class="line">        mUserRequestedInstall = false;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125; catch (UnavailableUserDeclinedInstallException e) &#123;</span><br><span class="line">  // Display an appropriate message to the user and return gracefully.</span><br><span class="line">  return;</span><br><span class="line">&#125; catch (...) &#123;  // current catch statements</span><br><span class="line">  ...</span><br><span class="line">  return;  // mSession is still null</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在Activity resume的时候，执行session创建，如果创建不成功，则请求安装，</p>
-<p>检查是否支持AR core，可选方案的时候</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">void maybeEnableArButton() &#123;</span><br><span class="line">  // Likely called from Activity.onCreate() of an activity with AR buttons.</span><br><span class="line">  ArAvailability availability = ArCoreApk.getInstance().checkAvailability(this);</span><br><span class="line">  if (availability.isTransient()) &#123;</span><br><span class="line">    // re-query at 5Hz while we check compatibility.</span><br><span class="line">    new Handler().postDelayed(new Runnable() &#123;</span><br><span class="line">      @Override</span><br><span class="line">      public void run() &#123;</span><br><span class="line">        maybeEnableArButton();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;, 200);</span><br><span class="line">  &#125;</span><br><span class="line">  if (availability.isSupported()) &#123;</span><br><span class="line">    mArButton.setVisibility(VISIBLE);</span><br><span class="line">    mArButton.setEnabled(true);</span><br><span class="line">    // indicator on the button.</span><br><span class="line">  &#125; else &#123; // unsupported or unknown</span><br><span class="line">    mArButton.setVisibility(HIDDEN);</span><br><span class="line">    mArButton.setEnabled(false);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>checkAvailability可能需要联网检查</p>
-</blockquote>
-<h2 id="Google-VR-AR-在现有平台上的运行情况"><a href="#Google-VR-AR-在现有平台上的运行情况" class="headerlink" title="Google VR AR 在现有平台上的运行情况"></a>Google VR AR 在现有平台上的运行情况</h2><ol>
-<li><p>寻宝游戏，demo 代码根据vr提供的sdk实现了左右分屏的这种效果，也就是说只要运行在普通的安卓手机上，在屏幕上，就可以看到一个左右分屏显示的功能，然后如果配合Google 的cardboard viewer 或者是 Daydream viewer 是可以直接在眼睛上实现3D显示的。那这个demo在我们的820+眼镜上的运行效果就是。在切换到2D模式的时候，我们看到的就是两个左右的图片，切换到3d的时候，确实可以实现看到一个叠加的图片，但是这个叠加后的有些变形。</p>
-</li>
-<li><p>Google vr播放器，需要在7.0以上版本运行，2d的播放器可以在5516上运行，但要切换成3D模式的时候，提示手机与Daydream不兼容；在pixel一些指定的兼容设备上才可运行，但是运行起来感觉屏幕闪烁较为明显，需要配合daydream屏体的控制器运行观看</p>
-</li>
-<li><p>ARcore支持的设备：</p>
-<blockquote>
-<p>Asus Zenfone AR</p>
-<p>LG V30</p>
-<p>Google Pixel</p>
-<p>OnePlus 5</p>
-<p>Samsung Galaxy</p>
-</blockquote>
-<p>在可支持的设备上，<strong>hello ar</strong>运行的起来就是一个摄像头应用，在识别平坦桌面后，可以放置android玩偶，然后移动相机，可以实现，各种视角查看玩偶。就想真实存在的物体一样。</p>
-<p>5516无法支持ARcore</p>
-<p><strong>computevision</strong> 纹理阅读，可识别物体纹理</p>
-</li>
-</ol>
-<h2 id="如何兼容Google-VR-AR"><a href="#如何兼容Google-VR-AR" class="headerlink" title="如何兼容Google VR AR"></a>如何兼容Google VR AR</h2><ul>
-<li><p>VR、 Daydream</p>
-<p><uses-feature android:name="android.software.vr.mode" android:required="false">和<uses-feature android:name="android.hardware.vr.high_performance" android:required="false"> 由 Android N加入的新特性，前者表示需要使用Android VR模式，后者表示需要可支持Daydream的设备。</uses-feature></uses-feature></p>
-<p>对于没有Google VR服务的设备，需要安装Google VR 服务，才可以将可支持Daydream的设备与对应的VR viewer配对</p>
-</li>
-</ul>
-<ul>
-<li><p>AR</p>
- <uses-feature android:name="android.hardware.camera.ar" android:required="true">
-
-<p>另外需要安装ARcore</p>
-</uses-feature></li>
-</ul>
-<h2 id="Nibiru-系统"><a href="#Nibiru-系统" class="headerlink" title="Nibiru 系统"></a>Nibiru 系统</h2><h2 id="Nibiru-VR"><a href="#Nibiru-VR" class="headerlink" title="Nibiru VR"></a>Nibiru VR</h2><ul>
-<li><p>Nibiru studio</p>
-<blockquote>
-<p>面向VR应用开发者，开发者无需OpenGL基础，无需写<br>shader和计算矩阵，极大地简化了VR应用开发流程。并且<br>支持Head Tracking和Raycast交互方式，以及具有完善的<br>事件系统。定义了功能丰富的VR控件与组件集合，在功能点<br>上涵盖了Image、Label、Skybox、Listview、<br>ProgressBar Gridview等核心控件，同时支持播放、图片、<br>浏览器等组件。</p>
-</blockquote>
-</li>
-<li><p>demo运行</p>
-<p>新建一个空的项目，选择 file-new-import module，选择模块源码位置，点击finish，完成倒入</p>
-<p>需要睿悦的os。</p>
-<p>demo展示的主要展示了基于睿悦系统的一些基本控件的使用，基于睿悦系统的头部运动操作和响应，以及对系统设置Wi-Fi、蓝牙等系统界面的调用。</p>
-<p>整体体验起来，空间立体的感觉还不够，似乎只是一个2d界面，经过3d左右分屏处理后，融合sensor之后的附加的交互而已。立体渲染部分比较少，给人的空间感体验较差。</p>
-</li>
-</ul>
-<h2 id="Nibiru-AR"><a href="#Nibiru-AR" class="headerlink" title="Nibiru AR"></a>Nibiru AR</h2><p>目前就demo而言，AR的特性体现的比较少。</p>
-<h2 id="Unity"><a href="#Unity" class="headerlink" title="Unity"></a>Unity</h2><p>游戏与VR/AR开发引擎。</p>
-<h2 id="Unreal"><a href="#Unreal" class="headerlink" title="Unreal"></a>Unreal</h2><p><a href="https://www.zhihu.com/question/20116279" target="_blank" rel="noopener">https://www.zhihu.com/question/20116279</a> 知乎上关于unity和unreal两个平台的对比</p>
-<p>TODO: 体验一下</p>
-
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2018/02/21/bookxiaobai application/">书小白书单功能实现</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-02-21
-        </span><span class="post-category">
-            <a href="/categories/ANDROID/">ANDROID</a>
-            </span>
-        </div>
-    </header>
-
-    <div class="post-content"><p>书小白书单功能实现</p>
-          <div class="read-more">
-            <a href="/2018/02/21/bookxiaobai application/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
       <h1 class="post-title"><a class="post-link" href="/2017/12/11/android private so/">Android N  无法调用私有库问题</a>
         </h1>
 
@@ -1197,6 +750,307 @@ void qijiReverseData(unsigned char* data, unsigned int unWidth){
 <li>raw-&gt;rsblock = (RSblock <em>)<strong>calloc</strong>(raw-&gt;blocks, sizeof(RSblock));改为    raw-&gt;rsblock = (RSblock <em>)*</em>OslMalloc**((raw-&gt;blocks)</em>(sizeof(RSblock)));memset(raw-&gt;rsblock, 0x00, (raw-&gt;blocks)*(sizeof(RSblock)));</li>
 </ul>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>有时候我们都不知道自己是怎么完成这一步步的瞎子摸象。例如我突然想不起来，曾经写过一个给校准树写DLL的经历，我只记得接到任务的时候，只有“懵逼”来形容，什么事校准树，什么事DLL，特么我是写android的，C是什么鬼，我只在大学学过C++。然后，我在万用的路上越走越远。也许有圣人相助，反正每个感觉完不成的任务，最后也都完成了，再见了feature phone<del>~</del></p>
+
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2016/03/05/Mtk feature phone - how to add new application/">MTK Feature Phone-Hello World</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2016-03-05
+        </span><span class="post-category">
+            <a href="/categories/feature-phone/">feature phone</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h1 id="What-Feature-phone"><a href="#What-Feature-phone" class="headerlink" title="What, Feature phone"></a>What, Feature phone</h1><p>一开始我是拒绝的，然并卵，要你干，你就得干，返璞归真，走一走先人的路。一搜几乎都是零几年的文章，那个时候，我还在备战高考，那个时候，还不知道编程为何物。从年前一段时间到现在，这个项目有了个初始版本，终于闲下来可以列点总结，以备记忆。么么哒<del>~</del></p>
+<h1 id="如何建一个应用"><a href="#如何建一个应用" class="headerlink" title="如何建一个应用"></a>如何建一个应用</h1><p>MTK的文档是有，但是因为年代久远，平台更新，总是有一些变化，让你没办法依葫芦画瓢，最后郁郁寡欢；但一般这种状态持续一阵子后，总有茅塞顿开的一天。几经摸索，我终于可以建立一个，随后我才发现，认识旧世界，这仅仅只是个开始。如下总结下下，也许没准多少年后，我又回来了呢。</p>
+<h2 id="文件目录"><a href="#文件目录" class="headerlink" title="文件目录"></a>文件目录</h2><p>大部分的应用都是放在<code>plutommi\mmi\</code>下面的，每个应用一个文件夹，文件夹夹下面的目录结构大体是这样的，例如<code>QRcode</code>目录下应该是</p>
+<pre><code>QRcodeInc   //存放头文件
+--QRcodeAppGprot.h  //对外的接口，供外部调用
+--QRcodeAppProt.h   //内部接口，内部原型声明
+--QRcodeAppResDef.h //资源定义
+QRcodeSrc   //存放源文件C
+--QRcodeMain.c</code></pre><h2 id="将项目加入编译"><a href="#将项目加入编译" class="headerlink" title="将项目加入编译"></a>将项目加入编译</h2><p>将我们的代码加入编译，在<code>make/plutommi/mmi_app/mmi_app.mak</code><br>文件中追加：</p>
+<pre><code>//add 源文件
+SRC_LIST += XXXXXX \
+        plutommi\mmi\QRcode\QRcodeSrc\QRcodeMain.c \
+        plutommi\mmi\HelloWorld\HelloWorldSrc\QRcodeMain2.c \
+
+......
+//add 头文件目录
+INC_DIR = XXXXXX＼
+    plutommi\mmi\QRcode\QRcodeInc            </code></pre><h2 id="程序开关"><a href="#程序开关" class="headerlink" title="程序开关"></a>程序开关</h2><p>程序开关，可以不要，全都省了，要加的话，差不多就是</p>
+<ol>
+<li><p>在plutommi\mmi\Inc\MMI_features_switch.h添加<code>#define CFG_MMI_HELLOWORLD    (__ON__)</code></p>
+</li>
+<li><p>在plutommi\Customer\CustResource\PLUTO_MMI\ MMI_features_switchPLUTO.h末尾添加    <code>#define CFG_MMI_HELLOWORLD (__ON__)</code></p>
+</li>
+</ol>
+<ol start="3">
+<li>在\plutommi\Customer\CustResource\项目名<em>MMI 的feature.h文件中追加`#define CFG_MMI_HELLOWORLD    (<em>_ON</em></em>)`</li>
+</ol>
+<ol start="4">
+<li><p>在plutommi\mmi\Inc\MMI_features.h添加</p>
+<pre><code>#if defined(CFG_MMI_HELLOWORLD) &amp;&amp; ((CFG_MMI_HELLOWORLD == __ON__)||(CFG_MMI_HELLOWORLD == __AUTO__)) 
+    #ifndef __MMI_HELLOWORLD__
+    #define __MMI_HELLOWORLD__
+    #endif
+#endif</code></pre></li>
+</ol>
+<p>完成之后，我们就可以在程序中添加如：</p>
+<pre><code>#ifdef __MMI_HELLOWORLD__
+#endif</code></pre><p>这样的代码开关了，但是我觉得菊紧~，不想弄；这步骤不要了；</p>
+<h2 id="界面显示"><a href="#界面显示" class="headerlink" title="界面显示"></a>界面显示</h2><p>如果你的程序不需要文字资源，不需要图片资源，那么上面两步，已经完成了一个应用的添加，接下来要做的事情不过是在c文件里面给一个程序入口，然后再这个程序路口里面，负责显示你的应用界面；最后再把这个程序路口暴露给随便谁谁谁，可以在launcher里面，可以在一个按键的响应里面，反正一按，就跳到你的界面就对了。</p>
+<p>例如：</p>
+<pre><code>void mmi_qrcode_exit(void){
+    mmi_frm_scrn_close_active_id(); //关闭页面
+}
+
+void mmi_qrcode_entry(char* szSourceString){
+    S32 x,y,w,h;
+    EntryNewScreen(SCR_QRCODE_MAIN,NULL,mmi_qrcode_entry,NULL); //SCR_QRCODE_MAIN暂时没有，可以随便拿一个src用一下，后面我们会说到怎么定义这些东西
+    entry_full_screen();//hide status bar
+    clear_screen();
+    gui_measure_string((UI_string_type)GetString(STR_ID_QRCODE_NOTE),&amp;w,&amp;h);
+    x=(UI_device_width-w)/2;
+    y=(UI_device_width-h)/2;
+    gui_move_text_cursor(x,y);
+    gui_print_text((UI_string_type)GetString(STR_ID_QRCODE_NOTE));
+
+    gui_BLT_double_buffer(0,0,UI_device_width-1,UI_device_height-1);
+    SetKeyHandler(mmi_qrcode_exit,KEY_LSK,KEY_EVENT_DOWN);
+}</code></pre><p>在C的代码中，我们做的事情就是，进入我们的页面，获取一段字符串，显示，然后设置点击软键盘左键的时候，退出我们的界面；</p>
+<p>相应的，在头文件中我们需要加入原型声明</p>
+<pre><code>#ifndef _QRCODE_GPROT_H
+#define _QRCODE_GPROT_H
+
+#include &quot;MMI_features.h&quot;
+#include &quot;MMIDataType.h&quot;
+#include &quot;kal_general_types.h&quot;
+
+//interface for outside
+
+extern void mmi_qrcode_exit(void);
+extern void mmi_qrcode_entry(char* szSourceString);
+
+#endif//_QRCODE_GPROT_H</code></pre><h2 id="添加资源"><a href="#添加资源" class="headerlink" title="添加资源"></a>添加资源</h2><p>那上面的这些 STR_ID_QRCODE_NOTE、SCR_QRCODE_MAIN怎么加入的呢？<br>先说下字符串资源</p>
+<ol>
+<li>首先，平台的资源放在plutommi/Customer/CustResource/PLUTO_MMI/ref_list.txt 文件中，请使用 excell 来开打文件，会看到一列一列的资源,在底部添加一句</li>
+</ol>
+<p><code>STR_ID_QRCODE_NOTE    Qrcode    note    tell the use to scan qrcode    Scan to banding    請掃描二維碼綁定    请扫描二维码绑定</code></p>
+<p>底部的数字加上你追加的条目+n； </p>
+<ol start="2">
+<li>在plutommi/Customer/CustResource/PLUTO_MMI/Res_MMI/下添加一个文件Res_QRcode.c。内容如下</li>
+</ol>
+<pre><code>#ifndef __QRCODE_RES_DEF_H__
+#define __QRCODE_RES_DEF_H__
+#include &quot;MMI_features.h&quot;
+#include &quot;MMIDataType.h&quot;
+#include &quot;CustDataProts.h&quot;
+#include &quot;GlobalMenuItems.h&quot;
+#include &quot;StdC.h&quot;
+#ifdef DEVELOPER_BUILD_FIRST_PASS
+#include &quot;PopulateRes.h&quot;
+#include &quot;QRcodeAppResDef.h&quot;
+void PopulateQRcodeRes(void)
+{
+    ADD_APPLICATION_STRING2(STR_ID_QRCODE_NOTE,&quot;Scan to bind&quot;,&quot;QRcode&quot;);
+
+
+
+       ADD_APPLICATION_IMAGE2(
+        IMG_ID_QRCODE,
+        CUST_IMG_PATH&quot;\\\\MainLCD\\\\IdleScreen\\\\Wallpaper\\\\analog.bmp&quot;,
+        &quot;analog image test&quot;);
+}
+
+#endif//DEVELOPER_BUILD_SECOND_PASS
+#endif</code></pre><p>该文件主要讲我们在资源list中添加的字符串资源装载进来，同样的，将对应目录下的图片也可以通过第二个方法装载进来</p>
+<ol start="3">
+<li><p>那么这个文件中的方法由谁来调用呢？我们需要修改 plutommi/mmi/Resource/PopulateRes.c</p>
+<pre><code>//声明外部函数
+extern void PopulateQRcodeRes(void);
+.....
+
+#ifdef __MMI_VUI_ENGINE__
+    PopulateVCPRes();
+#endif
+RESPOP_LOG_V((&quot;Populating QRCODE APP Resource&quot;));
+PopulateQRcodeRes(); //追加我们的资源装载</code></pre></li>
+</ol>
+<ol start="4">
+<li><p>在应用目录下的资源声明头文件中添加 QRcodeAppResDef.h</p>
+<pre><code>#include &quot;MMI_features.h&quot;
+#include &quot;MMIDataType.h&quot;
+#include &quot;mmi_res_range_def.h&quot;
+/* Screen IDs */
+typedef enum
+{
+    SCR_QRCODE_MAIN = QRCODE_APP_BASE+1,
+}SCREEN_LIST_QRCODE;</code></pre></li>
+</ol>
+<pre><code>/* String IDs */
+
+typedef enum
+{
+    STR_ID_QRCODE_NOTE = QRCODE_APP_BASE+1,
+}STRING_LIST_QRCODE;
+
+/* Image IDs */
+typedef enum
+{
+    IMG_ID_QRCODE = QRCODE_APP_BASE+1,
+}IMAGE_LIST_QRCODE;</code></pre><p>5.QRCODE_APP_BASE哪里来的？在plutommi/mmi/Inc/mmi_res_range_def.h，看文件名的大概意思就是，资源范围定义。追加：</p>
+<pre><code>RESOURCE_BASE_RANGE(APP_QRCODE,              100),
+
+.....
+#define QRCODE_APP_BASE                        ((U16) GET_RESOURCE_BASE(APP_QRCODE))
+#define QRCODE_APP_BASE_MAX                   ((U16) GET_RESOURCE_MAX(APP_QRCODE))
+RESOURCE_BASE_TABLE_ITEM(APP_QRCODE)</code></pre><p>不要问我为什么，反正其他应用也这么写，参照着写了；</p>
+<ol start="6">
+<li>最后我们要把声明的这些id告诉给编译器，在plutommi/Custmer/ResGenerator/resgen_default_inc.txt中追加一行<code>../../MMI/QRcode/QRcodeInc</code>告诉编译器<code>QRcodeAppResDef.h</code>的位置，不然会找不到里面定义的这些id。</li>
+</ol>
+<ol start="7">
+<li>图片的位置是放在plutommi/Customer/Images/屏幕对应尺寸/iamge.zip中</li>
+</ol>
+<h1 id="新版本差别"><a href="#新版本差别" class="headerlink" title="新版本差别"></a>新版本差别</h1><p>这篇总要是列出来新建一个应用的大体框架和资源添加的方式，新的版本可以通过在应用目录下添加res文件来声明资源ID。例如添加QRcode/QRcodeRes/QRcode.res文件，写法上也简便很多</p>
+<pre><code>#include &quot;MMI_features.h&quot;
+#include &quot;CustResDef.h&quot;
+
+
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;APP id=&quot;APP_QIJI&quot; type=&quot;venus&quot; name =&quot;STR_ID_QIJI_EXER&quot;&gt;
+    &lt;INCLUDE file=&quot;GlobalResDef.h&quot;/&gt;
+    &lt;!----- String Resource Area ----------------------------------------------&gt;
+    &lt;STRING id=&quot;STR_ID_QRCODE_NOTE&quot;/&gt;
+
+    &lt;!----- Image Resource Area -----------------------------------------------&gt;
+    &lt;IMAGE id=&quot;IMG_ID_QRCODE&quot;&gt;CUST_IMG_PATH&quot;\\\\MainLCD\\\\QiJi\\\\QJ_FONT24_0.png&quot;&lt;/IMAGE&gt;
+
+    &lt;!----- Screen Resource Area ----------------------------------------------&gt;
+    &lt;SCREEN id=&quot;SCR_QRCODE_MAIN&quot;/&gt;
+
+    &lt;!----- Menu Resource Area ------------------------------------------------&gt;
+
+
+    &lt;!----- Timer Resource Area ---- ------------------------------------------&gt;
+&lt;/APP&gt;</code></pre><p>最后需要将新加入的res文件加入编译，修改plutommi/mmi/Inc/mmi_pluto_res_range_def.h文件</p>
+<pre><code>MMI_RES_DECLARE(APP_QRCODE, 100, &quot;.\\mmi\\QRcode\\QRcodeRes\\&quot;)
+#define APP_QRCODE_BASE                            ((U16) GET_RESOURCE_BASE(APP_QRCODE))
+#define APP_QIJI_BASE_MAX                        ((U16) GET_RESOURCE_MAX(APP_QRCODE))</code></pre><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>我们大概了解了一个应用的搭建框架。看名字也知道，哈哈我现在要弄一个二维码的转换显示。虽然这个只是整个流程环节中微不足道的一环，但是面对全新的平台，还是捏了一把汗。但是，本宝宝最后还是完成了，点赞点赞。</p>
+
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2015/12/11/customer framework jar/">自定义framework动态链接库jar</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2015-12-11
+        </span><span class="post-category">
+            <a href="/categories/ANDROID/">ANDROID</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>上一篇总结的是自定义framework资源包的打包和访问，而这一篇，相对要简单一些，是android平台的自定义动态链接库。目的在于定义一个framework级别的jar，供相关应用使用。之前一个项目的common组件采用的是BUILD_STATIC_JAVA_LIBRARY方式，调试起来相对简单，不需要涉及到framework的资源，framework的jar包这样，但是会造成每个应用内都引入一个common的jar包，各自为营，不知不觉加大了整体软件的大小。因此这种common级别的jar包，还是作成动态jar，加入到系统中。</p>
+<h1 id="common-library"><a href="#common-library" class="headerlink" title="common library"></a>common library</h1><p>其实参考android的sample代码就可以完成基本的jar包编译，这里只是记录一下，其实，没那么难，啦啦。jar库的基文件目录如下：</p>
+<p><img src="http://7xl98n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20151216094557.jpg" alt></p>
+<p>java下存放纯java代码，一些需要的资源，我们就直接使用上一篇中说的自定义framework资源。</p>
+<h2 id="jar包的com-zowee-widget-xml"><a href="#jar包的com-zowee-widget-xml" class="headerlink" title="jar包的com.zowee.widget.xml"></a>jar包的com.zowee.widget.xml</h2><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;permissions&gt;
+    &lt;library name=&quot;com.zowee.widget&quot;
+            file=&quot;/system/framework/com.zowee.widget.jar&quot;/&gt;
+&lt;/permissions&gt;</code></pre><h2 id="项目编译的mk"><a href="#项目编译的mk" class="headerlink" title="项目编译的mk"></a>项目编译的mk</h2><p> 项目编译的mk代码如下</p>
+<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">ifneq ($(TARGET_BUILD_JAVA_SUPPORT_LEVEL),)</span><br><span class="line"># This makefile shows how to build your own shared library that can be</span><br><span class="line"># shipped on the system of a phone, and included additional examples of</span><br><span class="line"># including JNI code with the library and writing client applications against it.</span><br><span class="line">LOCAL_PATH := $(call my-dir)</span><br><span class="line"># the library</span><br><span class="line"># ============================================================</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">LOCAL_SRC_FILES := \</span><br><span class="line">        $(call all-subdir-java-files)</span><br><span class="line">LOCAL_MODULE_TAGS := optional</span><br><span class="line"></span><br><span class="line"># 我们要编译的库名就是com.zowee.widget.jar</span><br><span class="line">LOCAL_MODULE:= com.zowee.widget</span><br><span class="line">include $(BUILD_JAVA_LIBRARY)</span><br><span class="line"># 下面我们需要将com.zowee.widget.xml编译会生出到</span><br><span class="line"># system/etc/permission下，用于作权限声明的</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">LOCAL_MODULE := com.zowee.widget.xml</span><br><span class="line">LOCAL_MODULE_TAGS := optional</span><br><span class="line">LOCAL_MODULE_CLASS :=ETC</span><br><span class="line">LOCAL_MODULE_PATH :=$(TARGET_OUT_ETC)/permissions</span><br><span class="line">LOCAL_SRC_FILES :=$(LOCAL_MODULE)</span><br><span class="line">include $(BUILD_PREBUILT)</span><br><span class="line"></span><br><span class="line"># the documentation</span><br><span class="line"># ============================================================</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">LOCAL_SRC_FILES := $(call all-subdir-java-files) $(call all-subdir-html-files)</span><br><span class="line">LOCAL_MODULE:= com.zowee.widget</span><br><span class="line">LOCAL_DROIDDOC_OPTIONS := com.zowee.widget</span><br><span class="line">LOCAL_MODULE_CLASS := JAVA_LIBRARIES</span><br><span class="line">LOCAL_DROIDDOC_USE_STANDARD_DOCLET := true</span><br><span class="line">include $(BUILD_DROIDDOC)</span><br><span class="line"># The JNI component</span><br><span class="line"># ============================================================</span><br><span class="line"># Also build all of the sub-targets under this one: the library&apos;s</span><br><span class="line"># associated JNI code, and a sample client of the library.</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">include $(call all-makefiles-under,$(LOCAL_PATH))</span><br><span class="line">endif # JAVA_SUPPORT</span><br></pre></td></tr></table></figure></code></pre><p>以上大部分为参考sample代码，编译之后，会生成 </p>
+<p><code>Install:out/target/product/.../system/framework/com.zowee.widget.jar</code><br>和
+ <code>Copy xml: out/target/product/.../system/etc/permissions/com.zowee.widget.xml</code>;</p>
+<h2 id="修改device-mk文件"><a href="#修改device-mk文件" class="headerlink" title="修改device.mk文件"></a>修改device.mk文件</h2><p>将这两个添加到项目编译中，这样生成的system.image才会包含所需要的jar和xml文件；<br>拷贝xml文件：<br><code>PRODUCT_COPY_FILES += vendor/zowee/proprietary/framework/WidgetLibrary/com.zowee.widget.xml:system/etc/permissions/com.zowee.widget.xml</code><br>添加jar模块：<code>PRODUCT_PACKAGES+=com.zowee.widget</code></p>
+<h1 id="app如何访问引入动态链接库"><a href="#app如何访问引入动态链接库" class="headerlink" title="app如何访问引入动态链接库"></a>app如何访问引入动态链接库</h1><p>作为一个普通的app，如何访问系统的framework res资源，如何引入动态的jar包，并在xml和java代码中访问公共资源中的内容.</p>
+<h2 id="app的mk文件"><a href="#app的mk文件" class="headerlink" title="app的mk文件"></a>app的mk文件</h2><pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">LOCAL_PATH:= $(call my-dir)</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">LOCAL_MODULE_TAGS := optional</span><br><span class="line"></span><br><span class="line"># 要编译的app模块名称PlatformLibraryClient.apk</span><br><span class="line">LOCAL_PACKAGE_NAME := PlatformLibraryClient</span><br><span class="line"># Only compile source java files in this apk.</span><br><span class="line">LOCAL_SRC_FILES := $(call all-java-files-under, src)</span><br><span class="line"># 不要用current！，不然无法访问到自定义的framework组件</span><br><span class="line">#LOCAL_SDK_VERSION := current</span><br><span class="line"># 将动态库导入编译</span><br><span class="line">LOCAL_JAVA_LIBRARIES := com.zowee.widget</span><br><span class="line">LOCAL_PROGUARD_ENABLED := disabled</span><br><span class="line">include $(BUILD_PACKAGE)</span><br></pre></td></tr></table></figure></code></pre><h2 id="AndroidManifest-xml文件"><a href="#AndroidManifest-xml文件" class="headerlink" title="AndroidManifest.xml文件"></a>AndroidManifest.xml文件</h2><pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    package=&quot;com.example.android.platform_library.client&quot;&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;application android:label=&quot;Platform Lib Client&quot;&gt;</span><br><span class="line">    </span><br><span class="line">        &lt;!--将 com.zowee.widget 引入--&gt;</span><br><span class="line">        </span><br><span class="line">        &lt;uses-library android:name=&quot;com.zowee.widget&quot; /&gt;</span><br><span class="line">        </span><br><span class="line">        &lt;activity android:name=&quot;Client&quot;&gt;</span><br><span class="line">            &lt;intent-filter&gt;</span><br><span class="line">                &lt;action android:name=&quot;android.intent.action.MAIN&quot;/&gt;</span><br><span class="line">                &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot;/&gt;</span><br><span class="line">            &lt;/intent-filter&gt;</span><br><span class="line">        &lt;/activity&gt;</span><br><span class="line">    &lt;/application&gt;</span><br><span class="line">&lt;/manifest&gt;</span><br></pre></td></tr></table></figure></code></pre><h1 id="app如何访问自定义framework资源"><a href="#app如何访问自定义framework资源" class="headerlink" title="app如何访问自定义framework资源"></a>app如何访问自定义framework资源</h1><h2 id="java代码中"><a href="#java代码中" class="headerlink" title="java代码中"></a>java代码中</h2><p>只要导入编译正常，基本上java代码中就可以直接对自定义framework的资源进行访问，例如：<br>对jar包中的自定义控件，自定义资源的访问</p>
+<p><code>import com.zowee.widget.ToolbarImageTextButton;</code></p>
+<p><code>b2.setText(getString(com.zowee.R.string.zowee),1);</code></p>
+<h2 id="xml中自定义控件的访问"><a href="#xml中自定义控件的访问" class="headerlink" title="xml中自定义控件的访问"></a>xml中自定义控件的访问</h2><p>xml中对自定义控件的访问，自定义属性的访问，自定义资源的访问，可参考如下：</p>
+<pre><code>&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    xmlns:zowee=&quot;http://schemas.android.com/apk/res/com.zowee&quot; 
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    &gt;
+    &lt;com.zowee.widget.ToolbarImageTextButton
+    android:layout_width=&quot;wrap_content&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:text=&quot;@com.zowee:string/zowee&quot;
+    zowee:bracketColor=&quot;#057852dd&quot; 
+    android:id=&quot;@+id/toolbutton&quot;
+    /&gt;
+&lt;/RelativeLayout&gt;</code></pre><p>请注意 <code>xmlns:zowee=&quot;http://schemas.android.com/apk/res/com.zowee&quot;</code> 和 <code>zowee:bracketColor=&quot;#057852dd&quot;</code><br>以及<br><code>android:text=&quot;@com.zowee:string/zowee&quot;</code></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>自此，针对自定义的一套资源和jar的框架已经完成了，这样做的目的是，当整个平台升级的时候，我们可以单独将自定义的framework res 和 framework jar 先进行移植，接着依赖于这些的自定义app,也可以顺利的在新的平台上运行了</p>
+
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2015/12/10/customer framework resource/">自定义framework资源apk</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2015-12-10
+        </span><span class="post-category">
+            <a href="/categories/ANDROID/">ANDROID</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>去年在高通平台上的加过一次这种自定义framework级别的资源包，今年在MTK平台又部署了一次，当然第二次就比较轻车熟路了；趁现在编译时间，把这次的部署，完整记录一下吧。</p>
+<h1 id="自定义framework资源的-packing-amp-accessing"><a href="#自定义framework资源的-packing-amp-accessing" class="headerlink" title="自定义framework资源的 packing&amp;accessing"></a>自定义framework资源的 packing&amp;accessing</h1><p>首先，我们先明确这么做的目的是，将公司自定义的一些图片文字样式等资源独立与平台；这样可以与平台代码区分；这么做的好处就是，方便以后每个os的升级，在移植上的工作量相对减少。以下为具体的操作步骤：</p>
+<ol>
+<li><p>建立自定义资源目录结构<br>  在vendor目录下，建立一个与framework res类似路径的资源文件夹’vendor\zowee\proprietary\framework\base\res’；目录结构如下图</p>
+<p> <img src="http://7xl98n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20151210141422.jpg" alt></p>
+</li>
+<li><p>编写Android.mk文件，模块名称<code>LOCAL_PACKAGE_NAME := zowee-res</code>，资源flag 3~9可用<code>LOCAL_AAPT_FLAGS := -x3</code>；<code>LOCAL_NO_ZOWEE := true</code></p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">LOCAL_PATH := $(call my-dir)</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line"># include apicheck.mk later, we need the build pass to prepare the first version</span><br><span class="line"># include $(LOCAL_PATH)/apicheck.mk</span><br><span class="line">LOCAL_PACKAGE_NAME := zowee-res</span><br><span class="line">LOCAL_CERTIFICATE := platform</span><br><span class="line">LOCAL_AAPT_FLAGS := -x3</span><br><span class="line"></span><br><span class="line"># Tell aapt to build resource in utf16(the ROM will be enlarged),</span><br><span class="line"># in order to save RAM size for string cache table</span><br><span class="line">ifeq (yes,strip$(MTK_GMO_RAM_OPTIMIZE))</span><br><span class="line">LOCAL_AAPT_FLAGS += --utf16</span><br><span class="line">endif</span><br><span class="line"></span><br><span class="line">#LOCAL_NO_MTKRES := true</span><br><span class="line">LOCAL_NO_ZOWEE := true</span><br><span class="line">LOCAL_MODULE_TAGS := optional</span><br><span class="line"># Install this alongside the libraries.</span><br><span class="line">LOCAL_MODULE_PATH := $(TARGET_OUT_JAVA_LIBRARIES)</span><br><span class="line"># Create package-export.apk, which other packages can use to get</span><br><span class="line"># PRODUCT-agnostic resource data like IDs and type definitions.</span><br><span class="line">LOCAL_EXPORT_PACKAGE_RESOURCES := true	</span><br><span class="line">include $(BUILD_PACKAGE)</span><br><span class="line"></span><br><span class="line"># define a global intermediate target that other module may depend on.</span><br><span class="line">.PHONY: zowee-res-package-target</span><br><span class="line">zowee-res-package-target: $(LOCAL_BUILT_MODULE)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>AndroidManifest.xml文件，代码可参考：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line"></span><br><span class="line">&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    package=&quot;com.zowee&quot; android:sharedUserId=&quot;android.uid.system&quot;</span><br><span class="line">&lt;/manifest&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改\device\mediatek\common下device.mk，将新的资源模块添加到system img中</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># for mediatek-res</span><br><span class="line">PRODUCT_PACKAGES += mediatek-res</span><br><span class="line">	</span><br><span class="line"># for zowee-ress</span><br><span class="line">PRODUCT_PACKAGES += zowee-res</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改Z:\MT5505\alps\frameworks\base\libs\androidfw下的Assetmanager.cpp，将新的资源模块添加的默认的assets路径中</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">///M:add the resource path</span><br><span class="line">static const char* kMediatekAssets = &quot;framework/mediatek-res/mediatek-res.apk&quot;;</span><br><span class="line">static const char* kZoweeAssets = &quot;framework/zowee-res/zowee-res.apk&quot;;</span><br><span class="line">....</span><br><span class="line"> ///M:add the new resource path into default path,so all the app can reference,@&#123;	</span><br><span class="line">bool isOK1 =addAssetPath(path, NULL);</span><br><span class="line">String8 path2(root);</span><br><span class="line">path2.appendPath(kMediatekAssets);</span><br><span class="line">bool isOK2 =addAssetPath(path2, NULL);</span><br><span class="line">if(!isOK2)&#123;</span><br><span class="line">  ALOGW(&quot;AssetManager--&gt;addDefaultAssets isok2 is false&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">String8 path3(root);</span><br><span class="line">path3.appendPath(kZoweeAssets);</span><br><span class="line">bool isOK3 =addAssetPath(path3, NULL);</span><br><span class="line">if(!isOK3)&#123;</span><br><span class="line">  ALOGW(&quot;AssetManager--&gt;addDefaultAssets isok3 is false&quot;);</span><br><span class="line">&#125;else&#123;</span><br><span class="line">	 ALOGW(&quot;AssetManager--&gt;addDefaultAssets isok3 is true&quot;);</span><br><span class="line">&#125;</span><br><span class="line">return isOK1;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改alps\build\core下的package_internal.mk，添加编译依赖关系等</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">resource_export_package := $(intermediates.COMMON)/package-export.apk</span><br><span class="line">$(R_file_stamp): $(resource_export_package)</span><br><span class="line">$(call intermediates-dir-for,APPS,mediatek-res,,COMMON)/package-export.apk:$(call intermediates-dir-for,APPS,framework-res,,COMMON)/src/R.stamp</span><br><span class="line">$(call intermediates-dir-for,APPS,zowee-res,,COMMON)/package-export.apk:$(call intermediates-dir-for,APPS,mediatek-res,,COMMON)/src/R.stamp</span><br><span class="line">........</span><br><span class="line">mediatek_res_package_export :=</span><br><span class="line">mediatek_res_package_export_deps :=</span><br><span class="line">  ifneq ($(LOCAL_NO_MTKRES), true)</span><br><span class="line">    mediatek_res_package_export += \</span><br><span class="line">      $(call intermediates-dir-for,APPS,mediatek-res,,COMMON)/package-export.apk</span><br><span class="line">      mediatek_res_package_export_deps += \</span><br><span class="line">      $(call intermediates-dir-for,APPS,mediatek-res,,COMMON)/src/R.stamp</span><br><span class="line">      </span><br><span class="line">      ifneq ($(LOCAL_NO_ZOWEE), true)</span><br><span class="line">       mediatek_res_package_export += \</span><br><span class="line">          $(call intermediates-dir-for,APPS,zowee-res,,COMMON)/package-export.apk</span><br><span class="line">       mediatek_res_package_export_deps += \</span><br><span class="line">          $(call intermediates-dir-for,APPS,zowee-res,,COMMON)/src/R.stamp</span><br><span class="line">      endif</span><br><span class="line">  endif</span><br><span class="line">......</span><br><span class="line">$(filter-out $(mediatek_res_package_export),$(resource_export_package)): $(mediatek_res_package_export_deps)</span><br><span class="line">$(R_file_stamp): $(mediatek_res_package_export_deps)</span><br><span class="line">$(resource_export_package) $(R_file_stamp) $(LOCAL_BUILT_MODULE): $(all_library_res_package_export_deps)</span><br><span class="line">$(LOCAL_INTERMEDIATE_TARGETS): \</span><br><span class="line">    PRIVATE_AAPT_INCLUDES := $(all_library_res_package_exports) $(mediatek_res_package_export)</span><br><span class="line">endif # LOCAL_NO_STANDARD_LIBRARIES</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改alps\frameworks\base下Android.mk将资源路径添加的编译路径中</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">framework_res_source_path := APPS/framework-res_intermediates/src</span><br><span class="line"># M:add mediatek resource path</span><br><span class="line">mediatek-res-source-path := APPS/mediatek-res_intermediates/src</span><br><span class="line">zowee-res-source-path := APPS/zowee-res_intermediates/src</span><br><span class="line">.......</span><br><span class="line">LOCAL_INTERMEDIATE_SOURCES += \</span><br><span class="line">      $(zowee-res-source-path)/com/zowee/R.java \</span><br><span class="line">      $(zowee-res-source-path)/com/zowee/Manifest.java \</span><br><span class="line">      $(zowee-res-source-path)/com/zowee/internal/R.java \</span><br><span class="line">			$(mediatek-res-source-path)/com/mediatek/internal/R.java \</span><br><span class="line">			$(mediatek-res-source-path)/com/mediatek/R.java \</span><br><span class="line">			$(mediatek-res-source-path)/com/mediatek/Manifest.java </span><br><span class="line"># @&#125;</span><br><span class="line">......</span><br><span class="line">zowee_res_R_stamp := \</span><br><span class="line">	$(call intermediates-dir-for,APPS,zowee-res,,COMMON)/src/R.stamp</span><br><span class="line">$(full_classes_compiled_jar): $(zowee_res_R_stamp)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Z:\MT5505\alps\build\core clear_vars.mk添加<code>LOCAL_NO_ZOWEE :=</code></p>
+</li>
+<li><p>修改alps\frameworks\base\services\core\java\com\android\server\pm<br>PackageManagerService.java，不对新的资源apk进行 dexopted</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">alreadyDexOpted.add(frameworkDir.getPath() + &quot;/framework-res.apk&quot;);</span><br><span class="line"></span><br><span class="line">/// M: This file doesn&apos;t contain any code,just like framework-res,so don&apos;t dexopt it</span><br><span class="line">alreadyDexOpted.add(frameworkDir.getPath() + &quot;/mediatek-res/mediatek-res.apk&quot;);</span><br><span class="line">alreadyDexOpted.add(frameworkDir.getPath() + &quot;/zowee-res/zowee-res.apk&quot;);</span><br><span class="line"></span><br><span class="line">/** M: [CIP] Add CIP scanning path variable @&#123; */</span><br><span class="line">File customFrameworkDir = new File(&quot;/custom/framework&quot;);</span><br><span class="line">/// M: [CIP] Add custom resources to libFiles to avoid dex opt.</span><br><span class="line">alreadyDexOpted.add(customFrameworkDir.getPath() + &quot;/framework-res.apk&quot;);</span><br><span class="line">alreadyDexOpted.add(customFrameworkDir.getPath() + &quot;/mediatek-res.apk&quot;);</span><br><span class="line">alreadyDexOpted.add(customFrameworkDir.getPath() + &quot;/zowee-res.apk&quot;);</span><br><span class="line">/** @&#125; */</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>针对L版本，还需要修个alps\frameworks\base\libs\androidfw    for L 版本<br><code>ResourceTypes.cpp</code> 主要是对资源id的查找映射表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#define APP_PACKAGE_ID      0x7f</span><br><span class="line">#define SYS_MTK_PACKAGE_ID  0x08 /// M: 0x08 is mediatek-res.apk resource ID</span><br><span class="line">#define SYS_ZOWEE_PACKAGE_ID  0x03 /// M: 0x03 is zowee-res.apk resource ID</span><br><span class="line">#define SYS_PACKAGE_ID      0x01</span><br><span class="line">.......</span><br><span class="line"> if (packageId != APP_PACKAGE_ID &amp;&amp; packageId != SYS_PACKAGE_ID &amp;&amp; packageId != SYS_MTK_PACKAGE_ID</span><br><span class="line">                	&amp;&amp; packageId != SYS_ZOWEE_PACKAGE_ID) &#123;</span><br><span class="line">                    outValue-&gt;dataType = Res_value::TYPE_DYNAMIC_REFERENCE;</span><br><span class="line">                &#125;</span><br><span class="line">......</span><br><span class="line">else if (packageId == APP_PACKAGE_ID || packageId == SYS_PACKAGE_ID || packageId == SYS_MTK_PACKAGE_ID</span><br><span class="line">                    	|| packageId == SYS_ZOWEE_PACKAGE_ID) &#123;</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line">mLookupTable[APP_PACKAGE_ID] = APP_PACKAGE_ID;</span><br><span class="line">    mLookupTable[SYS_PACKAGE_ID] = SYS_PACKAGE_ID;</span><br><span class="line">    mLookupTable[SYS_ZOWEE_PACKAGE_ID] = SYS_ZOWEE_PACKAGE_ID;</span><br><span class="line">    mLookupTable[SYS_MTK_PACKAGE_ID] = SYS_MTK_PACKAGE_ID;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h1 id="自定义资源的添加和访问"><a href="#自定义资源的添加和访问" class="headerlink" title="自定义资源的添加和访问"></a>自定义资源的添加和访问</h1><ol>
+<li>在自定义资源目录下，像普通的应用一样，添加<code>values/strings.xml</code>等字符串，颜色等资源，编译之后，在out目录下的APPS intermediate文件中，将生成的<code>public_resource.xml</code>文件中，需要开放权限，作为外部访问的添加到资源目录下的<code>values/public.xml</code>中</li>
+</ol>
+<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;resources&gt;</span><br><span class="line">  &lt;!-- Declared at vendor/zowee/proprietary/framework/base/res/res/values/strings.xml:23 --&gt;</span><br><span class="line">  &lt;public type=&quot;string&quot; name=&quot;zowee&quot; id=&quot;0x03020000&quot; /&gt;</span><br><span class="line">  &lt;!-- Declared at vendor/zowee/proprietary/framework/base/res/res/values/attrs.xml:5 --&gt;</span><br><span class="line">  &lt;public type=&quot;attr&quot; name=&quot;bracketColor&quot; id=&quot;0x03010000&quot; /&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- Declared at vendor/zowee/proprietary/framework/base/res/res/values/colors.xml:4 --&gt;</span><br><span class="line">  &lt;public type=&quot;color&quot; name=&quot;zui_common_default_hint&quot; id=&quot;0x03030000&quot; /&gt;</span><br><span class="line">  &lt;!-- Declared at vendor/zowee/proprietary/framework/base/res/res/values/colors.xml:6 --&gt;</span><br><span class="line">  &lt;public type=&quot;color&quot; name=&quot;zui_common_default_textcolor&quot; id=&quot;0x03030001&quot; /&gt;</span><br><span class="line">  &lt;!-- Declared at vendor/zowee/proprietary/framework/base/res/res/values/colors.xml:9 --&gt;</span><br><span class="line">  &lt;public type=&quot;color&quot; name=&quot;zui_common_activited_textcolor&quot; id=&quot;0x03030002&quot; /&gt;</span><br><span class="line">&lt;/resources&gt;</span><br></pre></td></tr></table></figure></code></pre><ol start="2">
+<li><p>另外如果想作为私有的ID资源则可以放在<code>values/symbols.xml</code>中</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;resources&gt;</span><br><span class="line">  &lt;!-- We don&apos;t want to publish private symbols in com.mediatek.R as part of the</span><br><span class="line">       SDK.  Instead, put them here. --&gt;</span><br><span class="line">  &lt;private-symbols package=&quot;com.zowee.internal&quot; /&gt;</span><br><span class="line">  &lt;java-symbol type=&quot;string&quot; name=&quot;zowee_internal&quot; /&gt;</span><br><span class="line"></span><br><span class="line">&lt;/resources&gt;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>经过以上步骤之后，可在所有的应用中通过<code>android:text=&quot;@com.zowee:string/zowee&quot;</code>访问自定义的资源，在java代码中通过<code>int z =com.zowee.R.string.zowee</code>直接访问资源ID。<br>另附mtk提供的diff包，如果有什么不对的，可以对比查证<br><a href="/media/mtkcustomer-res-L.zip">mtk提供的diff包</a></p>
 
         </div></article>
       <nav class="pagination"><a class="prev" href="/page/2/">
