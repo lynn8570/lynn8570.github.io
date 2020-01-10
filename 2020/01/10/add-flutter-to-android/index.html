@@ -13,8 +13,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
-<meta name="description" content="Hello World"><meta name="keywords" content="android"><link rel="alternate" href="/default" title="Lynn8570's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
-<link rel="canonical" href="https://lynn8570.github.io/2019/06/29/hello-world/">
+<meta name="description" content="add flutter to android"><meta name="keywords" content="android"><link rel="alternate" href="/default" title="Lynn8570's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://lynn8570.github.io/2020/01/10/add-flutter-to-android/">
 
 <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
@@ -37,7 +37,7 @@
   window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
 </script>
 
-    <title>Hello World - Lynn8570's Blog</title>
+    <title>add flutter to android - Lynn8570's Blog</title>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -74,33 +74,56 @@
         <div class="content-wrapper">
           <div id="content" class="content"><article class="post">
     <header class="post-header">
-      <h1 class="post-title">Hello World
+      <h1 class="post-title">add flutter to android
         </h1>
 
       <div class="post-meta">
         <span class="post-time">
-          2019-06-29
+          2020-01-10
         </span></div>
     </header>
 
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#File-new-module-选择flutter-module，这样就可以生成一个flutter模块"><span class="toc-text">File-new module 选择flutter module，这样就可以生成一个flutter模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#向应用中添加并启动flutter页面"><span class="toc-text">向应用中添加并启动flutter页面</span></a></li></ol>
     </div>
-  </div><div class="post-content"><p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+  </div><div class="post-content"><p>根据 <a href="https://flutter.dev/docs/development/add-to-app" target="_blank" rel="noopener">https://flutter.dev/docs/development/add-to-app</a> 中的步骤，在现有的应用中添加flutter模块</p>
+<p>准备工作：</p>
+<p>Android studio要升级到3.6，flutter插件要是42以上的</p>
+<ol>
+<li><h3 id="File-new-module-选择flutter-module，这样就可以生成一个flutter模块"><a href="#File-new-module-选择flutter-module，这样就可以生成一个flutter模块" class="headerlink" title="File-new module 选择flutter module，这样就可以生成一个flutter模块"></a>File-new module 选择flutter module，这样就可以生成一个flutter模块</h3></li>
+<li><h3 id="向应用中添加并启动flutter页面"><a href="#向应用中添加并启动flutter页面" class="headerlink" title="向应用中添加并启动flutter页面"></a>向应用中添加并启动flutter页面</h3><ol>
+<li><p>先初始化flutter在application中<br><code>FlutterMain.startInitialization(this);</code></p>
+</li>
+<li><p>启动默认页面</p>
+<p><code>startActivity(FlutterActivity.createDefaultIntent(activity!!))</code></p>
+</li>
+<li><p>添加依赖 <code>implementation &#39;android.arch.lifecycle:common-java8:1.1.1&#39;</code></p>
+</li>
+</ol>
+</li>
+<li><p>错误记录</p>
+<ol>
+<li><p>错误: 程序包android.support.annotation不存在</p>
+<p>修正：将对  android.support.annotation.NonNull; 的改为Androidx <code>androidx.fragment.app.Fragment;</code></p>
+<p><code>androidx.annotation.NonNull;</code><br><code>import androidx.lifecycle.Lifecycle;</code><br><code>import androidx.lifecycle.LifecycleObserver;</code><br><code>import androidx.lifecycle.OnLifecycleEvent;</code></p>
+</li>
+<li><p>错误：未初始化flutter</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Unable to start activity ComponentInfo&#123;com.magefitness.app/io.flutter.embedding.android.FlutterActivity&#125;: java.lang.IllegalStateException: ensureInitializationComplete must be called after startInitialization</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>修正flutter未初始化，在application中<code>FlutterMain.startInitialization(this);</code>  </p>
+</li>
+</ol>
+</li>
+</ol>
+<ol start="3">
+<li><p>未添加 <code>implementation &#39;android.arch.lifecycle:common-java8:1.1.1&#39;</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Failed resolution of: Lio/flutter/embedding/engine/FlutterEngineAndroidLifecycle$1;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+</li>
+</ol>
 
       </div>
       <div class="post-copyright">
@@ -110,21 +133,19 @@
     </p>
     <p class="copyright-item">
       <span>原文链接: </span>
-      <a href="https://lynn8570.github.io/2019/06/29/hello-world/">https://lynn8570.github.io/2019/06/29/hello-world/</a>
+      <a href="https://lynn8570.github.io/2020/01/10/add-flutter-to-android/">https://lynn8570.github.io/2020/01/10/add-flutter-to-android/</a>
     </p>
     <p class="copyright-item">
       <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
     </p>
   </div>
       <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/android-flutter/">android flutter</a>
+            </div>
         
-        <nav class="post-nav"><a class="prev" href="/2020/01/10/add-flutter-to-android/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">add flutter to android</span>
-        <span class="prev-text nav-mobile">上一篇</span>
-      </a>
-    <a class="next" href="/2018/05/31/tensorflow/">
-        <span class="next-text nav-default">TensorFlow Android walkthrough</span>
+        <nav class="post-nav"><a class="next" href="/2019/06/29/hello-world/">
+        <span class="next-text nav-default">Hello World</span>
         <span class="prev-text nav-mobile">下一篇</span>
         <i class="iconfont icon-right"></i>
       </a>
